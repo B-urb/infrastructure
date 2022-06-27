@@ -6,6 +6,11 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
 
   return webservices.map(webservice =>
       new k8s.networking.v1.Ingress(webservice.name, {
+        metadata: {
+          annotations: {
+                "kubernetes.io/ingress.class": "traefik",
+  "cert-manager.io/cluster-issuer": "letsencrypt"
+        }},
             spec: {
               tls: [{
                 secretName: webservice.name + "-tls",

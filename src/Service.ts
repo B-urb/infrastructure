@@ -6,6 +6,9 @@ export function createService(webservices: Array<WebService>): Array<k8s.core.v1
 
   return webservices.map(webservice =>
       new k8s.core.v1.Service(webservice.name, {
+        "metadata": {
+          name: webservice.name
+        },
         "spec": {
           "ports": [
             {
@@ -16,7 +19,7 @@ export function createService(webservices: Array<WebService>): Array<k8s.core.v1
             }
           ],
           "selector": {
-            "name": "daniel"
+            "name": webservice.name
           }
         }
       }))
