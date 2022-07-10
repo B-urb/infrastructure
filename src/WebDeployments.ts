@@ -19,7 +19,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
           "annotations": {
             "keel.sh/policy": "force",
             "keel.sh/trigger": "poll",
-            "keel.sh/pollSchedule": "@hourly"
+            "keel.sh/pollSchedule": "@every 5m"
           }
         },
         "spec": {
@@ -42,7 +42,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
                 {
                   "name": website.name,
                   "image": website.registryImage + ":" + website.imageTag,
-
+                  "imagePullPolicy": "Always",
                   "env": [
                     {
                       "name": "url",

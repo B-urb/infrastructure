@@ -1,10 +1,10 @@
 import * as k8s from "@pulumi/kubernetes"
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
-const adminMail = process.env.CI_ADMIN_MAIL
+const adminMail = process.env.CI_ADMIN_EMAIL
 export function createDirectus() {
 
-  return new k8s.helm.v2.Chart("directus-release", {
+  return new k8s.helm.v3.Chart("directus-release", {
         chart: "directus",
         namespace: "burban",
         fetchOpts: {
@@ -45,6 +45,25 @@ export function createDirectus() {
             {
               name: "ADMIN_EMAIL",
               value: adminMail
+            },
+            {
+              name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
+            value: "array:'self',https://cms.burban.me"
+            }, {
+              name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
+              value: "array:'self', 'unsafe-inline'"
+            },
+            {
+              name:"CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC_ATTR",
+              value: "null"
+            },
+            {
+              name:"CORS_ENABLED",
+              value: "true"
+            },
+            {
+              name:"CORS_ORIGIN",
+              value: "https://burban.me,https://dev.burban.me"
             },
             {
               name: "ADMIN_PASSWORD",

@@ -21,5 +21,5 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
       }
     });
   }
-const pullSecret = process.env.CI_PULL_SECRET 
+const pullSecret = process.env.CI_PULL_SECRET!
 export const gitlabSecret = createGitlabSecret("pulumi",pullSecret);
