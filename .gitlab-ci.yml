@@ -14,9 +14,6 @@ stages:
   - infrastructure-update
 pulumi:
   stage: infrastructure-update
-  before_script:
-    - chmod +x ./scripts/*.sh
-    - ./scripts/setup.sh
   script:
     - npm ci
     - pulumi stack select pulumi/sample-iam/$DEPLOY_ENVIRONMENT
