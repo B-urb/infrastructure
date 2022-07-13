@@ -78,7 +78,9 @@ export function createDirectus() {
             {name: "DB_CLIENT", value: "mysql"},
             {name: "DB_HOST", value: "https://directus-release-mariadb"},
             {name: "DB_PORT", value: 5432},
-            {name: "DB_PASSWORD", "valueFrom": {"secretKeyRef": "directus-release-mariadb", "key": "password"}}
+            {name: "DB_PASSWORD", "valueFrom": {"secretKeyRef": "directus-release-mariadb", "key": "password"}},
+            {name: "DB_USER", value: mariaDBUsername},
+            {name: "DB_DATABASE", value: "directus"}
             // etc
           ],
           "mariadb": {
