@@ -6,6 +6,7 @@ const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
 const mariaDBPassword = process.env.CI_DB_PASSWORD
 const mariaDBUsername = process.env.CI_DB_USERNAME
+const redisDBPassword = process.env.CI_REDIS_PASSWORD
 
 export function createDirectus() {
 
@@ -76,7 +77,7 @@ export function createDirectus() {
               value: adminPassword
             },
             {name: "DB_CLIENT", value: "mysql"},
-            {name: "DB_HOST", value: "https://directus-release-mariadb"},
+            {name: "DB_HOST", value: "directus-release-mariadb"},
             {name: "DB_PORT", value: "3306"},
             {name: "DB_PASSWORD", valueFrom: {secretKeyRef: {name:"directus-release-mariadb", key: "mariadb-password"}}},
             {name: "DB_USER", value: "directus"},
@@ -89,7 +90,13 @@ export function createDirectus() {
               "username": mariaDBUsername,
               "password": mariaDBPassword
             }
-          }
+          },
+          "redis": {
+            "auth": {
+              "password": redisDBPassword
+            }
+          },
+
 
         },
 
