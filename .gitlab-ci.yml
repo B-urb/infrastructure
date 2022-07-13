@@ -16,7 +16,7 @@ pulumi:
   stage: infrastructure-update
   script:
     - npm ci
-    - pulumi stack select dev
+    - pulumi stack select bjoern_urban_5/pulumi-infra/dev
     - pulumi update --skip-preview
   # Create an artifact archive with just the pulumi log file,
   # which is created using console-redirection in run-pulumi.sh.
@@ -34,7 +34,7 @@ pulumi-preview:
   stage: infrastructure-update
   script:
     - npm ci
-    - pulumi stack select dev
+    - pulumi stack select bjoern_urban_5/pulumi-infra/dev
     - pulumi preview
   only:
     - merge_requests
