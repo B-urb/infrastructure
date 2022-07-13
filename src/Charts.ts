@@ -1,7 +1,12 @@
 import * as k8s from "@pulumi/kubernetes"
+import {createSecretKey} from "crypto";
+import {CustomResourceOptions} from "@pulumi/pulumi";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
+const mariaDBPassword = process.env.CI_DB_PASSWORD
+const mariaDBUsername = process.env.CI_DB_USERNAME
+
 export function createDirectus() {
 
   return new k8s.helm.v3.Chart("directus-release", {
@@ -9,9 +14,10 @@ export function createDirectus() {
         namespace: "burban",
         fetchOpts: {
           repo: "https://directus-community.github.io/helm-chart",
-        }, values: {
+        },
+        values: {
           "image": {
-            "tag":"9.12.2"
+            "tag": "9.12.2"
           },
           "ingress": {
             "enabled": "true",
@@ -48,30 +54,41 @@ export function createDirectus() {
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
-            value: "array:'self',https://cms.burban.me"
+              value: "array:'self',https://cms.burban.me"
             }, {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
               value: "array:'self', 'unsafe-inline'"
             },
             {
-              name:"CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC_ATTR",
+              name: "CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC_ATTR",
               value: "null"
             },
             {
-              name:"CORS_ENABLED",
+              name: "CORS_ENABLED",
               value: "true"
             },
             {
-              name:"CORS_ORIGIN",
+              name: "CORS_ORIGIN",
               value: "https://burban.me,https://dev.burban.me"
             },
             {
               name: "ADMIN_PASSWORD",
               value: adminPassword
+            },
+            {name: "DB_CLIENT", value: "mysql"},
+            {name: "DB_HOST", value: "https://directus-release-mariadb"},
+            {name: "DB_PORT", value: 5432},
+            {name: "DB_PASSWORD", "valueFrom": {"secretKeyRef": "directus-release-mariadb", "key": "password"}}
+            // etc
+          ],
+          "mariadb": {
+            "auth": {
+              "username": mariaDBUsername,
+              "password": mariaDBPassword
             }
-          ]
+          }
 
-        }
+        },
 
       }
   );

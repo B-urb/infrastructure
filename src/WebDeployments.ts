@@ -47,7 +47,8 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
                     {
                       "name": "url",
                       "value": website.url
-                    }
+                    },
+                    {name:""}
                   ],
                   "ports": [
                     {
