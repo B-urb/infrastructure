@@ -85,6 +85,7 @@ export function createDirectus() {
           ],
           "mariadb": {
             "auth": {
+              "database": "directus",
               "username": mariaDBUsername,
               "password": mariaDBPassword
             }
