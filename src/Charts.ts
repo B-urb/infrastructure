@@ -81,7 +81,14 @@ export function createDirectus() {
             {name: "DB_PORT", value: "3306"},
             {name: "DB_PASSWORD", valueFrom: {secretKeyRef: {name:"directus-release-mariadb", key: "mariadb-password"}}},
             {name: "DB_USER", value: "directus"},
-            {name: "DB_DATABASE", value: "directus"}
+            {name: "DB_DATABASE", value: "directus"},
+              //S3
+            {name: "STORAGE_LOCATIONS", value: "s3"},
+            {name: "STORAGE_S3_DRIVER", value: "s3" },
+            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:"directus-release-s3", key:"user-key"}}},
+            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name:"directus-release-s3", key:"user-secret"}}},
+            {name: "STORAGE_S3_SECRET", value: "directus"},
+            {name: "STORAGE_S3_ENDPOINT", value: "minio.fbr.ai"}
             // etc
           ],
           "mariadb": {
