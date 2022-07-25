@@ -1,6 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
 import {createSecretKey} from "crypto";
 import {CustomResourceOptions} from "@pulumi/pulumi";
+import {directusS3Secret} from "./Secrets";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -85,8 +86,8 @@ export function createDirectus() {
               //S3
             {name: "STORAGE_LOCATIONS", value: "s3"},
             {name: "STORAGE_S3_DRIVER", value: "s3" },
-            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:"directus-release-s3", key:"user-key"}}},
-            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name:"directus-release-s3", key:"user-secret"}}},
+            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
+            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
             {name: "STORAGE_S3_SECRET", value: "directus"},
             {name: "STORAGE_S3_ENDPOINT", value: "minio.fbr.ai"}
             // etc
