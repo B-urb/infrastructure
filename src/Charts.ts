@@ -90,7 +90,7 @@ export function createDirectus() {
             {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
             {name: "STORAGE_S3_BUCKET", value: "directus"},
             {name: "STORAGE_S3_REGION", value: "US"},
-            {name: "STORAGE_S3_ENDPOINT", value: "https://minio.fbr.ai"},
+            {name: "STORAGE_S3_ENDPOINT", value: "https://minio.fbr.ai/bucket/directus"},
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: 'true'}
             // etc
           ],
