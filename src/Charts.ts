@@ -89,10 +89,11 @@ export function createDirectus() {
             {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
             {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
             {name: "STORAGE_S3_BUCKET", value: "directus"},
-            {name: "STORAGE_S3_REGION", value: "US"},
-            {name: "STORAGE_S3_ENDPOINT", value: "https://minio.fbr.ai/"},
+            {name: "STORAGE_S3_REGION", value: ""},
+            {name: "STORAGE_S3_ENDPOINT", value: "https://minio.fbr.ai:80"},
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: 'true'},
-            {name: "LOG_LEVEL", value: "debug"}
+            {name: "STORAGE_S3_SIGNATURE_VERSION", value: "v4"},
+            {name: "LOG_LEVEL", value: "trace"}
             // etc
           ],
           "mariadb": {
