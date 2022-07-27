@@ -37,7 +37,8 @@ function createDirectusS3Service() {
       ports: [{
         port: 9000,
         protocol: "TCP",
-        targetPort: 80
+        targetPort: 80,
+        name: "minio"
       }]
     }
   })
