@@ -9,9 +9,9 @@ let ws1 = new WebService("webcv-dev","dev.burban.me", "registry.gitlab.com/priva
 let ws2 = new WebService("webcv-prod", "burban.me",  "registry.gitlab.com/privateprojectsbu/webcv", "master");
 let directusIngress = new WebService("directus","cms.burban.me",null, null);
 
-createDeployments(new Array<WebService>(ws1));
-createService(new Array<WebService>(ws1));
-createIngresses(new Array<WebService>(ws1));
+createDeployments(new Array<WebService>(ws1, ws2));
+createService(new Array<WebService>(ws1, ws2));
+createIngresses(new Array<WebService>(ws1, ws2));
 
 let directus = createDirectus();
 //console.log(directus.ready);
