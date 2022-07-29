@@ -19,7 +19,7 @@ export function createDirectus() {
         },
         values: {
           "image": {
-            "tag": "9.14.1"
+            "tag": "9.14.5"
           },
           "ingress": {
             "enabled": "true",
