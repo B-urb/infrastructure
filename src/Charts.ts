@@ -42,6 +42,9 @@ export function createDirectus() {
               "cert-manager.io/cluster-issuer": "letsencrypt"
             }
           },
+          "serviceAccount": {
+            "enabled": "false"
+          },
           "extraEnvVars": [{
             name: "KEY",
             value: "test"
