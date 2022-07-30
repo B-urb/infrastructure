@@ -10,8 +10,22 @@ image:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 stages:
+  - build-directus
   - build
   - infrastructure-update
+
+directus:
+  stage: build-directus
+  environment:
+    DIRECTUS_VERSION: "v9.14.5"
+  image: node:16
+  script:
+    - git clone --depth 1 --branch $DIRECTUS_VERSION https://github.com/directus/directus.git && cd directus
+    - npm ci
+    - npm install -g pnpm
+    - pnpm -r build
+    - cd docker && docker build -t directus .
+
 pulumi:
   stage: infrastructure-update
   script:
