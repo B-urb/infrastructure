@@ -14,7 +14,7 @@ stages:
   - build
   - infrastructure-update
 
-directus:
+build-directus-app:
   stage: build-directus
   variables:
     NODE_OPTIONS: --max_old_space_size=4096
@@ -25,7 +25,22 @@ directus:
     - npm install -g pnpm
     - pnpm -r install
     - pnpm -r build
-    - cd docker && docker build -t directus .
+  artifacts:
+    untracked: true
+    paths:
+      - directus/
+    expire_in: 1 hour
+
+build-directus-container:
+  stage: build-directus
+  dependencies:
+    - build-directus-app
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/directus/docker/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
 
 pulumi:
   stage: infrastructure-update
