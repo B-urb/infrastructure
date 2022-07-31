@@ -34,6 +34,8 @@ build-directus-app:
 
 build-directus-container:
   stage: build-directus-container
+  before_script:
+    - CI_PROJECT_DIR=directus
   dependencies:
     - build-directus-app
   image:
@@ -44,7 +46,7 @@ build-directus-container:
   script:
     - ls
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - cd directus && /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/directus/docker/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/docker/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
 
 pulumi:
   stage: infrastructure-update
