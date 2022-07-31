@@ -17,6 +17,7 @@ stages:
 directus:
   stage: build-directus
   variables:
+    NODE_OPTIONS: --max_old_space_size=4096
     DIRECTUS_VERSION: "v9.14.5"
   image: node:16
   script:
