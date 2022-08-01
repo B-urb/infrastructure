@@ -93,7 +93,7 @@ export function createDirectus() {
               //S3
             {name: "STORAGE_LOCATIONS", value: "s3"},
             {name: "STORAGE_S3_DRIVER", value: "s3" },
-            {name: "STORAGE_S3_ENDPOINT", value: "http://minio.minio.svc.cluster.local:80"},
+            {name: "STORAGE_S3_ENDPOINT", value: "http://minio.minio"},
             {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
             {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
             {name: "STORAGE_S3_BUCKET", value: "directus"},
