@@ -10,43 +10,8 @@ image:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 stages:
-  - build-directus-app
-  - build-directus-container
   - build
   - infrastructure-update
-
-build-directus-app:
-  stage: build-directus-app
-  variables:
-    NODE_OPTIONS: --max_old_space_size=4096
-    DIRECTUS_VERSION: "v9.14.5"
-  image: node:16
-  script:
-    - git clone --depth 1 --branch $DIRECTUS_VERSION https://github.com/directus/directus.git && cd directus
-    - npm install -g pnpm
-    - pnpm -r install
-    - pnpm -r build
-  artifacts:
-    untracked: true
-    paths:
-      - directus/
-    expire_in: 1 hour
-
-build-directus-container:
-  stage: build-directus-container
-  before_script:
-    - CI_PROJECT_DIR=directus
-  dependencies:
-    - build-directus-app
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  variables:
-    NODE_VERSION: "16"
-  script:
-    - ls
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/docker/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
 
 pulumi:
   stage: infrastructure-update

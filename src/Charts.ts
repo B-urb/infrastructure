@@ -1,7 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
 import {createSecretKey} from "crypto";
 import {CustomResourceOptions} from "@pulumi/pulumi";
-import {directusS3Secret} from "./Secrets";
+import {directusS3Secret, gitlabSecret} from "./Secrets";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -19,7 +19,9 @@ export function createDirectus() {
         },
         values: {
           "image": {
-            "tag": "9.14.5"
+            "repository":"registry.gitlab.com/privateprojectsbu/directus",
+            "tag": "main",
+            "pullSecrets": gitlabSecret.metadata.name
           },
           "ingress": {
             "enabled": "true",
