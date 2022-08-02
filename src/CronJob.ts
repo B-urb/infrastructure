@@ -8,7 +8,11 @@ import {directusS3Secret} from "./Secrets";
 
 
 export default function createCronjob() {
-const namespace = new k8s.core.v1.Namespace("directus")
+const namespace = new k8s.core.v1.Namespace("directus", {
+  metadata: {
+    name: "directus",
+  }
+})
   return new k8s.batch.v1.CronJob("backup-directus", {
     metadata: {
       name: "directus-backup",
