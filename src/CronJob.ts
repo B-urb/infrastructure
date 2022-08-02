@@ -28,7 +28,7 @@ const namespace = new k8s.core.v1.Namespace("directus", {
                 {
                   name: "directus-backup",
                   image: "mobilejazz/mariadb-backup-s3:latest",
-                  imagePullPolicy: "always",
+                  imagePullPolicy: "Always",
                   env: [{
                     name: "MYSQL_USER",
                     value: "directus"
