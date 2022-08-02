@@ -48,7 +48,7 @@ const namespace = new k8s.core.v1.Namespace("directus")
                   ]
                 }
               ],
-              restartPolicy: "onFailure"
+              restartPolicy: "OnFailure"
 
             }
           }
