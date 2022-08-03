@@ -25,21 +25,21 @@ export default function createCronjob() {
               containers: [
                 {
                   name: "directus-backup",
-                  image: "mobilejazz/mariadb-backup-s3:10.5",
+                  image: "bjoern5urban/mariadb-s3-backup:latest",
                   imagePullPolicy: "Always",
                   env: [{
-                    name: "MYSQL_USER",
+                    name: "MARIADB_USER",
                     valueFrom: {secretKeyRef: {name:mariaDbBackupSecret.metadata.name, key: "user"}}
                   },
                     {
-                      name: "MYSQL_HOST",
+                      name: "MARIADB_HOST",
                       value: "directus-release-mariadb"
                     }, {
-                    name: "MYSQL_PASSWORD",
+                    name: "MARIADB_PASSWORD",
                       valueFrom: {secretKeyRef: {name:mariaDbBackupSecret.metadata.name, key: "password"}}
                     },
                     {name: "S3_ENDPOINT",
-                      value: "http://minio.minio"
+                      value: "minio.fbr.ai"
                     },
                     {
                       name: "S3_BUCKET_NAME",
