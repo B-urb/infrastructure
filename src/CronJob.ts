@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes"
-import {directusS3Secret} from "./Secrets";
+import {directusS3Secret, mariaDbBackupSecret} from "./Secrets";
 import {namespace} from "./namespace";
 
 
@@ -29,14 +29,14 @@ export default function createCronjob() {
                   imagePullPolicy: "Always",
                   env: [{
                     name: "MYSQL_USER",
-                    value: "directus"
+                    valueFrom: {secretKeyRef: {name:mariaDbBackupSecret.metadata.name, key: "user"}}
                   },
                     {
                       name: "MYSQL_HOST",
                       value: "directus-release-mariadb"
                     }, {
                     name: "MYSQL_PASSWORD",
-                      valueFrom: {secretKeyRef: {name:"directus-release-mariadb", key: "mariadb-password"}}
+                      valueFrom: {secretKeyRef: {name:mariaDbBackupSecret.metadata.name, key: "password"}}
                     },
                     {name: "S3_ENDPOINT",
                       value: "http://minio.minio"
