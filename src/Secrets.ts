@@ -1,5 +1,5 @@
-import {WebService} from "./types/WebService";
 import * as k8s from "@pulumi/kubernetes";
+import {namespace} from "./namespace";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
@@ -24,6 +24,10 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
 
   function createDirectusS3Secret(userKey: string, userSecret: string) {
   return new k8s.core.v1.Secret("directus-release-s3", {
+    metadata: {
+      name: "directus-s3",
+      namespace: namespace.metadata.name
+    },
     stringData: {
       "user-key": userKey,
       "user-secret": userSecret
