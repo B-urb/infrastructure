@@ -8,6 +8,7 @@ const adminMail = process.env.CI_ADMIN_EMAIL
 const mariaDBPassword = process.env.CI_DB_PASSWORD
 const mariaDBUsername = process.env.CI_DB_USERNAME
 const redisDBPassword = process.env.CI_REDIS_PASSWORD
+const mariaDBRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
 export function createDirectus() {
 
@@ -103,7 +104,8 @@ export function createDirectus() {
             "auth": {
               "database": "directus",
               "username": mariaDBUsername,
-              "password": mariaDBPassword
+              "password": mariaDBPassword,
+              "rootPassword": mariaDBRootPassword
             }
           },
           "redis": {
