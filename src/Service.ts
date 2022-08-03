@@ -1,6 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
 import {WebService} from "./types/WebService";
 import {directusS3Secret} from "./Secrets";
+import {namespaceBurban} from "./namespaceDirectus";
 
 
 export function createService(webservices: Array<WebService>): Array<k8s.core.v1.Service> {
@@ -8,7 +9,8 @@ export function createService(webservices: Array<WebService>): Array<k8s.core.v1
   return webservices.map(webservice =>
       new k8s.core.v1.Service(webservice.name, {
         "metadata": {
-          name: webservice.name
+          name: webservice.name,
+          namespace: namespaceBurban.metadata.name
         },
         "spec": {
           "ports": [

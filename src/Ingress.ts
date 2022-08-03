@@ -1,5 +1,6 @@
 import {WebService} from "./types/WebService";
 import * as k8s from "@pulumi/kubernetes"
+import {namespaceBurban} from "./namespaceDirectus";
 
 
 export function createIngresses(webservices: Array<WebService>): Array<k8s.networking.v1.Ingress> {
@@ -10,7 +11,10 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
           annotations: {
                 "kubernetes.io/ingress.class": "traefik",
   "cert-manager.io/cluster-issuer": "letsencrypt"
-        }},
+        },
+          namespace: namespaceBurban.metadata.name
+        },
+
             spec: {
               tls: [{
                 secretName: webservice.name + "-tls",

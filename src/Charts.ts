@@ -2,7 +2,7 @@ import * as k8s from "@pulumi/kubernetes"
 import {createSecretKey} from "crypto";
 import {CustomResourceOptions} from "@pulumi/pulumi";
 import {directusS3Secret, gitlabSecret} from "./Secrets";
-import {namespace} from "./namespace";
+import {namespaceDirectus} from "./namespaceDirectus";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -15,7 +15,7 @@ export function createDirectus() {
 
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "directus",
-        namespace: namespace.metadata.name,
+        namespace: namespaceDirectus.metadata.name,
         fetchOpts: {
           repo: "https://directus-community.github.io/helm-chart",
         },

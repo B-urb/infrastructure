@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes";
-import {namespace} from "./namespace";
+import {namespaceBurban, namespaceDirectus} from "./namespaceDirectus";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
@@ -15,6 +15,9 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
   console.log(encodedSecret);
 
     return new k8s.core.v1.Secret('gitlab-pull-secret', {
+      metadata: {
+        namespace: namespaceBurban.metadata.name
+      },
       type: "kubernetes.io/dockerconfigjson",
       data: {
         ".dockerconfigjson": encodedSecret
@@ -26,7 +29,7 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
   return new k8s.core.v1.Secret("directus-release-s3", {
     metadata: {
       name: "directus-s3",
-      namespace: namespace.metadata.name
+      namespace: namespaceDirectus.metadata.name
     },
     stringData: {
       "user-key": userKey,
@@ -41,7 +44,7 @@ function createMariaDBBackupSecret(user: string, password: string) {
   return new k8s.core.v1.Secret("mariadb-backup", {
     metadata: {
       name: "mariadb-backup",
-      namespace: namespace.metadata.name
+      namespace: namespaceDirectus.metadata.name
     },
     stringData: {
       "user": user,
