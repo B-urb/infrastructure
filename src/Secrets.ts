@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes";
-import {namespaceBurban, namespaceDirectus} from "./namespaceDirectus";
+import {namespaceBurban, namespaceDirectus} from "./namespace";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {

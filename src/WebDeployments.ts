@@ -3,7 +3,7 @@ import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "./types/WebService";
 import {secret} from "@pulumi/pulumi";
 import { gitlabSecret} from "./Secrets";
-import {namespaceBurban} from "./namespaceDirectus";
+import {namespaceBurban} from "./namespace";
 
 const env = getEnv("development")
 

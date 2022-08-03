@@ -2,7 +2,7 @@ import * as k8s from "@pulumi/kubernetes"
 import {createSecretKey} from "crypto";
 import {CustomResourceOptions} from "@pulumi/pulumi";
 import {directusS3Secret, gitlabSecret} from "./Secrets";
-import {namespaceDirectus} from "./namespaceDirectus";
+import {namespaceDirectus} from "./namespace";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL

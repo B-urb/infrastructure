@@ -1,6 +1,6 @@
 import * as k8s from "@pulumi/kubernetes"
 import {directusS3Secret, mariaDbBackupSecret} from "./Secrets";
-import {namespaceDirectus} from "./namespaceDirectus";
+import {namespaceDirectus} from "./namespace";
 
 
 
