@@ -16,7 +16,7 @@ const namespace = new k8s.core.v1.Namespace("directus", {
   return new k8s.batch.v1.CronJob("backup-directus", {
     metadata: {
       name: "directus-backup",
-      namespace: namespace.metadata.name,
+      namespace: "burban"
     },
     spec: {
       schedule: "0 2 * * *",
