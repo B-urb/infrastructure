@@ -38,7 +38,7 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
 
 
 function createMariaDBBackupSecret(user: string, password: string) {
-  return new k8s.core.v1.Secret("directus-release-s3", {
+  return new k8s.core.v1.Secret("mariadb-backup", {
     metadata: {
       name: "mariadb-backup",
       namespace: namespace.metadata.name
