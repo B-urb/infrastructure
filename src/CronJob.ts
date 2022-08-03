@@ -44,7 +44,7 @@ const namespace = new k8s.core.v1.Namespace("directus", {
                       value: "http://minio.minio"
                     },
                     {
-                      name: "S3_BUCKET",
+                      name: "S3_BUCKET_NAME",
                       value: "directus"
                     },
                     {name: "AWS_ACCESS_KEY_ID", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
