@@ -35,7 +35,7 @@ const namespace = new k8s.core.v1.Namespace("directus", {
                   },
                     {
                       name: "MYSQL_HOST",
-                      value: "directus-mariadb.directus"
+                      value: "directus-release-mariadb"
                     }, {
                     name: "MYSQL_PASSWORD",
                       valueFrom: {secretKeyRef: {name:"directus-release-mariadb", key: "mariadb-password"}}
