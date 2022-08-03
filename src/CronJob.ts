@@ -41,6 +41,8 @@ export default function createCronjob() {
                     {name: "S3_ENDPOINT",
                       value: "minio.fbr.ai"
                     },
+                    {name: "AWS_REGION",
+                    value: "US"},
                     {
                       name: "S3_BUCKET_NAME",
                       value: "directus"
