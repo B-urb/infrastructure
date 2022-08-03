@@ -22,7 +22,7 @@ export function createDirectus() {
         values: {
           "image": {
             //"repository":"registry.gitlab.com/privateprojectsbu/directus",
-            "tag":"v9.14.5",
+            "tag":"9.14.5",
             "pullSecrets": [
               {name: gitlabSecret.metadata.name}
                 ]
