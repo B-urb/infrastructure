@@ -25,7 +25,7 @@ export default function createCronjob() {
               containers: [
                 {
                   name: "directus-backup",
-                  image: "mobilejazz/mariadb-backup-s3:latest",
+                  image: "mobilejazz/mariadb-backup-s3:10.5",
                   imagePullPolicy: "Always",
                   env: [{
                     name: "MYSQL_USER",
