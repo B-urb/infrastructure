@@ -45,7 +45,7 @@ export default function createCronjob() {
                     value: "US"},
                     {
                       name: "S3_BUCKET_NAME",
-                      value: "directus"
+                      value: "directus-backup"
                     },
                     {name: "AWS_ACCESS_KEY_ID", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
                     {name: "AWS_SECRET_ACCESS_KEY", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
