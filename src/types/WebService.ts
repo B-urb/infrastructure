@@ -5,11 +5,13 @@ export class WebService {
   url!: string;
   registryImage: string | null;
   imageTag: string | null;
+  policy: string | null;
 
-  constructor(name: string, url: string, registryImage: string | null, imageTag: string| null) {
+  constructor(name: string, url: string, registryImage: string | null, imageTag: string| null, policy: string|null) {
     this.name = name;
     this.url = url;
     this.registryImage = registryImage;
     this.imageTag = imageTag;
+    this.policy = policy;
   }
 }
