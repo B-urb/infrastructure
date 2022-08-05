@@ -1,20 +1,14 @@
 import * as k8s from "@pulumi/kubernetes";
+import {create} from "domain";
 
- function createDirectusNamespace() {
-   return new k8s.core.v1.Namespace("directus", {
+ function createNamespace(name:string) {
+   return new k8s.core.v1.Namespace(name, {
      metadata: {
-       name: "directus",
-     }
-   })
- }
-
- function createMyNamespace() {
-   return new k8s.core.v1.Namespace("burban", {
-     metadata: {
-       name: "burban",
+       name: name,
      }
      })
  }
 
- export const namespaceBurban = createMyNamespace()
-export const namespaceDirectus = createDirectusNamespace()
+ export const namespaceBurban = createNamespace("burban")
+export const namespaceDirectus = createNamespace("directus")
+export const namespaceEtcd = createNamespace("etcd")

@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes";
-import {namespaceBurban, namespaceDirectus} from "./namespace";
+import {namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
@@ -38,7 +38,17 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
   })
   }
 
-
+function createEtcdSecret(rootPassword: string) {
+  return new k8s.core.v1.Secret("etcd", {
+    metadata: {
+      name: "etcd",
+      namespace: namespaceEtcd.metadata.name
+    },
+    stringData: {
+      "root-password": rootPassword
+    }
+  })
+}
 
 function createMariaDBBackupSecret(user: string, password: string) {
   return new k8s.core.v1.Secret("mariadb-backup", {
@@ -57,7 +67,9 @@ const s3UserKey = process.env.CI_DIRECTUS_S3_KEY!
 const s3UserSecret = process.env.CI_DIRECTUS_S3_SECRET!
 const mariaDBBackupUser = process.env.CI_BACKUP_USER!
 const mariaDBBackupPassword = process.env.CI_BACKUP_PASSWORD!
+const etcdRootPassword = process.env.CI_DB_ROOT_PASSWORD!;
 
+export const etcdSecret = createEtcdSecret(etcdRootPassword);
 export const mariaDbBackupSecret = createMariaDBBackupSecret(mariaDBBackupUser, mariaDBBackupPassword);
 export const directusS3Secret = createDirectusS3Secret(s3UserKey, s3UserSecret);
 export const gitlabSecret = createGitlabSecret("pulumi",pullSecret);

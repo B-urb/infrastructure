@@ -1,8 +1,8 @@
 import * as k8s from "@pulumi/kubernetes"
 import {createSecretKey} from "crypto";
 import {CustomResourceOptions} from "@pulumi/pulumi";
-import {directusS3Secret, gitlabSecret} from "./Secrets";
-import {namespaceDirectus} from "./namespace";
+import {directusS3Secret, etcdSecret, gitlabSecret} from "./Secrets";
+import {namespaceDirectus, namespaceEtcd} from "./namespace";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -121,4 +121,24 @@ export function createDirectus() {
       }
   );
 
+}
+
+export function createEtcd() {
+  return new k8s.helm.v3.Chart("etcd", {
+    chart: "etcd",
+    namespace: namespaceEtcd.metadata.name,
+    fetchOpts: {
+      repo: "https://charts.bitnami.com/bitnami"
+    },
+    values: {
+      "auth":
+          {
+            "rbac": {
+
+              "existingSecret": etcdSecret.metadata.name,
+              "existingSecretPasswordKey": "root-password"
+            }
+          }
+    }
+  })
 }
