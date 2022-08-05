@@ -140,10 +140,12 @@ export function createEtcd() {
             }
           },
       "persistence": {
-        "storageClass":"openstack",
-        "size": "1Gi"
+        "storageClass":"local-path",
+        "size": "3Gi"
       },
-   
+     nodeSelector: {
+        owner: "bjoern"
+     }
 
     }
   })
