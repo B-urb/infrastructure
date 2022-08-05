@@ -138,7 +138,12 @@ export function createEtcd() {
               "existingSecret": etcdSecret.metadata.name,
               "existingSecretPasswordKey": "root-password"
             }
-          }
+          },
+      "persistence": {
+        "storageClass":"openstack",
+        "size": "1Gi"
+      },
+      "nodeSelector": "openstack"
     }
   })
 }
