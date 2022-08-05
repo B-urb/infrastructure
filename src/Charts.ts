@@ -143,9 +143,7 @@ export function createEtcd() {
         "storageClass":"openstack",
         "size": "1Gi"
       },
-      "nodeSelector": {
-        storage:"openstack"
-      }
+   
 
     }
   })
