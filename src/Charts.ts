@@ -131,12 +131,18 @@ export function createEtcd() {
       repo: "https://charts.bitnami.com/bitnami"
     },
     values: {
+      hostAliases: ["etcd.etcd"],
       "auth":
           {
             "rbac": {
-
+              create: false,
               "existingSecret": etcdSecret.metadata.name,
               "existingSecretPasswordKey": "root-password"
+            },
+            client: {
+              //secureTransport: true,
+              //useAutoTLS: true
+              //existingSecret: etcdSecret.metadata.name
             }
           },
       "persistence": {
