@@ -3,7 +3,7 @@ import {createDeployments} from "./src/WebDeployments";
 import {WebService} from "./src/types/WebService";
 import {createIngresses} from "./src/Ingress";
 import {createService} from "./src/Service";
-import {createDirectus, createEtcd} from "./src/Charts";
+import {createDirectus, createEtcd, createGitlabRunner} from "./src/Charts";
 import createCronjob from "./src/CronJob";
 
 
@@ -15,6 +15,7 @@ createDeployments(new Array<WebService>(ws1, ws2));
 createService(new Array<WebService>(ws1, ws2));
 createIngresses(new Array<WebService>(ws1, ws2));
 
+let gitlabRunner = createGitlabRunner();
 let directus = createDirectus();
 let etcd = createEtcd();
 //console.log(directus.ready);
