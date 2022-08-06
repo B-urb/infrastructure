@@ -131,7 +131,6 @@ export function createEtcd() {
       repo: "https://charts.bitnami.com/bitnami"
     },
     values: {
-      hostAliases: ["etcd.etcd"],
       "auth":
           {
             "rbac": {
@@ -153,6 +152,25 @@ export function createEtcd() {
         owner: "bjoern"
      }
 
+    }
+  })
+}
+
+const runnerToken = process.env.RUNNER_REGISTRATION_TOKEN!
+export function createGitlabRunner() {
+  return new k8s.helm.v3.Chart("gitlabRunner", {
+    chart: "gitlab-runner",
+    namespace: namespaceEtcd.metadata.name,
+    fetchOpts: {
+      repo: " https://charts.gitlab.io"
+    },
+    values: {
+      gitlabUrl: "https://gitlab.com",
+      runnerRegistrationToken: runnerToken,
+
+      nodeSelector: {
+        owner: "bjoern"
+      }
     }
   })
 }
