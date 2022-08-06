@@ -162,7 +162,7 @@ export function createGitlabRunner() {
     chart: "gitlab-runner",
     namespace: namespaceEtcd.metadata.name,
     fetchOpts: {
-      repo: " https://charts.gitlab.io"
+      repo: " https://charts.gitlab.io/gitlab-runner"
     },
     values: {
       gitlabUrl: "https://gitlab.com",
