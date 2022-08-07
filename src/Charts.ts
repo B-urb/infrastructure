@@ -1,8 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
-import {createSecretKey} from "crypto";
-import {CustomResourceOptions} from "@pulumi/pulumi";
 import {directusS3Secret, etcdSecret, gitlabSecret} from "./Secrets";
-import {namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
+import {namespaceDirectus, namespaceEtcd, namespaceGitlab} from "./namespace";
+import {serviceAccount} from "./Serviceaccounts";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -157,10 +156,11 @@ export function createEtcd() {
 }
 
 const runnerToken = process.env.RUNNER_REGISTRATION_TOKEN!
+const runnerConfig = process.env.RUNNER_CONFIG!
 export function createGitlabRunner() {
   return new k8s.helm.v3.Chart("gitlab-runner", {
     chart: "gitlab-runner",
-    namespace: namespaceBurban.metadata.name,
+    namespace: namespaceGitlab.metadata.name,
     fetchOpts: {
       repo: "https://charts.gitlab.io/"
     },
@@ -170,6 +170,14 @@ export function createGitlabRunner() {
 
       nodeSelector: {
         owner: "bjoern"
+      },
+      rbac: {
+        create: false,
+        serviceAccountName: serviceAccount.metadata.name
+      },
+      runners: {
+        config: runnerConfig,
+        privileged: true
       }
     }
   })
