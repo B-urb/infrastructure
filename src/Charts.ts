@@ -2,7 +2,7 @@ import * as k8s from "@pulumi/kubernetes"
 import {createSecretKey} from "crypto";
 import {CustomResourceOptions} from "@pulumi/pulumi";
 import {directusS3Secret, etcdSecret, gitlabSecret} from "./Secrets";
-import {namespaceDirectus, namespaceEtcd} from "./namespace";
+import {namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -160,7 +160,7 @@ const runnerToken = process.env.RUNNER_REGISTRATION_TOKEN!
 export function createGitlabRunner() {
   return new k8s.helm.v3.Chart("gitlab-runner", {
     chart: "gitlab-runner",
-    namespace: namespaceEtcd.metadata.name,
+    namespace: namespaceBurban.metadata.name,
     fetchOpts: {
       repo: "https://charts.gitlab.io/"
     },

@@ -19,9 +19,10 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
             name: website.name
           },
           "annotations": {
-            "keel.sh/policy": website.policy!,
             "keel.sh/trigger": "poll",
-            "keel.sh/pollSchedule": "@every 5m"
+            "keel.sh/pollSchedule": "@every 5m",
+            ...website.keelAnnotations
+
           }
         },
         "spec": {
