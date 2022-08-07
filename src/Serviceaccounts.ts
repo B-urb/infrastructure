@@ -15,8 +15,8 @@ function createRole() {
     },
     rules: [
       { apiGroups: [""],
-        resources: ["secrets, pods, configmaps, pods/attach"],
-        verbs: ["get", "list", "create", "delete", "update"]
+        resources: ["secrets","pods", "configmaps","service", "pods/attach"],
+        verbs: ["get", "list", "watch", "create", "delete", "update"]
         }
     ]
   })
