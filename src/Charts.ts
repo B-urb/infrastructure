@@ -165,7 +165,7 @@ export function createGitlabRunner() {
       repo: "https://charts.gitlab.io/"
     },
     values: {
-      gitlabUrl: "gitlab.com",
+      gitlabUrl: "https://gitlab.com",
       runnerRegistrationToken: runnerToken,
 
       nodeSelector: {
