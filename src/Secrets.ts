@@ -3,8 +3,6 @@ import {namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
-
-
   let secretData  = {
     "auths":
         {

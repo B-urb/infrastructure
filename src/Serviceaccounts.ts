@@ -21,7 +21,7 @@ function createRole() {
     },
     rules: [
       { apiGroups: [""],
-        resources: ["secrets","pods", "configmaps","service", "pods/attach"],
+        resources: ["secrets","pods", "configmaps","service", "pods/attach", "pods/exec"],
         verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
         }
     ]
@@ -30,6 +30,10 @@ function createRole() {
 export const role = createRole();
 function createRoleBinding() {
   return new k8s.rbac.v1.RoleBinding("gitlab-runner", {
+    metadata: {
+      name: "gitlab-runner",
+      namespace: namespaceGitlab.metadata.name
+    },
     roleRef: {
       apiGroup: "rbac.authorization.k8s.io",
       kind: "Role",
