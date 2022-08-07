@@ -4,7 +4,13 @@ import {namespaceGitlab} from "./namespace";
 
 
 function createServiceAccount() {
-  return new k8s.core.v1.ServiceAccount("gitlab-runner")
+  return new k8s.core.v1.ServiceAccount("gitlab-runner",
+      {
+        metadata: {
+          name: "gitlab-runner",
+          namespace: namespaceGitlab.metadata.name
+        }
+      })
 }
 export const serviceAccount = createServiceAccount();
 function createRole() {
@@ -21,7 +27,7 @@ function createRole() {
     ]
   })
 }
-const role = createRole();
+export const role = createRole();
 function createRoleBinding() {
   return new k8s.rbac.v1.RoleBinding("gitlab-runner", {
     roleRef: {
@@ -36,4 +42,4 @@ function createRoleBinding() {
   })
 
 }
-createRoleBinding()
+export const rolebinding = createRoleBinding()
