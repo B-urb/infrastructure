@@ -16,9 +16,9 @@ let ws1 = new WebService("webcv-dev","dev.burban.me", "registry.gitlab.com/priva
 let ws2 = new WebService("webcv-prod", "burban.me",  "registry.gitlab.com/privateprojectsbu/webcv", "v1.1.2", keelAnnotationsProd);
 let ws3 = new WebService("webcv-experimental", "experimental.burban.me","registry.gitlab.com/privateprojectsbu/webcv","feature-next", keelAnnotationsExp);
 
-createDeployments(new Array<WebService>(ws1, ws2));
-createService(new Array<WebService>(ws1, ws2));
-createIngresses(new Array<WebService>(ws1, ws2));
+createDeployments(new Array<WebService>(ws1, ws2,ws3));
+createService(new Array<WebService>(ws1, ws2, ws3));
+createIngresses(new Array<WebService>(ws1, ws2, ws3));
 
 let gitlabRunner = createGitlabRunner();
 let directus = createDirectus();
