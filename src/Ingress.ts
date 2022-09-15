@@ -10,7 +10,8 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
         metadata: {
           annotations: {
                 "kubernetes.io/ingress.class": "traefik",
-  "cert-manager.io/cluster-issuer": "letsencrypt"
+  "cert-manager.io/cluster-issuer": "letsencrypt",
+            ...webservice.ingressAnnotations
         },
           namespace: namespaceBurban.metadata.name
         },
