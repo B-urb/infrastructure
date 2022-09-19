@@ -15,7 +15,7 @@ export function createService(webservices: Array<WebService>): Array<k8s.core.v1
         "spec": {
           "ports": [
             {
-              "name": "https",
+              "name": "http",
               "port": 80,
               "protocol": "TCP",
               "targetPort": "http"
