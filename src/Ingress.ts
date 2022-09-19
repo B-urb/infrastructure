@@ -32,7 +32,7 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
                     paths: [{
                       pathType: "Prefix",
                       path: "/",
-                      backend: {service: {name: webservice.name, port:{number: 80 }}}
+                      backend: {service: {name: webservice.name, port:{number: 443 }}}
                     }]
 
                   }
