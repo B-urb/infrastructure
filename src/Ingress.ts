@@ -11,10 +11,6 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
           annotations: {
                 "kubernetes.io/ingress.class": "traefik",
   "cert-manager.io/cluster-issuer": "letsencrypt",
-            "traefik.ingress.kubernetes.io/router.entrypoints.web.address": ":80",
-            "traefik.ingress.kubernetes.io/router.entrypoints.web.http.redirections.entryPoint.to": "websecure",
-            "traefik.ingress.kubernetes.io/router.entrypoints.web.http.redirections.entryPoint.scheme": "https",
-            "traefik.ingress.kubernetes.io/router.entrypoints.websecure.address": ":443",
             ...webservice.ingressAnnotations
         },
           namespace: namespaceBurban.metadata.name
@@ -32,7 +28,7 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
                     paths: [{
                       pathType: "Prefix",
                       path: "/",
-                      backend: {service: {name: webservice.name, port:{number: 443 }}}
+                      backend: {service: {name: webservice.name, port:{number: 80 }}}
                     }]
 
                   }
