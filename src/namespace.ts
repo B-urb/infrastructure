@@ -12,3 +12,4 @@ import * as k8s from "@pulumi/kubernetes";
 export const namespaceDirectus = createNamespace("directus")
 export const namespaceEtcd = createNamespace("etcd")
 export const namespaceGitlab = createNamespace("gitlab")
+export const namespaceBahrenberg = createNamespace("bahrenberg")

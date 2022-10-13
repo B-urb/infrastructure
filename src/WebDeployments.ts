@@ -3,7 +3,7 @@ import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "./types/WebService";
 import {secret} from "@pulumi/pulumi";
 import { gitlabSecret} from "./Secrets";
-import {namespaceBurban} from "./namespace";
+
 
 const env = getEnv("development")
 
@@ -14,7 +14,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
       new k8s.apps.v1.Deployment(website.name, {
         metadata: {
           name: website.name,
-          namespace: namespaceBurban.metadata.name,
+          namespace: website.namespace.metadata.name,
           labels: {
             name: website.name
           },
