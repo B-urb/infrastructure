@@ -13,7 +13,7 @@ export function createIngresses(webservices: Array<WebService>): Array<k8s.netwo
   "cert-manager.io/cluster-issuer": "letsencrypt",
             ...webservice.ingressAnnotations
         },
-          namespace: namespaceBurban.metadata.name
+          namespace: webservice.namespace.metadata.name
         },
 
             spec: {

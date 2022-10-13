@@ -10,7 +10,7 @@ export function createService(webservices: Array<WebService>): Array<k8s.core.v1
       new k8s.core.v1.Service(webservice.name, {
         "metadata": {
           name: webservice.name,
-          namespace: namespaceBurban.metadata.name
+          namespace: webservice.namespace.metadata.name
         },
         "spec": {
           "ports": [
