@@ -33,7 +33,7 @@ function createGitlabSecretBahrenberg(username: string, token: string): k8s.core
   let encodedSecret = Buffer.from(JSON.stringify(secretData)).toString('base64')
   console.log(encodedSecret);
 
-  return new k8s.core.v1.Secret('gitlab-pull-secret', {
+  return new k8s.core.v1.Secret('gitlab-pull-secret-bahrenberg', {
     metadata: {
       namespace: namespaceBahrenberg.metadata.name
     },
