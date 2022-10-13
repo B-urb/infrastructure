@@ -1,8 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
 import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "./types/WebService";
-import {secret} from "@pulumi/pulumi";
-import { gitlabSecret} from "./Secrets";
+
 
 
 const env = getEnv("development")
@@ -61,7 +60,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
                 }
               ],
               imagePullSecrets: [
-                {"name": gitlabSecret.metadata.name}
+                {"name": website.gitlabSecret.metadata.name}
               ]
 
             }

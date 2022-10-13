@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes";
-import {namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
+import {namespaceBahrenberg, namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
@@ -22,6 +22,27 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
       }
     });
   }
+//TODO: Generalize function create secret
+function createGitlabSecretBahrenberg(username: string, token: string): k8s.core.v1.Secret {
+  let secretData  = {
+    "auths":
+        {
+          "registry.gitlab.com":
+              {"auth": Buffer.from(username + ":" + token).toString('base64')}
+        }};
+  let encodedSecret = Buffer.from(JSON.stringify(secretData)).toString('base64')
+  console.log(encodedSecret);
+
+  return new k8s.core.v1.Secret('gitlab-pull-secret', {
+    metadata: {
+      namespace: namespaceBahrenberg.metadata.name
+    },
+    type: "kubernetes.io/dockerconfigjson",
+    data: {
+      ".dockerconfigjson": encodedSecret
+    }
+  });
+}
 
   function createDirectusS3Secret(userKey: string, userSecret: string) {
   return new k8s.core.v1.Secret("directus-release-s3", {
@@ -71,3 +92,4 @@ export const etcdSecret = createEtcdSecret(etcdRootPassword);
 export const mariaDbBackupSecret = createMariaDBBackupSecret(mariaDBBackupUser, mariaDBBackupPassword);
 export const directusS3Secret = createDirectusS3Secret(s3UserKey, s3UserSecret);
 export const gitlabSecret = createGitlabSecret("pulumi",pullSecret);
+export const bahrenbergGitlab = createGitlabSecretBahrenberg("pulumi",pullSecret)
