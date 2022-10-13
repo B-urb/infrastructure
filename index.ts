@@ -20,9 +20,9 @@ let ws3 = new WebService("webcv-experimental", "experimental.burban.me",namespac
 let ws4 = new WebService("website-dev", "tischlerei-bahrenberg.burban.me", namespaceBahrenberg, "registry.gitlab.com/a9668/bahrenberg/website", "v1.0.0-rc.1", keelAnnotationsDev, basicAuthAnnotation);
 
 
-createDeployments(new Array<WebService>(ws1, ws2,ws3));
-createService(new Array<WebService>(ws1, ws2, ws3));
-createIngresses(new Array<WebService>(ws1, ws2, ws3));
+createDeployments(new Array<WebService>(ws1, ws2,ws3, ws4));
+createService(new Array<WebService>(ws1, ws2, ws3, ws4));
+createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4));
 
 let gitlabRunner = createGitlabRunner();
 let directus = createDirectus();
