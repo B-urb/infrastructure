@@ -1,6 +1,7 @@
 import * as k8s from "@pulumi/kubernetes";
 import {namespaceBahrenberg, namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
 import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
+import {Secret} from "@pulumi/kubernetes/core/v1";
 
 
 function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
@@ -110,7 +111,7 @@ function createBasicAuthSecret(user: string, password: string) {
   })
 }
 
-function createMiddleware() {
+function createMiddleware(secret: Secret) {
   return new k8s.apiextensions.CustomResource("middleware-ba", {
     apiVersion: "traefik.containo.us/v1alpha1",
     kind: "Middleware",
@@ -120,7 +121,7 @@ function createMiddleware() {
     },
     spec: {
       basicAuth: {
-        secret: "burban-basic"
+        secret: secret.metadata.name
       }
     }
   })
@@ -136,7 +137,8 @@ const etcdRootPassword = process.env.CI_DB_ROOT_PASSWORD!;
 const basicAuthUser = process.env.CI_BASIC_AUTH_USER!;
 const basicAuthPassword = process.env.CI_BASIC_AUTH_PASSWORD!;
 
-createBasicAuthSecret(basicAuthUser, basicAuthPassword);
+const baSecret = createBasicAuthSecret(basicAuthUser, basicAuthPassword);
+const middleware = createMiddleware(baSecret)
 
 export const etcdSecret = createEtcdSecret(etcdRootPassword);
 export const mariaDbBackupSecret = createMariaDBBackupSecret(mariaDBBackupUser, mariaDBBackupPassword);
