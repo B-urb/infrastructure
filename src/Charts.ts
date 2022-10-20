@@ -21,7 +21,7 @@ export function createDirectus() {
         values: {
           "image": {
             //"repository":"registry.gitlab.com/privateprojectsbu/directus",
-            "tag":"9.14.5",
+            "tag":"9.18.1",
             "pullSecrets": [
               {name: gitlabSecret.metadata.name}
                 ]
@@ -79,7 +79,7 @@ export function createDirectus() {
             },
             {
               name: "CORS_ORIGIN",
-              value: "https://burban.me,https://dev.burban.me"
+              value: "https://burban.me,https://dev.burban.me,https://dev.tischlerei-bahrenberg.de,https://tischlerei-bahrenberg.de"
             },
             {
               name: "ADMIN_PASSWORD",
