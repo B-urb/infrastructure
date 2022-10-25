@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes"
-import {namespacePlausible} from "./kubernetes/namespace";
+import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 const plausibleImage = "docker pull plausible/analytics:stable"
 
@@ -10,13 +10,15 @@ export function createPlausible() {
 }
 
 
-function createPlausibleManual() {
+function createPlausibleManual(namespace: Namespace) {
   const deployment = new k8s.apps.v1.Deployment("plausible-analytics", {
     metadata: {
-      namespace: namespacePlausible.metadata.namespace
+      namespace: namespace.metadata.namespace
     },
-    spec: {
-      environment: {}
+    "spec": {
+      "strategy": {
+        "type": "Recreate"
+      },
     }
   })
 

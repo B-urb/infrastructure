@@ -1,24 +1,33 @@
 import {createDirectus} from "../resources/directus";
 import {createPostgres} from "../resources/charts/Postgres";
-import {createPlausible} from "../resources/plausible";
 import {createEtcd} from "../resources/charts/Etcd";
 import {createGitlabRunner} from "../resources/charts/GitlabRunner";
+import {
+  createKubernetesCluster, directusS3Secret,
+  etcdSecret, namespaceDirectus,
+  namespaceEtcd,
+  namespaceGitlab,
+  namespacePostgres
+} from "../resources/kubernetes";
+import {adminMail, adminPassword} from "../util/env";
 
 
 export const kubernetesCluster = createKubernetesCluster()
 
 
 // Databases Setup
-export const postgres = createPostgres()
-export const etcd = createEtcd()
-export const redis = createRedis()
+export const postgres = createPostgres(namespacePostgres)
+export const etcd = createEtcd(namespaceEtcd, etcdSecret)
+//export const redis = createRedis()
 
 // Create Persistent Storages
-export const s3 = createS3()
+//export const s3 = createS3()
 
 // Create Gitlab Runner
-export const gitlabRunner = createGitlabRunner()
+export const gitlabRunner = createGitlabRunner(namespaceGitlab)
 
 // Create apps for general usage
-export const directus = createDirectus("helm");
-export const plausible = createPlausible()
+const directusConfig =  {namespace: namespaceDirectus, secret: directusS3Secret, vars:{ adminMail, adminPassword }}
+export const directus = createDirectus("helm", directusConfig);
+
+//export const plausible = createPlausible()

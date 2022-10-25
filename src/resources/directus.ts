@@ -1,8 +1,8 @@
 import {createDirectusHelmChart} from "./charts/Directus";
-import {Source} from "../types/types";
+import {DirectusConfig, Source} from "../types/types";
 
 
-export function createDirectus(by: Source) {
+export function createDirectus(by: Source, config: DirectusConfig) {
    switch (by) {
      case "manual":
        console.log("Not Implemented")
@@ -14,7 +14,7 @@ export function createDirectus(by: Source) {
        console.log("Not Implemented")
        return null
      case "helm":
-       return createDirectusHelmChart()
+       return createDirectusHelmChart(config.namespace, config.secret, config.vars)
      case "aws":
        console.log("Not Implemented")
        return null

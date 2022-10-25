@@ -26,8 +26,3 @@ export function createService(webservices: Array<WebService>): Array<k8s.core.v1
         }
       }))
 }
-
-
-
-
-export const directusS3Service = createDirectusS3Service()

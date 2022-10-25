@@ -1,11 +1,11 @@
 import * as k8s from "@pulumi/kubernetes";
-import {namespaceEtcd} from "../kubernetes/namespace";
-import {etcdSecret} from "../kubernetes/Secrets";
+import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
-export function createEtcd() {
+
+export function createEtcd(namespace: Namespace, secret: Secret) {
   return new k8s.helm.v3.Chart("etcd", {
     chart: "etcd",
-    namespace: namespaceEtcd.metadata.name,
+    namespace: namespace.metadata.name,
     fetchOpts: {
       repo: "https://charts.bitnami.com/bitnami"
     },
@@ -14,7 +14,7 @@ export function createEtcd() {
           {
             "rbac": {
               create: false,
-              "existingSecret": etcdSecret.metadata.name,
+              "existingSecret": secret.metadata.name,
               "existingSecretPasswordKey": "root-password"
             },
             client: {

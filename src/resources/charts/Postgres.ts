@@ -1,16 +1,15 @@
-import {namespacePostgres} from "../kubernetes/namespace";
 import * as k8s from "@pulumi/kubernetes"
-import {mariaDbBackupSecret} from "../kubernetes/Secrets";
+import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 const dbPassword = process.env.CI_DB_PASSWORD
 const dbUsername = process.env.CI_DB_USERNAME
 const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
 
-export function createPostgres() {
+export function createPostgres(namespace: Namespace) {
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "postgres",
-        namespace: namespacePostgres.metadata.name,
+        namespace: namespace.metadata.name,
         fetchOpts: {
           repo: "https://charts.bitnami.com/bitnami",
         },

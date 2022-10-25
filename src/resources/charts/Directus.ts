@@ -1,15 +1,9 @@
 import * as k8s from "@pulumi/kubernetes"
-import {directusS3Secret, gitlabSecret} from "../kubernetes/Secrets";
-import {Namespace} from "@pulumi/kubernetes/core/v1";
+import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
-const adminPassword = process.env.CI_ADMIN_PASSWORD
-const adminMail = process.env.CI_ADMIN_EMAIL
-const mariaDBPassword = process.env.CI_DB_PASSWORD
-const mariaDBUsername = process.env.CI_DB_USERNAME
-const redisDBPassword = process.env.CI_REDIS_PASSWORD
-const mariaDBRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
-export function createDirectusHelmChart(namespace: Namespace) {
+
+export function createDirectusHelmChart(namespace: Namespace, secret: Secret, directusConfig: {adminMail: string, adminPassword: string }) {
 
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "directus",
@@ -21,9 +15,6 @@ export function createDirectusHelmChart(namespace: Namespace) {
           "image": {
             //"repository":"registry.gitlab.com/privateprojectsbu/directus",
             "tag":"9.18.1",
-            "pullSecrets": [
-              {name: gitlabSecret.metadata.name}
-                ]
           },
           "ingress": {
             "enabled": "true",
@@ -59,7 +50,7 @@ export function createDirectusHelmChart(namespace: Namespace) {
             },
             {
               name: "ADMIN_EMAIL",
-              value: adminMail
+              value: directusConfig.adminMail
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
@@ -82,7 +73,7 @@ export function createDirectusHelmChart(namespace: Namespace) {
             },
             {
               name: "ADMIN_PASSWORD",
-              value: adminPassword
+              value: directusConfig.adminPassword
             },
             {name: "DB_CLIENT", value: "mysql"},
             {name: "DB_HOST", value: "directus-release-mariadb"},
@@ -94,30 +85,27 @@ export function createDirectusHelmChart(namespace: Namespace) {
             {name: "STORAGE_LOCATIONS", value: "s3"},
             {name: "STORAGE_S3_DRIVER", value: "s3" },
             {name: "STORAGE_S3_ENDPOINT", value: "http://minio.minio"},
-            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
-            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
+            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:secret.metadata.name, key:"user-key"}}},
+            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: secret.metadata.name, key:"user-secret"}}},
             {name: "STORAGE_S3_BUCKET", value: "directus"},
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
           ],
           "mariadb": {
             enabled: false, // manage creation in pulumi not via directus helm chart
-            "auth": {
+       /*     "auth": {
               "database": "directus",
               "username": mariaDBUsername,
               "password": mariaDBPassword,
               "rootPassword": mariaDBRootPassword
-            }
+            }*/
           },
           "redis": {
             enabled: false, // manage creation in pulumi not via directus helm chart
-            "auth": {
+        /*    "auth": {
               "password": redisDBPassword
-            }
+            }*/
           },
-
-
         },
-
       }
   );
 

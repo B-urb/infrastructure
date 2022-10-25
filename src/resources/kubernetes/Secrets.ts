@@ -1,10 +1,9 @@
 import * as k8s from "@pulumi/kubernetes";
-import {namespaceBahrenberg, namespaceBurban, namespaceDirectus, namespaceEtcd} from "./namespace";
 import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
-import {Secret} from "@pulumi/kubernetes/core/v1";
+import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 
-function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
+export function createGitlabSecret(username: string, token: string, namespace: Namespace): k8s.core.v1.Secret {
   let secretData = {
     "auths":
         {
@@ -17,7 +16,7 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
 
   return new k8s.core.v1.Secret('gitlab-pull-secret', {
     metadata: {
-      namespace: namespaceBurban.metadata.name
+      namespace: namespace.metadata.name
     },
     type: "kubernetes.io/dockerconfigjson",
     data: {
@@ -27,7 +26,7 @@ function createGitlabSecret(username: string, token: string): k8s.core.v1.Secret
 }
 
 //TODO: Generalize function create secret
-function createGitlabSecretBahrenberg(username: string, token: string): k8s.core.v1.Secret {
+export function createGitlabSecretBahrenberg(username: string, token: string, namespace: Namespace): k8s.core.v1.Secret {
   let secretData = {
     "auths":
         {
@@ -40,7 +39,7 @@ function createGitlabSecretBahrenberg(username: string, token: string): k8s.core
 
   return new k8s.core.v1.Secret('gitlab-pull-secret-bahrenberg', {
     metadata: {
-      namespace: namespaceBahrenberg.metadata.name
+      namespace: namespace.metadata.name
     },
     type: "kubernetes.io/dockerconfigjson",
     data: {
@@ -49,11 +48,11 @@ function createGitlabSecretBahrenberg(username: string, token: string): k8s.core
   });
 }
 
-function createDirectusS3Secret(userKey: string, userSecret: string) {
+export function createDirectusS3Secret(userKey: string, userSecret: string, namespace: Namespace) {
   return new k8s.core.v1.Secret("directus-release-s3", {
     metadata: {
       name: "directus-s3",
-      namespace: namespaceDirectus.metadata.name
+      namespace: namespace.metadata.name
     },
     stringData: {
       "user-key": userKey,
@@ -62,11 +61,11 @@ function createDirectusS3Secret(userKey: string, userSecret: string) {
   })
 }
 
-function createEtcdSecret(rootPassword: string) {
+export function createEtcdSecret(rootPassword: string, namespace: Namespace) {
   return new k8s.core.v1.Secret("etcd", {
     metadata: {
       name: "etcd",
-      namespace: namespaceEtcd.metadata.name
+      namespace: namespace.metadata.name
     },
     stringData: {
       "root-password": rootPassword
@@ -74,11 +73,11 @@ function createEtcdSecret(rootPassword: string) {
   })
 }
 
-function createMariaDBBackupSecret(user: string, password: string) {
+export function createMariaDBBackupSecret(user: string, password: string, namespace: Namespace) {
   return new k8s.core.v1.Secret("mariadb-backup", {
     metadata: {
       name: "mariadb-backup",
-      namespace: namespaceDirectus.metadata.name
+      namespace: namespace.metadata.name
     },
     stringData: {
       "user": user,
@@ -87,7 +86,7 @@ function createMariaDBBackupSecret(user: string, password: string) {
   })
 }
 
-function createBasicAuthSecret(user: string, password: string) {
+export function createBasicAuthSecret(user: string, password: string) {
 
   const credentials = new Htpasswd('credentials', {
     algorithm: HtpasswdAlgorithm.Bcrypt,
@@ -111,7 +110,7 @@ function createBasicAuthSecret(user: string, password: string) {
   })
 }
 
-function createMiddleware(secret: Secret) {
+export function createMiddleware(secret: Secret) {
   return new k8s.apiextensions.CustomResource("middleware-ba", {
     apiVersion: "traefik.containo.us/v1alpha1",
     kind: "Middleware",
@@ -128,20 +127,4 @@ function createMiddleware(secret: Secret) {
 }
 
 
-const pullSecret = process.env.CI_PULL_SECRET!
-const s3UserKey = process.env.CI_DIRECTUS_S3_KEY!
-const s3UserSecret = process.env.CI_DIRECTUS_S3_SECRET!
-const mariaDBBackupUser = process.env.CI_BACKUP_USER!
-const mariaDBBackupPassword = process.env.CI_BACKUP_PASSWORD!
-const etcdRootPassword = process.env.CI_DB_ROOT_PASSWORD!;
-const basicAuthUser = process.env.CI_BASIC_AUTH_USER!;
-const basicAuthPassword = process.env.CI_BASIC_AUTH_PASSWORD!;
 
-const baSecret = createBasicAuthSecret(basicAuthUser, basicAuthPassword);
-const middleware = createMiddleware(baSecret)
-
-export const etcdSecret = createEtcdSecret(etcdRootPassword);
-export const mariaDbBackupSecret = createMariaDBBackupSecret(mariaDBBackupUser, mariaDBBackupPassword);
-export const directusS3Secret = createDirectusS3Secret(s3UserKey, s3UserSecret);
-export const gitlabSecret = createGitlabSecret("pulumi", pullSecret);
-export const bahrenbergGitlab = createGitlabSecretBahrenberg("pulumi", pullSecret)
