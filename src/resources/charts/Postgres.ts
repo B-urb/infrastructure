@@ -1,12 +1,13 @@
-import {namespacePostgres} from "./namespace";
+import {namespacePostgres} from "../kubernetes/namespace";
 import * as k8s from "@pulumi/kubernetes"
-import {mariaDbBackupSecret} from "./Secrets";
+import {mariaDbBackupSecret} from "../kubernetes/Secrets";
 
 const dbPassword = process.env.CI_DB_PASSWORD
 const dbUsername = process.env.CI_DB_USERNAME
 const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
-export function createPostgres() {
 
+
+export function createPostgres() {
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "postgres",
         namespace: namespacePostgres.metadata.name,
@@ -30,4 +31,3 @@ export function createPostgres() {
   );
 }
 
-export const postgres = createPostgres();

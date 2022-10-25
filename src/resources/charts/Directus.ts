@@ -1,7 +1,6 @@
 import * as k8s from "@pulumi/kubernetes"
-import {directusS3Secret, etcdSecret, gitlabSecret} from "./Secrets";
-import {namespaceDirectus, namespaceEtcd, namespaceGitlab} from "./namespace";
-import {serviceAccount} from "./Serviceaccounts";
+import {directusS3Secret, gitlabSecret} from "../kubernetes/Secrets";
+import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 const adminPassword = process.env.CI_ADMIN_PASSWORD
 const adminMail = process.env.CI_ADMIN_EMAIL
@@ -10,11 +9,11 @@ const mariaDBUsername = process.env.CI_DB_USERNAME
 const redisDBPassword = process.env.CI_REDIS_PASSWORD
 const mariaDBRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
-export function createDirectus() {
+export function createDirectusHelmChart(namespace: Namespace) {
 
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "directus",
-        namespace: namespaceDirectus.metadata.name,
+        namespace: namespace.metadata.name,
         fetchOpts: {
           repo: "https://directus-community.github.io/helm-chart",
         },
@@ -101,6 +100,7 @@ export function createDirectus() {
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
           ],
           "mariadb": {
+            enabled: false, // manage creation in pulumi not via directus helm chart
             "auth": {
               "database": "directus",
               "username": mariaDBUsername,
@@ -109,6 +109,7 @@ export function createDirectus() {
             }
           },
           "redis": {
+            enabled: false, // manage creation in pulumi not via directus helm chart
             "auth": {
               "password": redisDBPassword
             }
@@ -122,63 +123,4 @@ export function createDirectus() {
 
 }
 
-export function createEtcd() {
-  return new k8s.helm.v3.Chart("etcd", {
-    chart: "etcd",
-    namespace: namespaceEtcd.metadata.name,
-    fetchOpts: {
-      repo: "https://charts.bitnami.com/bitnami"
-    },
-    values: {
-      "auth":
-          {
-            "rbac": {
-              create: false,
-              "existingSecret": etcdSecret.metadata.name,
-              "existingSecretPasswordKey": "root-password"
-            },
-            client: {
-              //secureTransport: true,
-              //useAutoTLS: true
-              //existingSecret: etcdSecret.metadata.name
-            }
-          },
-      "persistence": {
-        "storageClass":"local-path",
-        "size": "3Gi"
-      },
-     nodeSelector: {
-        owner: "bjoern"
-     }
 
-    }
-  })
-}
-
-const runnerToken = process.env.RUNNER_REGISTRATION_TOKEN!
-const runnerConfig = process.env.RUNNER_CONFIG!
-export function createGitlabRunner() {
-  return new k8s.helm.v3.Chart("gitlab-runner", {
-    chart: "gitlab-runner",
-    namespace: namespaceGitlab.metadata.name,
-    fetchOpts: {
-      repo: "https://charts.gitlab.io/"
-    },
-    values: {
-      gitlabUrl: "https://gitlab.com",
-      runnerRegistrationToken: runnerToken,
-
-      nodeSelector: {
-        owner: "bjoern"
-      },
-      rbac: {
-        create: false,
-        serviceAccountName: serviceAccount.metadata.name
-      },
-      runners: {
-        config: runnerConfig,
-        privileged: true
-      }
-    }
-  })
-}
