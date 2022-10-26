@@ -26,7 +26,7 @@ export function createDirectus() {
               {name: gitlabSecret.metadata.name}
                 ]
           },
-          "ingress": {
+          "ingre1ss": {
             "enabled": "true",
             "tls": [{
               "secretName": "directus" + "-tls",
@@ -48,7 +48,7 @@ export function createDirectus() {
             }
           },
           "serviceAccount": {
-            "create": "false"
+            "create": false
           },
           "extraEnvVars": [{
             name: "KEY",

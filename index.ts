@@ -4,8 +4,10 @@ import {createIngresses} from "./src/Ingress";
 import {createService} from "./src/Service";
 import {createDirectus, createEtcd, createGitlabRunner} from "./src/Charts";
 import createCronjob from "./src/CronJob";
-import {namespaceBahrenberg, namespaceBurban} from "./src/namespace";
+import {namespaceBahrenberg, namespaceBurban, namespaceDirectus} from "./src/namespace";
 import {bahrenbergGitlab, gitlabSecret} from "./src/Secrets";
+import {postgres} from "./src/Postgres";
+import {createDirectusDeployments} from "./src/Directus";
 
 let cronjob = createCronjob()
 let keelAnnotationsExp = {"keel.sh/policy": "all"}
@@ -22,13 +24,19 @@ let ws1 = new WebService("webcv-dev", "dev.burban.me", namespaceBurban, "registr
 let ws2 = new WebService("webcv-prod", "burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "v1.1.2", gitlabSecret, keelAnnotationsProd, {});
 let ws3 = new WebService("webcv-experimental", "experimental.burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "feature-next", gitlabSecret, keelAnnotationsExp, basicAuthAnnotation);
 let ws4 = new WebService("website-dev", "dev.tischlerei-bahrenberg.de", namespaceBahrenberg, "registry.gitlab.com/a9668/bahrenberg/website", "v1.0.0-rc.1", bahrenbergGitlab, keelAnnotationsDev, basicAuthAnnotation);
-
+let directusMan = new WebService("directus", "cmstest.burban.me", namespaceDirectus, "directus/directus", "9.19.2", gitlabSecret, keelAnnotationsProd, {});
 
 createDeployments(new Array<WebService>(ws1, ws2, ws3, ws4));
-createService(new Array<WebService>(ws1, ws2, ws3, ws4));
-createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4));
+createService(new Array<WebService>(ws1, ws2, ws3, ws4, directusMan));
+createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4, directusMan));
+
+
+//Test directus
+createDirectusDeployments(directusMan);
+
 
 let gitlabRunner = createGitlabRunner();
 let directus = createDirectus();
 let etcd = createEtcd();
+let postgres_L = postgres
 //console.log(directus.ready);
