@@ -45,6 +45,9 @@ export function createDirectusDeployments(website: WebService): Deployment {
           }
         },
         "spec": {
+          "nodeSelector": {
+            "owner": "felix"
+          },
           "containers": [
             {
               "name": website.name,
