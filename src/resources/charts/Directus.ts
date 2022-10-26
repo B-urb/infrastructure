@@ -38,7 +38,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
             }
           },
           "serviceAccount": {
-            "enabled": "false"
+            "create": "false"
           },
           "extraEnvVars": [{
             name: "KEY",
