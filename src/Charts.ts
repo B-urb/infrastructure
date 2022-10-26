@@ -48,7 +48,7 @@ export function createDirectus() {
             }
           },
           "serviceAccount": {
-            "enabled": "false"
+            "create": "false"
           },
           "extraEnvVars": [{
             name: "KEY",
