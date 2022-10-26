@@ -59,6 +59,7 @@ export function createDirectusDeployments(website: WebService): Deployment {
                   name: "SECRET",
                   value: "test"
                 },
+                {name: "PUBLIC_URL", value: "https://" + website.url},
                 {
                   name: "ADMIN_EMAIL",
                   value: adminMail
