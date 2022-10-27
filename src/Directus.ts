@@ -49,13 +49,13 @@ export function createDirectusDeployments(website: WebService): Deployment {
           "nodeSelector": {
             "owner": "felix"
           },
-/*          dnsConfig: {
-            options: [{
-              name: "ndots",
-              value: "5"
-            }]
-          },
-          dnsPolicy: "ClusterFirst",*/
+          /*          dnsConfig: {
+                      options: [{
+                        name: "ndots",
+                        value: "5"
+                      }]
+                    },
+                    dnsPolicy: "ClusterFirst",*/
           "containers": [
             {
               "name": website.name,
@@ -127,8 +127,19 @@ export function createDirectusDeployments(website: WebService): Deployment {
                 {
                   "name": "http",
                   "containerPort": 8055
+                },],
+              "livenessProbe": {
+                httpGet: {
+                  path: "/",
+                  port: "http"
                 }
-              ]
+              },
+              readinessProbe: {
+                httpGet: {
+                  path: "/",
+                  port: "http"
+                }
+              }
             }
           ],
           imagePullSecrets: [
