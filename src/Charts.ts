@@ -29,7 +29,7 @@ export function createDirectus() {
           "ingress": {
             "enabled": "true",
             "tls": [{
-              "secretName": "directus" + "-tls",
+              "secretName": "directus" + "-legacy-tls",
               "hosts": ["cms-legacy.burban.me"]
             }],
             "hosts": [

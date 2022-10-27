@@ -49,13 +49,13 @@ export function createDirectusDeployments(website: WebService): Deployment {
           "nodeSelector": {
             "owner": "felix"
           },
-          dnsConfig: {
+/*          dnsConfig: {
             options: [{
               name: "ndots",
               value: "5"
             }]
           },
-          dnsPolicy: "ClusterFirst",
+          dnsPolicy: "ClusterFirst",*/
           "containers": [
             {
               "name": website.name,
