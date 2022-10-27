@@ -38,6 +38,7 @@ export function createDirectusDeployments(website: WebService): Deployment {
           "name": website.name
         }
       },
+
       "template": {
         "metadata": {
           "labels": {
@@ -48,6 +49,13 @@ export function createDirectusDeployments(website: WebService): Deployment {
           "nodeSelector": {
             "owner": "felix"
           },
+          dnsConfig: {
+            options: [{
+              name: "ndots",
+              value: "5"
+            }]
+          },
+          dnsPolicy: "ClusterFirst",
           "containers": [
             {
               "name": website.name,
@@ -90,9 +98,9 @@ export function createDirectusDeployments(website: WebService): Deployment {
                   name: "ADMIN_PASSWORD",
                   value: adminPassword
                 },
-                {name: "DB_CLIENT", value: "mysql"},
-                {name: "DB_HOST", value: "directus-release-mariadb"},
-                {name: "DB_PORT", value: "3306"},
+                {name: "DB_CLIENT", value: "pg"},
+                {name: "DB_HOST", value: "postgres-postgresql.postgres.svc.cluster.local"},
+                {name: "DB_PORT", value: "5432"},
                 {
                   name: "DB_PASSWORD",
                   valueFrom: {secretKeyRef: {name: "directus-release-mariadb", key: "mariadb-password"}}
@@ -128,6 +136,7 @@ export function createDirectusDeployments(website: WebService): Deployment {
           ]
 
         }
+
       }
     }
   })

@@ -30,7 +30,7 @@ export function createDirectus() {
             "enabled": "true",
             "tls": [{
               "secretName": "directus" + "-tls",
-              "hosts": ["cms.burban.me"]
+              "hosts": ["cms-legacy.burban.me"]
             }],
             "hosts": [
               {
@@ -40,7 +40,7 @@ export function createDirectus() {
                     "path": "/"
                   }
                 ],
-                "host": 'cms.burban.me'
+                "host": 'cms-legacy.burban.me'
               }],
             "annotations": {
               "kubernetes.io/ingress.class": "traefik",
@@ -64,7 +64,7 @@ export function createDirectus() {
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
-              value: "array:'self',https://cms.burban.me"
+              value: "array:'self',https://cms-legacy.burban.me"
             }, {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
               value: "array:'self', 'unsafe-inline'"

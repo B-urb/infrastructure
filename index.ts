@@ -24,7 +24,7 @@ let ws1 = new WebService("webcv-dev", "dev.burban.me", namespaceBurban, "registr
 let ws2 = new WebService("webcv-prod", "burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "v1.1.2", gitlabSecret, keelAnnotationsProd, {});
 let ws3 = new WebService("webcv-experimental", "experimental.burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "feature-next", gitlabSecret, keelAnnotationsExp, basicAuthAnnotation);
 let ws4 = new WebService("website-dev", "dev.tischlerei-bahrenberg.de", namespaceBahrenberg, "registry.gitlab.com/a9668/bahrenberg/website", "v1.0.0-rc.1", bahrenbergGitlab, keelAnnotationsDev, basicAuthAnnotation);
-let directusMan = new WebService("directus", "cmstest.burban.me", namespaceDirectus, "directus/directus", "9.19.2", gitlabSecret, keelAnnotationsProd, {});
+let directusMan = new WebService("directus", "cms.burban.me", namespaceDirectus, "directus/directus", "9.19.2", gitlabSecret, keelAnnotationsProd, {});
 
 createDeployments(new Array<WebService>(ws1, ws2, ws3, ws4));
 createService(new Array<WebService>(ws1, ws2, ws3, ws4, directusMan));
