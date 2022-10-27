@@ -99,7 +99,7 @@ export function createDirectusDeployments(website: WebService): Deployment {
                   value: adminPassword
                 },
                 {name: "DB_CLIENT", value: "pg"},
-                {name: "DB_HOST", value: "postgres-postgresql.postgres.svc.cluster.local"},
+                {name: "DB_HOST", value: "postgres-postgresql.postgres"},
                 {name: "DB_PORT", value: "5432"},
                 {
                   name: "DB_PASSWORD",
