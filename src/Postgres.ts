@@ -9,6 +9,7 @@ const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
   return new k8s.helm.v3.Chart("postgres", {
         chart: "postgresql",
+        version: "11.9.13",
         namespace: namespacePostgres.metadata.name,
         fetchOpts: {
           repo: "https://charts.bitnami.com/bitnami",
