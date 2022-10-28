@@ -123,8 +123,11 @@ export function createDirectusDeployments(website: WebService): Deployment {
                 },
                 {name: "STORAGE_S3_BUCKET", value: "directus"},
                 {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
-                {name: "EMAIL_MAILGUN_DOMAIN", value:"mg.burban.me"},
-                {name: "EMAIL_MAILGUN_API_KEY",value:mailgunKey}
+                {name: "EMAIL_VERIFY_SETUP", value: "true"},
+                {name: "EMAIL_FROM", value: "no-reply@cms.burban.me"},
+                {name: "EMAIL_TRANSPORT", value: "mailgun"},
+                {name: "EMAIL_MAILGUN_DOMAIN", value: "mg.burban.me"},
+                {name: "EMAIL_MAILGUN_API_KEY", value: mailgunKey}
 
               ],
               "ports": [
