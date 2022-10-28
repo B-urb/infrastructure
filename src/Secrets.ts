@@ -36,7 +36,7 @@ function createDirectusGitlabSecret(username: string, token: string): k8s.core.v
   let encodedSecret = Buffer.from(JSON.stringify(secretData)).toString('base64')
   console.log(encodedSecret);
 
-  return new k8s.core.v1.Secret('gitlab-pull-secret', {
+  return new k8s.core.v1.Secret('gitlab-pull-secret-directus', {
     metadata: {
       namespace: namespaceDirectus.metadata.name
     },
