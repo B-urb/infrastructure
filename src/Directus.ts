@@ -12,6 +12,8 @@ const mariaDBPassword = process.env.CI_DB_PASSWORD
 const mariaDBUsername = process.env.CI_DB_USERNAME
 const redisDBPassword = process.env.CI_REDIS_PASSWORD
 const mariaDBRootPassword = process.env.CI_DB_ROOT_PASSWORD;
+const mailgunKey = process.env.CI_MAILGUN_KEY;
+
 
 export function createDirectusDeployments(website: WebService): Deployment {
   const appLabels = {};
@@ -120,7 +122,9 @@ export function createDirectusDeployments(website: WebService): Deployment {
                   valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key: "user-secret"}}
                 },
                 {name: "STORAGE_S3_BUCKET", value: "directus"},
-                {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"}
+                {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
+                {name: "EMAIL_MAILGUN_DOMAIN", value:"mg.burban.me"},
+                {name: "EMAIL_MAILGUN_API_KEY",value:mailgunKey}
 
               ],
               "ports": [
