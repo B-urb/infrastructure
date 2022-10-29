@@ -1,4 +1,8 @@
 import * as definitions from "./src/definitions/general"
+import * as bjoern from "./src/contributors/bjoern"
+import {createBjoern} from "./src/contributors/bjoern";
+import {createGeneral} from "./src/definitions/general";
 
-console.log(definitions.directus?.ready);
+createGeneral()
+createBjoern()
 console.log("Start")

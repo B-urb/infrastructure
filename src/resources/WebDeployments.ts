@@ -1,6 +1,8 @@
 import * as k8s from "@pulumi/kubernetes"
 import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "../types/WebService";
+import {keelAnnotationsProd} from "../util/globals";
+import {gitlabSecretDi} from "./kubernetes";
 
 
 
@@ -20,7 +22,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
           "annotations": {
             "keel.sh/trigger": "poll",
             "keel.sh/pollSchedule": "@every 5m",
-            ...website.keelAnnotations
+            ...keelAnnotationsProd
 
           }
         },
@@ -60,7 +62,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
                 }
               ],
               imagePullSecrets: [
-                {"name": website.gitlabSecret.metadata.name}
+                {"name": "gitlab-pull-secret"+ website.namespace.metadata.name}
               ]
 
             }

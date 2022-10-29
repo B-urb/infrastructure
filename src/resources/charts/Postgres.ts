@@ -6,7 +6,7 @@ const dbUsername = process.env.CI_DB_USERNAME
 const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
 
-export function createPostgres(namespace: Namespace) {
+export function createPostgresHelm(namespace: Namespace) {
   return new k8s.helm.v3.Chart("postgres", {
         chart: "postgresql",
         namespace: namespace.metadata.name,

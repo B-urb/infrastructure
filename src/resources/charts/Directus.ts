@@ -1,10 +1,12 @@
 import * as k8s from "@pulumi/kubernetes"
-import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+import {directusConfig} from "../configs";
+import {directusSecret} from "../secrets";
 
 
 
 
-export function createDirectusHelmChart(namespace: Namespace, secret: Secret, directusConfig: {adminMail: string, adminPassword: string }) {
+export function createDirectusHelmChart(namespace: Namespace, secret: Secret, config: ConfigMap) {
 
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "directus",
@@ -16,9 +18,6 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
           "image": {
             //"repository":"registry.gitlab.com/privateprojectsbu/directus",
             "tag":"9.18.1",
-            "pullSecrets": [
-              {name: gitlabSecret.metadata.name}
-                ]
           },
           "ingress": {
             "enabled": "true",
@@ -54,7 +53,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
             },
             {
               name: "ADMIN_EMAIL",
-              value: directusConfig.adminMail
+              value: directusSecret["admin-mail"]
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
@@ -77,7 +76,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
             },
             {
               name: "ADMIN_PASSWORD",
-              value: directusConfig.adminPassword
+              value: directusSecret["admin-password"]
             },
             {name: "DB_CLIENT", value: "mysql"},
             {name: "DB_HOST", value: "directus-release-mariadb"},
