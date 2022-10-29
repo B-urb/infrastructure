@@ -24,6 +24,27 @@ export function createGitlabSecret(username: string, token: string, namespace: N
     }
   });
 }
+function createDirectusGitlabSecret(username: string, token: string): k8s.core.v1.Secret {
+  let secretData = {
+    "auths":
+        {
+          "registry.gitlab.com":
+              {"auth": Buffer.from(username + ":" + token).toString('base64')}
+        }
+  };
+  let encodedSecret = Buffer.from(JSON.stringify(secretData)).toString('base64')
+  console.log(encodedSecret);
+
+  return new k8s.core.v1.Secret('gitlab-pull-secret-directus', {
+    metadata: {
+      namespace: namespaceDirectus.metadata.name
+    },
+    type: "kubernetes.io/dockerconfigjson",
+    data: {
+      ".dockerconfigjson": encodedSecret
+    }
+  });
+}
 
 //TODO: Generalize function create secret
 export function createGitlabSecretBahrenberg(username: string, token: string, namespace: Namespace): k8s.core.v1.Secret {

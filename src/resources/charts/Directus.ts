@@ -3,6 +3,7 @@ import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 
 
+
 export function createDirectusHelmChart(namespace: Namespace, secret: Secret, directusConfig: {adminMail: string, adminPassword: string }) {
 
   return new k8s.helm.v3.Chart("directus-release", {
@@ -15,12 +16,15 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
           "image": {
             //"repository":"registry.gitlab.com/privateprojectsbu/directus",
             "tag":"9.18.1",
+            "pullSecrets": [
+              {name: gitlabSecret.metadata.name}
+                ]
           },
           "ingress": {
             "enabled": "true",
             "tls": [{
-              "secretName": "directus" + "-tls",
-              "hosts": ["cms.burban.me"]
+              "secretName": "directus" + "-legacy-tls",
+              "hosts": ["cms-legacy.burban.me"]
             }],
             "hosts": [
               {
@@ -30,7 +34,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
                     "path": "/"
                   }
                 ],
-                "host": 'cms.burban.me'
+                "host": 'cms-legacy.burban.me'
               }],
             "annotations": {
               "kubernetes.io/ingress.class": "traefik",
@@ -38,7 +42,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
             }
           },
           "serviceAccount": {
-            "create": "false"
+            "create": false
           },
           "extraEnvVars": [{
             name: "KEY",
@@ -54,7 +58,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, di
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
-              value: "array:'self',https://cms.burban.me"
+              value: "array:'self',https://cms-legacy.burban.me"
             }, {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
               value: "array:'self', 'unsafe-inline'"
