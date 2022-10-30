@@ -2,6 +2,7 @@ import * as k8s from "@pulumi/kubernetes"
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {directusConfig} from "../configs";
 import {directusSecret} from "../secrets";
+import {dbPassword, dbRootPassword} from "../../util/env";
 
 
 
@@ -94,17 +95,17 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, co
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
           ],
           "mariadb": {
-            enabled: false, // manage creation in pulumi not via directus helm chart
-       /*     "auth": {
+            enabled: "true", // manage creation in pulumi not via directus helm chart
+            "auth": {
               "database": "directus",
-              "username": mariaDBUsername,
-              "password": mariaDBPassword,
-              "rootPassword": mariaDBRootPassword
-            }*/
+              "username": "directus",
+              "password": dbPassword,
+              "rootPassword": dbRootPassword // TODO: Remove
+            }
           },
           "redis": {
             enabled: false, // manage creation in pulumi not via directus helm chart
-        /*    "auth": {
+        /*   "auth": {
               "password": redisDBPassword
             }*/
           },

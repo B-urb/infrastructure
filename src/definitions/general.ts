@@ -34,6 +34,7 @@ export function createGeneral() {
     config: createDirectusConfig()
   }
   const directus = createDirectus("manual", directusConfig);
+  const dirHelm = createDirectus("helm", directusConfig)
 
 //export const plausible = createPlausible()
 }
