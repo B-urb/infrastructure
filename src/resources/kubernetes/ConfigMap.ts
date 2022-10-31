@@ -6,8 +6,13 @@ const appLabels = {};
 
 export function createDirectusConfig() {
   return new k8s.core.v1.ConfigMap("directus", {
-    metadata: { labels: appLabels },
+    metadata: {
+      namespace: "directus",
+      name: "directus"
+    },
+
     data: directusConfig
+  
   });
 
 }

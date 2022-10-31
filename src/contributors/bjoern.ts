@@ -13,7 +13,7 @@ export function createBjoern() {
   const namespaceBahrenberg = createNamespace("bahrenberg")
  let permRedirectAnnotation = {"traefik.ingress.kubernetes.io/redirect-permanent": "true"}
  let ws1 = new WebService("webcv-dev", "dev.burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "v1.2.2-rc.2", basicAuthAnnotation);
- let ws2 = new WebService("webcv-prod", "burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "v1.1.2", {});
+ let ws2 = new WebService("webcv-prod", "burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "v1.2.2", {});
  let ws3 = new WebService("webcv-experimental", "experimental.burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "feature-next", basicAuthAnnotation);
  let ws4 = new WebService("website-dev", "dev.tischlerei-bahrenberg.de", namespaceBahrenberg, "registry.gitlab.com/a9668/bahrenberg/website", "v1.0.0-rc.1", basicAuthAnnotation);
  const gitlabSecretB = createGitlabSecret("pulumi", env.pullSecret, "gitlab-pull-secret", namespaceBurban);
