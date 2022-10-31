@@ -1,0 +1,36 @@
+import * as k8s from "@pulumi/kubernetes";
+import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+
+
+export function createEtcd(namespace: Namespace, secret: Secret) {
+  return new k8s.helm.v3.Chart("etcd", {
+    chart: "etcd",
+    namespace: namespace.metadata.name,
+    fetchOpts: {
+      repo: "https://charts.bitnami.com/bitnami"
+    },
+    values: {
+      "auth":
+          {
+            "rbac": {
+              create: false,
+              "existingSecret": secret.metadata.name,
+              "existingSecretPasswordKey": "root-password"
+            },
+            client: {
+              //secureTransport: true,
+              //useAutoTLS: true
+              //existingSecret: etcdSecret.metadata.name
+            }
+          },
+      "persistence": {
+        "storageClass":"local-path",
+        "size": "3Gi"
+      },
+      nodeSelector: {
+        owner: "bjoern"
+      }
+
+    }
+  })
+}

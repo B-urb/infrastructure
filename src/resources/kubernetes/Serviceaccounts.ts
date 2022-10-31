@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes"
-import {namespaceGitlab} from "./namespace";
+import {namespaceGitlab} from "./index";
 
 
 

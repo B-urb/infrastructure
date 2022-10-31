@@ -1,20 +1,17 @@
 import * as k8s from "@pulumi/kubernetes"
-import {directusS3Secret, etcdSecret, gitlabSecret} from "./Secrets";
-import {namespaceDirectus, namespaceEtcd, namespaceGitlab} from "./namespace";
-import {serviceAccount} from "./Serviceaccounts";
+import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+import {directusConfig} from "../configs";
+import {directusSecret} from "../secrets";
+import {dbPassword, dbRootPassword} from "../../util/env";
 
-const adminPassword = process.env.CI_ADMIN_PASSWORD
-const adminMail = process.env.CI_ADMIN_EMAIL
-const mariaDBPassword = process.env.CI_DB_PASSWORD
-const mariaDBUsername = process.env.CI_DB_USERNAME
-const redisDBPassword = process.env.CI_REDIS_PASSWORD
-const mariaDBRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 
-export function createDirectus() {
+
+
+export function createDirectusHelmChart(namespace: Namespace, secret: Secret, config: ConfigMap) {
 
   return new k8s.helm.v3.Chart("directus-release", {
         chart: "directus",
-        namespace: namespaceDirectus.metadata.name,
+        namespace: namespace.metadata.name,
         fetchOpts: {
           repo: "https://directus-community.github.io/helm-chart",
         },
@@ -22,9 +19,6 @@ export function createDirectus() {
           "image": {
             //"repository":"registry.gitlab.com/privateprojectsbu/directus",
             "tag":"9.18.1",
-            "pullSecrets": [
-              {name: gitlabSecret.metadata.name}
-                ]
           },
           "ingress": {
             "enabled": "true",
@@ -60,7 +54,7 @@ export function createDirectus() {
             },
             {
               name: "ADMIN_EMAIL",
-              value: adminMail
+              value: directusSecret["admin-mail"]
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
@@ -83,7 +77,7 @@ export function createDirectus() {
             },
             {
               name: "ADMIN_PASSWORD",
-              value: adminPassword
+              value: directusSecret["admin-password"]
             },
             {name: "DB_CLIENT", value: "mysql"},
             {name: "DB_HOST", value: "directus-release-mariadb"},
@@ -95,90 +89,30 @@ export function createDirectus() {
             {name: "STORAGE_LOCATIONS", value: "s3"},
             {name: "STORAGE_S3_DRIVER", value: "s3" },
             {name: "STORAGE_S3_ENDPOINT", value: "http://minio.minio"},
-            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:directusS3Secret.metadata.name, key:"user-key"}}},
-            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: directusS3Secret.metadata.name, key:"user-secret"}}},
+            {name: "STORAGE_S3_KEY", valueFrom: {secretKeyRef: {name:secret.metadata.name, key:"user-key"}}},
+            {name: "STORAGE_S3_SECRET", valueFrom: {secretKeyRef: {name: secret.metadata.name, key:"user-secret"}}},
             {name: "STORAGE_S3_BUCKET", value: "directus"},
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
           ],
           "mariadb": {
+            enabled: "true", // manage creation in pulumi not via directus helm chart
             "auth": {
               "database": "directus",
-              "username": mariaDBUsername,
-              "password": mariaDBPassword,
-              "rootPassword": mariaDBRootPassword
+              "username": "directus",
+              "password": dbPassword,
+              "rootPassword": dbRootPassword // TODO: Remove
             }
           },
           "redis": {
-            "auth": {
+            enabled: false, // manage creation in pulumi not via directus helm chart
+        /*   "auth": {
               "password": redisDBPassword
-            }
+            }*/
           },
-
-
         },
-
       }
   );
 
 }
 
-export function createEtcd() {
-  return new k8s.helm.v3.Chart("etcd", {
-    chart: "etcd",
-    namespace: namespaceEtcd.metadata.name,
-    fetchOpts: {
-      repo: "https://charts.bitnami.com/bitnami"
-    },
-    values: {
-      "auth":
-          {
-            "rbac": {
-              create: false,
-              "existingSecret": etcdSecret.metadata.name,
-              "existingSecretPasswordKey": "root-password"
-            },
-            client: {
-              //secureTransport: true,
-              //useAutoTLS: true
-              //existingSecret: etcdSecret.metadata.name
-            }
-          },
-      "persistence": {
-        "storageClass":"local-path",
-        "size": "3Gi"
-      },
-     nodeSelector: {
-        owner: "bjoern"
-     }
 
-    }
-  })
-}
-
-const runnerToken = process.env.RUNNER_REGISTRATION_TOKEN!
-const runnerConfig = process.env.RUNNER_CONFIG!
-export function createGitlabRunner() {
-  return new k8s.helm.v3.Chart("gitlab-runner", {
-    chart: "gitlab-runner",
-    namespace: namespaceGitlab.metadata.name,
-    fetchOpts: {
-      repo: "https://charts.gitlab.io/"
-    },
-    values: {
-      gitlabUrl: "https://gitlab.com",
-      runnerRegistrationToken: runnerToken,
-
-      nodeSelector: {
-        owner: "bjoern"
-      },
-      rbac: {
-        create: false,
-        serviceAccountName: serviceAccount.metadata.name
-      },
-      runners: {
-        config: runnerConfig,
-        privileged: true
-      }
-    }
-  })
-}
