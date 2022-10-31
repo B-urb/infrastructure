@@ -62,7 +62,7 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
                 }
               ],
               imagePullSecrets: [
-                {"name": "gitlab-pull-secret"+ website.namespace.metadata.name}
+                {"name": "gitlab-pull-secret-"+ website.namespace.metadata.name}
               ]
 
             }
