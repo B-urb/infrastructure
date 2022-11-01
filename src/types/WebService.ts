@@ -1,4 +1,5 @@
 import {Namespace, } from "@pulumi/kubernetes/core/v1";
+import {Stage} from "./types";
 
 
 export class WebService {
@@ -8,11 +9,12 @@ export class WebService {
   imageTag: string | null;
   ingressAnnotations: object | null;
   namespace!: Namespace
+  stage!: Stage
 
   constructor(name: string,
               url: string, namespace: Namespace,
               registryImage: string | null, imageTag: string| null,
-              ingressAnnotations: object | null,)
+              ingressAnnotations: object | null, stage: Stage)
   {
     this.name = name;
     this.url = url;
@@ -20,6 +22,7 @@ export class WebService {
     this.registryImage = registryImage;
     this.imageTag = imageTag;
     this.ingressAnnotations = ingressAnnotations;
+    this.stage = stage;
 
   }
 }

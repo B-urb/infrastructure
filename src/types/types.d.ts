@@ -7,3 +7,5 @@ export interface DirectusConfig  {
   secret: Secret;
   config: ConfigMap;
 }
+
+export type Stage = "prod" | "dev" | "experimental"

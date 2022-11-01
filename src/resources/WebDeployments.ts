@@ -1,7 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
 import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "../types/WebService";
-import {keelAnnotationsProd} from "../util/globals";
+import {keelAnnotationsDev, keelAnnotationsExp, keelAnnotationsProd} from "../util/globals";
 import {gitlabSecretDi} from "./kubernetes";
 
 
@@ -11,8 +11,16 @@ const env = getEnv("development")
 
 export function createDeployments(resources: Array<WebService>): Array<k8s.apps.v1.Deployment> {
   const appLabels = {};
-  return resources.map(website =>
-      new k8s.apps.v1.Deployment(website.name, {
+  return resources.map(website => {
+      let keelAnnotations = {};
+      switch (website.stage) {
+        case "prod": keelAnnotations = keelAnnotationsProd
+          break
+        case "dev": keelAnnotations = keelAnnotationsDev
+          break
+        case "experimental": keelAnnotations = keelAnnotationsExp
+      }
+      return new k8s.apps.v1.Deployment(website.name, {
         metadata: {
           name: website.name,
           namespace: website.namespace.metadata.name,
@@ -22,7 +30,8 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
           "annotations": {
             "keel.sh/trigger": "poll",
             "keel.sh/pollSchedule": "@every 5m",
-            ...keelAnnotationsProd
+            ...keelAnnotations
+
 
           }
         },
@@ -62,13 +71,13 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
                 }
               ],
               imagePullSecrets: [
-                {"name": "gitlab-pull-secret-"+ website.namespace.metadata.name}
+                {"name": "gitlab-pull-secret-" + website.namespace.metadata.name}
               ]
 
             }
           }
         }
-
+      }
       }));
 }
 
