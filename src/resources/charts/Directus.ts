@@ -95,7 +95,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, co
             {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
           ],
           "mariadb": {
-            enabled: "true", // manage creation in pulumi not via directus helm chart
+            enabled: true, // manage creation in pulumi not via directus helm chart
             "auth": {
               "database": "directus",
               "username": "directus",
