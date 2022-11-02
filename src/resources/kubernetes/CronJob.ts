@@ -20,14 +20,14 @@ export default function createBackupCronjob(namespace: Namespace, backupSecret: 
                   imagePullPolicy: "Always",
                   env: [{
                     name: "DB_USER",
-                    valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "user"}}
+                    valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "db-user"}}
                   },
                     {
                       name: "DB_HOST",
                       value: "postgres-postgresql.postgres"
                     }, {
                     name: "DB_PASSWORD",
-                      valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "password"}}
+                      valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "db-password"}}
                     },
                     {name: "S3_ENDPOINT",
                       value: "minio.fbr.ai"
@@ -38,8 +38,8 @@ export default function createBackupCronjob(namespace: Namespace, backupSecret: 
                       name: "S3_BUCKET_NAME",
                       value: "postgres-backup"
                     },
-                    {name: "AWS_ACCESS_KEY_ID", valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key:"user-key"}}},
-                    {name: "AWS_SECRET_ACCESS_KEY", valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key:"user-secret"}}},
+                    {name: "AWS_ACCESS_KEY_ID", valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key:"s3-user-key"}}},
+                    {name: "AWS_SECRET_ACCESS_KEY", valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key:"s3-user-secret"}}},
                   ]
                 }
               ],
