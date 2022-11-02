@@ -1,4 +1,13 @@
-import {adminMail, adminPassword, dbPassword, dbUsername, mailgunKey, s3UserKey, s3UserSecret} from "../util/env";
+import {
+  adminMail,
+  adminPassword,
+  dbBackupUser,
+  dbPassword,
+  dbUsername,
+  mailgunKey,
+  s3UserKey,
+  s3UserSecret
+} from "../util/env";
 
 
 export const directusSecret = {
@@ -11,4 +20,10 @@ export const directusSecret = {
   "s3-user-secret": s3UserSecret,
   "mg-api-key": mailgunKey,
   "directus-secret": "test"
+}
+export const backupSecret = {
+  "db-user": dbBackupUser,
+  "db-password": dbBackupUser,
+  "s3-user-key": s3UserKey,
+  "s3-user-secret": s3UserSecret,
 }

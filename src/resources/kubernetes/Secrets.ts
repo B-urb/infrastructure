@@ -1,7 +1,7 @@
 import * as k8s from "@pulumi/kubernetes";
 import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {directusSecret} from "../secrets";
+import {backupSecret, directusSecret} from "../secrets";
 import * as pulumi from "@pulumi/pulumi"
 
 export function createGitlabSecret(username: string, token: string,name:string, namespace: Namespace): k8s.core.v1.Secret {
@@ -27,16 +27,13 @@ export function createGitlabSecret(username: string, token: string,name:string, 
 }
 
 
-export function createDirectusS3Secret(userKey: string, userSecret: string, namespace: Namespace) {
-  return new k8s.core.v1.Secret("directus-release-s3", {
+export function createBackupSecret(namespace: Namespace) {
+  return new k8s.core.v1.Secret("postgres-backup", {
     metadata: {
-      name: "directus-s3",
+      name: "postgres-backup",
       namespace: namespace.metadata.name
     },
-    stringData: {
-      "user-key": userKey,
-      "user-secret": userSecret
-    }
+    stringData: backupSecret
   })
 }
 
