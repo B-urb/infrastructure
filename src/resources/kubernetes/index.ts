@@ -1,7 +1,6 @@
 import {createNamespace} from "./namespace";
 import {
   createBasicAuthSecret, createDbSecret,
-  createDirectusS3Secret,
   createEtcdSecret, createGitlabSecret,
   createMiddleware
 } from "./Secrets";
