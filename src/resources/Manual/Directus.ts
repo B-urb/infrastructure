@@ -44,6 +44,9 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
           }
         },
         "spec": {
+          nodeSelector: {
+            "owner": "bjoern"
+          },
           "containers": [
             {
               "name": website.name,

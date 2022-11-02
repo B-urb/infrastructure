@@ -53,6 +53,9 @@ export function createDeployments(resources: Array<WebService>): Array<k8s.apps.
             }
           },
           "spec": {
+            nodeSelector: {
+              "owner": "bjoern"
+            },
             "containers": [
               {
                 "name": website.name,
