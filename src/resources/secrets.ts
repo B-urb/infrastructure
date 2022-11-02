@@ -6,7 +6,7 @@ import {
   dbUsername,
   mailgunKey,
   s3UserKey,
-  s3UserSecret
+  s3UserSecret, umamiPassword, umamiUser
 } from "../util/env";
 
 
@@ -26,4 +26,7 @@ export const backupSecret = {
   "db-password": dbBackupUser,
   "s3-user-key": s3UserKey,
   "s3-user-secret": s3UserSecret,
+}
+export const umamiSecret = {
+  "db-connection-string": `postgresql://${umamiUser}:${umamiPassword}@postgres-postgresql.postgres:5432/umami`
 }

@@ -6,11 +6,12 @@ import {
   etcdSecret, namespaceDirectus,
   namespaceEtcd,
   namespaceGitlab,
-  namespacePostgres
+  namespacePostgres, namespaceUmami
 } from "../resources/kubernetes";
-import {createDirectusSecret} from "../resources/kubernetes/Secrets";
+import {createDirectusSecret, createUmamiSecret} from "../resources/kubernetes/Secrets";
 import {createDirectusConfig} from "../resources/kubernetes/ConfigMap";
 import {createPostgres} from "../resources/postgres";
+import {createUmami} from "../resources/umami";
 
 export function createGeneral() {
   const kubernetesCluster = createKubernetesCluster()
@@ -35,6 +36,7 @@ export function createGeneral() {
   }
   const directus = createDirectus("manual", directusConfig);
   const dirHelm = createDirectus("helm", directusConfig)
+  createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami))
 
 //export const plausible = createPlausible()
 }

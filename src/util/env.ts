@@ -14,3 +14,5 @@ export const dbUsername = process.env.CI_DB_USERNAME!
 export const redisDBPassword = process.env.CI_REDIS_PASSWORD
 export const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 export const mailgunKey = process.env.CI_MAILGUN_KEY!;
+export const umamiUser = process.env.CI_UMAMI_DB_USER!;
+export const umamiPassword = process.env.CI_UMAMI_DB_PASSWORD!;
