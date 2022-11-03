@@ -2,10 +2,10 @@ import * as k8s from "@pulumi/kubernetes"
 import {WebService} from "../../types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import { Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {keelAnnotationsProd} from "../../util/globals";
+import {keelAnnotationsDev} from "../../util/globals";
 
 export function createUmamiManual(namespace: Namespace, secret: Secret) {
-  const website =  new WebService("umami", "stats.burban.me", namespace, "docker.umami.is/umami-software/umami", "postgresql-latest", {}, "prod");
+  const website =  new WebService("umami", "stats.burban.me", namespace, "docker.umami.dev/umami-software/umami", "postgresql-latest", {}, "prod");
 
   const deployment = createUmamiDeployments(website, secret);
   const service = createUmamiService(website);
@@ -22,7 +22,7 @@ function createUmamiDeployments(website: WebService, secret: Secret): Deployment
       "annotations": {
         "keel.sh/trigger": "poll",
         "keel.sh/pollSchedule": "@every 5m",
-        ...keelAnnotationsProd
+        ...keelAnnotationsDev
 
       }
     },
