@@ -1,6 +1,6 @@
 import {
   adminMail,
-  adminPassword,
+  adminPassword, dbBackupPassword,
   dbBackupUser,
   dbPassword,
   dbUsername,
@@ -23,7 +23,7 @@ export const directusSecret = {
 }
 export const backupSecret = {
   "db-user": dbBackupUser,
-  "db-password": dbBackupUser,
+  "db-password": dbBackupPassword,
   "s3-user-key": s3UserKey,
   "s3-user-secret": s3UserSecret,
 }
