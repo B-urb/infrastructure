@@ -5,14 +5,15 @@ import {
   createKubernetesCluster,
   etcdSecret, namespaceDirectus,
   namespaceEtcd,
-  namespaceGitlab,
+  namespaceGitlab, namespaceMedusa,
   namespacePostgres, namespaceRedis, namespaceUmami
 } from "../resources/kubernetes";
-import {createDirectusSecret, createUmamiSecret} from "../resources/kubernetes/Secrets";
+import {createDirectusSecret, createMedusaSecret, createUmamiSecret} from "../resources/kubernetes/Secrets";
 import {createDirectusConfig} from "../resources/kubernetes/ConfigMap";
 import {createPostgres} from "../resources/postgres";
 import {createUmami} from "../resources/umami";
 import {createRedis} from "../resources/redis";
+import {createMedusa} from "../resources/medusa";
 
 export function createGeneral() {
   const kubernetesCluster = createKubernetesCluster()
@@ -38,6 +39,7 @@ export function createGeneral() {
   const directus = createDirectus("manual", directusConfig);
   const dirHelm = createDirectus("helm", directusConfig)
   createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami))
+  createMedusa("manual", namespaceMedusa, createMedusaSecret(namespaceMedusa))
 
 //export const plausible = createPlausible()
 }

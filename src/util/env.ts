@@ -16,3 +16,5 @@ export const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
 export const mailgunKey = process.env.CI_MAILGUN_KEY!;
 export const umamiUser = process.env.CI_UMAMI_DB_USER!;
 export const umamiPassword = process.env.CI_UMAMI_DB_PASSWORD!;
+export const medusaUser = process.env.CI_MEDUSA_DB_USER!;
+export const medusaPassword = process.env.CI_MEDUSA_DB_PASSWORD!;

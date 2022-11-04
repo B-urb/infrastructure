@@ -4,7 +4,7 @@ import {
   dbBackupUser,
   dbPassword,
   dbUsername,
-  mailgunKey,
+  mailgunKey, medusaPassword, medusaUser, redisDBPassword,
   s3UserKey,
   s3UserSecret, umamiPassword, umamiUser
 } from "../util/env";
@@ -29,4 +29,8 @@ export const backupSecret = {
 }
 export const umamiSecret = {
   "db-connection-string": `postgresql://${umamiUser}:${umamiPassword}@postgres-postgresql.postgres:5432/umami`
+}
+export const medusaSecret = {
+  "postgres-connection-string": `postgresql://${medusaUser}:${medusaPassword}@postgres-postgresql.postgres:5432/medusa`,
+  "redis-connection-string": `redis://redis-headless.redis:6379?ConnectTimeout=5000&password=${redisDBPassword}&IdleTimeOutSecs=180`
 }
