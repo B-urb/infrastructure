@@ -58,7 +58,7 @@ function createMedusaDeployment(website: WebService, secret: Secret): Deployment
               "imagePullPolicy": "Always",
               "env": [
                 {
-                  name: "AMIN_CORS",
+                  name: "ADMIN_CORS",
                   value: "https://store-admin.burban.me"
                 },
                 {name: "DATABASE_URL", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "postgres-connection-string"}}},
@@ -69,18 +69,6 @@ function createMedusaDeployment(website: WebService, secret: Secret): Deployment
                   "name": "http",
                   "containerPort": 9000
                 },],
-              "livenessProbe": {
-                httpGet: {
-                  path: "/",
-                  port: "http"
-                }
-              },
-              readinessProbe: {
-                httpGet: {
-                  path: "/",
-                  port: "http"
-                }
-              }
             }
           ],
         }
@@ -129,21 +117,27 @@ function createMedusaAdminDeployment(website: WebService): Deployment {
               "name": website.name,
               "image": website.registryImage + ":" + website.imageTag,
               "imagePullPolicy": "Always",
+              "env": [
+                {
+                  name: "MEDUSA_URL",
+                  value: "https://medusa.burban.me"
+                }],
               "ports": [
                 {
                   "name": "http",
-                  "containerPort": 7000
+                  "containerPort": 80
                 },],
               "livenessProbe": {
+                initialDelaySeconds: 200,
                 httpGet: {
-                  path: "/",
+                  path: "/login",
                   port: "http"
                 }
               },
               readinessProbe: {
                 initialDelaySeconds: 200,
                 httpGet: {
-                  path: "/",
+                  path: "/login",
                   port: "http"
                 }
               }
