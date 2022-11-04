@@ -12,6 +12,7 @@ export const namespaceEtcd = createNamespace("etcd")
 export const namespaceGitlab = createNamespace("gitlab")
 export const namespaceMariaDB = createNamespace("mariadb")
 export const namespaceUmami = createNamespace("umami")
+export const namespaceRedis = createNamespace("redis")
 
 const baSecret = createBasicAuthSecret(env.basicAuthUser, env.basicAuthPassword);
 const middleware = createMiddleware(baSecret)

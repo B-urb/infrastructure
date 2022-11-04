@@ -6,12 +6,13 @@ import {
   etcdSecret, namespaceDirectus,
   namespaceEtcd,
   namespaceGitlab,
-  namespacePostgres, namespaceUmami
+  namespacePostgres, namespaceRedis, namespaceUmami
 } from "../resources/kubernetes";
 import {createDirectusSecret, createUmamiSecret} from "../resources/kubernetes/Secrets";
 import {createDirectusConfig} from "../resources/kubernetes/ConfigMap";
 import {createPostgres} from "../resources/postgres";
 import {createUmami} from "../resources/umami";
+import {createRedis} from "../resources/redis";
 
 export function createGeneral() {
   const kubernetesCluster = createKubernetesCluster()
@@ -20,7 +21,7 @@ export function createGeneral() {
 // Databases Setup
   const postgres = createPostgres("helm", namespacePostgres)
   const etcd = createEtcd(namespaceEtcd, etcdSecret)
-//export const redis = createRedis()
+  const redis = createRedis("helm",namespaceRedis);
 
 // Create Persistent Storages
 //export const s3 = createS3()
