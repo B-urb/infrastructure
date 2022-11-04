@@ -141,6 +141,7 @@ function createMedusaAdminDeployment(website: WebService): Deployment {
                 }
               },
               readinessProbe: {
+                initialDelaySeconds: 200,
                 httpGet: {
                   path: "/",
                   port: "http"
