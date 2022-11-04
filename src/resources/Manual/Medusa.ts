@@ -132,7 +132,7 @@ function createMedusaAdminDeployment(website: WebService): Deployment {
               "ports": [
                 {
                   "name": "http",
-                  "containerPort": 9000
+                  "containerPort": 7000
                 },],
               "livenessProbe": {
                 httpGet: {
