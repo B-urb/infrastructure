@@ -19,15 +19,14 @@ export function createBjoern() {
  let ws2 = new WebService("webcv-prod", "burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "v2.4.0", {}, "prod");
  let ws3 = new WebService("webcv-experimental", "experimental.burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/webcv", "feature-next", basicAuthAnnotation, "experimental");
  let ws4 = new WebService("website-dev", "dev.tischlerei-bahrenberg.de", namespaceBahrenberg, "registry.gitlab.com/a9668/bahrenberg/website", "v1.0.0-rc.9", basicAuthAnnotation, "dev");
- let ws5 = new WebService("flathunter", "flat.burban.me", namespaceBurban, "registry.gitlab.com/privateprojectsbu/flathunter", "latest", basicAuthAnnotation, "experimental");
  const gitlabSecretB = createGitlabSecret("pulumi", env.pullSecret, "gitlab-pull-secret", namespaceBurban);
  const gitlabSecretBa = createGitlabSecret("pulumi", env.pullSecret, "gitlab-pull-secret-bahrenberg", namespaceBahrenberg);
 
  const dbBackupSecret = createBackupSecret(namespaceBurban);
 
  const cronjob = createBackupCronjob(namespaceBurban, dbBackupSecret)
- createDeployments(new Array<WebService>(ws1, ws2, ws3, ws4,ws5));
- createService(new Array<WebService>(ws1, ws2, ws3, ws4, ws5));
- createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4, ws5));
+ createDeployments(new Array<WebService>(ws1, ws2, ws3, ws4));
+ createService(new Array<WebService>(ws1, ws2, ws3, ws4));
+ createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4));
 }
 //console.log(directus.ready);
