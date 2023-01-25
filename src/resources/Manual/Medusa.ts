@@ -5,8 +5,8 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsDev} from "../../util/globals";
 
 export function createMedusaManual(namespace: Namespace, secret: Secret) {
-  const medusaBackend =  new WebService("medusa", "medusa.burban.me", namespace, "ghcr.io/breuerfelix/medusa/backend", "latest", {}, "prod");
-  const medusaAdmin =  new WebService("medusa-admin", "store-admin.burban.me", namespace, "ghcr.io/breuerfelix/medusa/admin", "latest", {}, "prod");
+  const medusaBackend =  new WebService("medusa", "medusa.tecios.de", namespace, "ghcr.io/breuerfelix/medusa/backend", "latest", {}, "prod");
+  const medusaAdmin =  new WebService("medusa-admin", "store-admin.tecios.de", namespace, "ghcr.io/breuerfelix/medusa/admin", "latest", {}, "prod");
 
   const deploymentBackend = createMedusaDeployment(medusaBackend, secret);
   const serviceBackend = createMedusaService(medusaBackend);
@@ -120,7 +120,7 @@ function createMedusaAdminDeployment(website: WebService): Deployment {
               "env": [
                 {
                   name: "MEDUSA_URL",
-                  value: "https://medusa.burban.me"
+                  value: "https://medusa.tecios.de"
                 }],
               "ports": [
                 {
@@ -132,7 +132,8 @@ function createMedusaAdminDeployment(website: WebService): Deployment {
                 httpGet: {
                   path: "/login",
                   port: "http"
-                }
+                },
+                periodSeconds: 60
               },
               readinessProbe: {
                 initialDelaySeconds: 200,

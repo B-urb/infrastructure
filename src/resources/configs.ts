@@ -20,7 +20,7 @@ export const s3Config = {
 }
 
 export const directusConfig = {
-  PUBLIC_URL: "https://cms.burban.me",
+  PUBLIC_URL: "https://cms.tecios.de",
   "db-client": "pg",
   "db-host": "postgres-postgresql.postgres",
   "db-port": "5432",

@@ -6,7 +6,7 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
-  const website =  new WebService("directus", "cms.burban.me", namespace, "registry.gitlab.com/privateprojectsbu/directus", "main", {}, "prod");
+  const website =  new WebService("directus", "cms.tecios.de", namespace, "registry.gitlab.com/privateprojectsbu/directus", "main", {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
@@ -68,7 +68,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {
                   name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
-                  value: "array:'self',https://cmstest.burban.me"
+                  value: "array:'self',https://cms.tecios.de"
                 }, {
                   name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
                   value: "array:'self', 'unsafe-inline'"
