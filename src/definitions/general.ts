@@ -37,9 +37,9 @@ export function createGeneral() {
     config: createDirectusConfig()
   }
   const directus = createDirectus("manual", directusConfig);
-  const dirHelm = createDirectus("helm", directusConfig)
+  //const dirHelm = createDirectus("helm", directusConfig)
   createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami))
-  createMedusa("manual", namespaceMedusa, createMedusaSecret(namespaceMedusa))
+  //createMedusa("manual", namespaceMedusa, createMedusaSecret(namespaceMedusa))
 
 //export const plausible = createPlausible()
 }
