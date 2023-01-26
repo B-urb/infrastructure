@@ -101,6 +101,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 //S3
                 {name: "STORAGE_LOCATIONS", value: "s3"},
                 {name: "STORAGE_S3_DRIVER", value: "s3"},
+                {name: "STORAGE_S3_REGION", value: "eu-central-1"},
                 {name: "STORAGE_S3_ENDPOINT", value: "http://minio.minio"},
                 {
                   name: "STORAGE_S3_KEY",
