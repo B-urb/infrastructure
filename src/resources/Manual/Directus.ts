@@ -111,7 +111,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-secret"}}
                 },
                 {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
-                {name: "STORAGE_S3_S3_FORCE_PATH_STYLE", value: "true"},
+                {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
                 {name: "EMAIL_VERIFY_SETUP", value: "true"},
                 {name: "EMAIL_FROM", value: "no-reply@cms.burban.me"},
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
