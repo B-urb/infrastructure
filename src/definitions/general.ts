@@ -13,7 +13,6 @@ import {createDirectusConfig} from "../resources/kubernetes/ConfigMap";
 import {createPostgres} from "../resources/postgres";
 import {createUmami} from "../resources/umami";
 import {createRedis} from "../resources/redis";
-import {createMedusa} from "../resources/medusa";
 
 export function createGeneral() {
   const kubernetesCluster = createKubernetesCluster()
