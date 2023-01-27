@@ -30,7 +30,7 @@ export default function createBackupCronjob(namespace: Namespace, backupSecret: 
                       valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "db-password"}}
                     },
                     {name: "S3_ENDPOINT",
-                      value: "minio.fbr.ai"
+                      value: "minio.tecios.de"
                     },
                     {name: "AWS_REGION",
                     value: "US"},
