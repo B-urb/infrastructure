@@ -118,7 +118,8 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
                 {name: "EMAIL_MAILGUN_DOMAIN", value: "mg.burban.me"},
                 {name: "EMAIL_MAILGUN_API_KEY", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "mg-api-key"}}
-                }
+                },
+                {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"}
               ],
               "ports": [
                 {
