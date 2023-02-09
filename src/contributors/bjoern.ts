@@ -27,8 +27,8 @@ export function createBjoern() {
  const dbBackupSecret = createBackupSecret(namespaceBurban);
 
  const cronjob = createBackupCronjob(namespaceBurban, dbBackupSecret)
- createDeployments(new Array<WebService>(ws1, ws2, ws3, ws4));
- createService(new Array<WebService>(ws1, ws2, ws3, ws4));
- createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4));
+ createDeployments(new Array<WebService>(ws1, ws2, ws3, ws4, ws5));
+ createService(new Array<WebService>(ws1, ws2, ws3, ws4, ws5));
+ createIngresses(new Array<WebService>(ws1, ws2, ws3, ws4, ws5));
 }
 //console.log(directus.ready);
