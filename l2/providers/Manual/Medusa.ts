@@ -1,8 +1,8 @@
 import * as k8s from "@pulumi/kubernetes"
-import {WebService} from "../../types/WebService";
+import {WebService} from "../../../src/types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {keelAnnotationsDev} from "../../util/globals";
+import {keelAnnotationsDev} from "../../../util/globals";
 
 export function createMedusaManual(namespace: Namespace, secret: Secret) {
   const medusaBackend =  new WebService("medusa", "medusa.tecios.de", namespace, "ghcr.io/breuerfelix/medusa/backend", "latest", {}, "prod");

@@ -1,6 +1,6 @@
-import {Source} from "../types/types";
+import {Source} from "../util/types";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
-import {createRedisHelm} from "./charts/Redis";
+import {createRedisHelm} from "./providers/charts/Redis";
 
 export function createRedis(by: Source, namespace: Namespace) {
   switch (by) {

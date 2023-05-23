@@ -1,7 +1,7 @@
-import {DirectusConfig, Source} from "../types/types";
+import {DirectusConfig, Source} from "../util/types";
 
 import * as postgresql from "@pulumi/postgresql";
-import {createPostgresHelm} from "./charts/Postgres";
+import {createPostgresHelm} from "./providers/charts/Postgres";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 

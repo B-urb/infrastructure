@@ -1,0 +1,12 @@
+{
+    "name": "l0",
+    "main": "index.ts",
+    "devDependencies": {
+        "@pulumi/github": "^5.9.0",
+        "@pulumi/gitlab": "^4.10.0",
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}

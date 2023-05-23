@@ -1,8 +1,8 @@
 import * as k8s from "@pulumi/kubernetes";
 import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {backupSecret, directusSecret, medusaSecret, umamiSecret} from "../../../l2/secrets";
 import * as pulumi from "@pulumi/pulumi"
+
 
 export function createGitlabSecret(username: string, token: string,name:string, namespace: Namespace): k8s.core.v1.Secret {
   let secretData = {
@@ -27,33 +27,6 @@ export function createGitlabSecret(username: string, token: string,name:string, 
 }
 
 
-export function createBackupSecret(namespace: Namespace) {
-  return new k8s.core.v1.Secret("postgres-backup", {
-    metadata: {
-      name: "postgres-backup",
-      namespace: namespace.metadata.name
-    },
-    stringData: backupSecret
-  })
-}
-export function createUmamiSecret(namespace: Namespace) {
-  return new k8s.core.v1.Secret("umami", {
-    metadata: {
-      name: "umami",
-      namespace: namespace.metadata.name
-    },
-    stringData: umamiSecret
-  })
-}
-export function createMedusaSecret(namespace: Namespace) {
-  return new k8s.core.v1.Secret("medusa", {
-    metadata: {
-      name: "medusa",
-      namespace: namespace.metadata.name
-    },
-    stringData: medusaSecret
-  })
-}
 export function createEtcdSecret(rootPassword: string, namespace: Namespace) {
   return new k8s.core.v1.Secret("etcd", {
     metadata: {
@@ -79,39 +52,7 @@ export function createDbSecret(user: string, password: string, name: string, nam
   })
 }
 
-export function createDirectusSecret(name: string, namespace: Namespace) {
-  return new k8s.core.v1.Secret("directus", {
-    metadata: {
-      name: name,
-      namespace: namespace.metadata.name
-    },
-    stringData: directusSecret
-  })
-}
 
-export function createBasicAuthSecret(user: string, password: string) {
-
-  const credentials = new Htpasswd('credentials', {
-    algorithm: HtpasswdAlgorithm.Bcrypt,
-    entries: [{
-      // example with a specific username + password
-      username: user,
-      password: password,
-    }],
-  });
-
-  const authString = credentials.result
-
-  return new k8s.core.v1.Secret("basic-auth", {
-    metadata: {
-      name: "basic-auth",
-      namespace: "kube-system"
-    },
-    stringData: {
-      "users": authString,
-    }
-  })
-}
 
 export function createMiddleware(secret: Secret) {
   return new k8s.apiextensions.CustomResource("middleware-ba", {
@@ -128,6 +69,5 @@ export function createMiddleware(secret: Secret) {
     }
   })
 }
-
 
 

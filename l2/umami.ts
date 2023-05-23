@@ -1,11 +1,11 @@
-import {Source} from "../types/types";
+import {createUmamiManual} from "./providers/Manual/Umami";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {createMedusaManual} from "./Manual/Medusa";
+import {Source} from "../util/types";
 
-export function createMedusa(by: Source, namespace: Namespace, secret: Secret) {
+export function createUmami(by: Source, namespace: Namespace, secret: Secret) {
   switch (by) {
     case "manual":
-      return createMedusaManual(namespace, secret)
+      return createUmamiManual(namespace, secret)
     case "gke":
       console.log("Not Implemented")
       return null

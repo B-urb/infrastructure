@@ -8,6 +8,8 @@ import {
   s3UserKey,
   s3UserSecret, umamiPassword, umamiUser
 } from "../util/env";
+import {Namespace} from "@pulumi/kubernetes/core/v1";
+import * as k8s from "@pulumi/kubernetes";
 
 
 export const directusSecret = {
@@ -33,4 +35,40 @@ export const umamiSecret = {
 export const medusaSecret = {
   "postgres-connection-string": `postgresql://${medusaUser}:${medusaPassword}@postgres-postgresql.postgres:5432/medusa`,
   "redis-connection-string": `redis://redis-headless.redis:6379?ConnectTimeout=5000&password=${redisDBPassword}&IdleTimeOutSecs=180`
+}
+export function createBackupSecret(namespace: Namespace) {
+  return new k8s.core.v1.Secret("postgres-backup", {
+    metadata: {
+      name: "postgres-backup",
+      namespace: namespace.metadata.name
+    },
+    stringData: backupSecret
+  })
+}
+export function createUmamiSecret(namespace: Namespace) {
+  return new k8s.core.v1.Secret("umami", {
+    metadata: {
+      name: "umami",
+      namespace: namespace.metadata.name
+    },
+    stringData: umamiSecret
+  })
+}
+export function createMedusaSecret(namespace: Namespace) {
+  return new k8s.core.v1.Secret("medusa", {
+    metadata: {
+      name: "medusa",
+      namespace: namespace.metadata.name
+    },
+    stringData: medusaSecret
+  })
+}
+export function createDirectusSecret(name: string, namespace: Namespace) {
+  return new k8s.core.v1.Secret("directus", {
+    metadata: {
+      name: name,
+      namespace: namespace.metadata.name
+    },
+    stringData: directusSecret
+  })
 }

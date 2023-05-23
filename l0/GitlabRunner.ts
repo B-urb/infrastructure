@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes";
-import {serviceAccount} from "../kubernetes/Serviceaccounts";
+import {serviceAccount} from "./Serviceaccounts";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 const runnerToken = process.env.RUNNER_REGISTRATION_TOKEN!

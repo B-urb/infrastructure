@@ -1,6 +1,6 @@
-import {createDirectusHelmChart} from "./charts/Directus";
-import {DirectusConfig, Source} from "../types/types";
-import {createDirectusManual} from "./Manual/Directus";
+import {createDirectusHelmChart} from "./providers/Charts/Directus";
+import {DirectusConfig, Source} from "../util/types";
+import {createDirectusManual} from "./providers/Manual/Directus";
 
 
 export function createDirectus(by: Source, params: DirectusConfig) {

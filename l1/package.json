@@ -1,0 +1,11 @@
+{
+    "name": "l1",
+    "main": "index.ts",
+    "devDependencies": {
+        "@pulumi/postgresql": "^3.8.0",
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}

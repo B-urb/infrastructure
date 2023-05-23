@@ -1,8 +1,7 @@
 import * as k8s from "@pulumi/kubernetes"
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {directusConfig} from "../configs";
-import {directusSecret} from "../secrets";
-import {dbPassword, dbRootPassword} from "../../util/env";
+import {directusSecret} from "../../secrets";
+import {dbPassword, dbRootPassword} from "../../../util/env";
 
 
 

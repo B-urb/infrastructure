@@ -1,9 +1,9 @@
 import * as k8s from "@pulumi/kubernetes"
 import {getEnv} from "@pulumi/kubernetes/utilities";
-import {WebService} from "../../types/WebService";
+import {WebService} from "../../../src/types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {keelAnnotationsProd} from "../../util/globals";
+import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const website =  new WebService("directus", "cms.tecios.de", namespace, "registry.gitlab.com/privateprojectsbu/directus", "main", {}, "prod");

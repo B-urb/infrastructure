@@ -1,5 +1,5 @@
 import {Namespace, } from "@pulumi/kubernetes/core/v1";
-import {Stage} from "./types";
+import {Stage} from "../../util/types";
 
 
 export class WebService {

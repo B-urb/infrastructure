@@ -2,14 +2,14 @@ import {createDeployments} from "../resources/WebDeployments";
 import {WebService} from "../types/WebService";
 import {createIngresses} from "../resources/kubernetes/Ingress";
 import {createService} from "../resources/kubernetes/Service";
-import {createNamespace} from "../resources/kubernetes/namespace";
+import {createNamespace} from "../../util/namespace";
 import {
  createBackupSecret,
  createGitlabSecret,
 } from "../resources/kubernetes/Secrets";
-import * as env from "../util/env";
-import createBackupCronjob from "../resources/kubernetes/CronJob";
-import {basicAuthAnnotation} from "../util/globals";
+import * as env from "../../util/env";
+import createBackupCronjob from "../../l2/CronJob";
+import {basicAuthAnnotation} from "../../util/globals";
 
 export function createBjoern() {
   const namespaceBurban = createNamespace("burban")
