@@ -6,8 +6,8 @@ jobs:
     name: Preview
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         workdir: [ l0, l1, l2 ]
     steps:
       - uses: actions/checkout@v2
