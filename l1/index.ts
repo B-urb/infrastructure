@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import {createNamespace} from "../util/namespace";
+import {createNamespace} from "../l0/namespace";
 import {createPostgres} from "./postgres";
 import {createEtcd} from "./providers/charts/Etcd";
 import {createRedis} from "./redis";

@@ -1,8 +1,8 @@
 import {createDeployments} from "../resources/WebDeployments";
-import {WebService} from "../types/WebService";
+import {WebService} from "../../l2/types/WebService";
 import {createIngresses} from "../resources/kubernetes/Ingress";
 import {createService} from "../resources/kubernetes/Service";
-import {createNamespace} from "../../util/namespace";
+import {createNamespace} from "../../l0/namespace";
 import {
  createBackupSecret,
  createGitlabSecret,

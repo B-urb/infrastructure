@@ -1,6 +1,6 @@
 import * as k8s from "@pulumi/kubernetes"
 import {getEnv} from "@pulumi/kubernetes/utilities";
-import {WebService} from "../types/WebService";
+import {WebService} from "../../l2/types/WebService";
 import {keelAnnotationsDev, keelAnnotationsExp, keelAnnotationsProd} from "../../util/globals";
 import * as pulumi from "@pulumi/pulumi"
 

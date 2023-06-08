@@ -1,4 +1,4 @@
-import {createNamespace} from "../../../util/namespace";
+import {createNamespace} from "../../../l0/namespace";
 import {
   createBasicAuthSecret, createDbSecret,
   createEtcdSecret, createGitlabSecret,

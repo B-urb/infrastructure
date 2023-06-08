@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import {createNamespace} from "../util/namespace";
+import {createNamespace} from "./namespace";
 import {createGitlabRunner} from "./GitlabRunner";
 import * as gitlab from "@pulumi/gitlab";
 

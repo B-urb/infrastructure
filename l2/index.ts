@@ -1,6 +1,6 @@
 import {createDirectus} from "./directus";
 import { createGitlabSecret } from "../src/resources/kubernetes/Secrets";
-import {createNamespace} from "../util/namespace";
+import {createNamespace} from "../l0/namespace";
 import * as k8s from "@pulumi/kubernetes";
 import {createUmami} from "./umami";
 import {createDirectusConfigMap } from "./configs";

@@ -1,4 +1,4 @@
-import {WebService} from "../../types/WebService";
+import {WebService} from "../../../l2/types/WebService";
 import * as k8s from "@pulumi/kubernetes"
 
 

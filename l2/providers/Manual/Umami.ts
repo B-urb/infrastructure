@@ -1,5 +1,5 @@
 import * as k8s from "@pulumi/kubernetes"
-import {WebService} from "../../../src/types/WebService";
+import {WebService} from "../../types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import { Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsDev} from "../../../util/globals";
