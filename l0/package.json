@@ -4,6 +4,7 @@
     "devDependencies": {
         "@pulumi/github": "^5.9.0",
         "@pulumi/gitlab": "^4.10.0",
+        "@pulumi/kubernetes": "^3.29.0",
         "@types/node": "^16"
     },
     "dependencies": {
