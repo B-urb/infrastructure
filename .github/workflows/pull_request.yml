@@ -5,6 +5,9 @@ jobs:
   preview:
     name: Preview
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        workdir: [ l0, l1, l2 ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3.5.0
@@ -17,10 +20,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: npm install
-        working-directory: ["l0", "l1", "l2"]
+        working-directory: ${{ matrix.workdir }}
       - uses: pulumi/actions@v3
         with:
           command: preview
-          work-dir: ["l0", "l1", "l2"]
+          work-dir: ${{ matrix.workdir }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
