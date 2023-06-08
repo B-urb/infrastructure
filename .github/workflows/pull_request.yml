@@ -17,9 +17,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: npm install
+        working-directory: ["l0", "l1", "l2"]
       - uses: pulumi/actions@v3
         with:
           command: preview
-          stack-name: tecios/prod/l0 # When using an individual account, only use stack-name.  
+          work-dir: ["l0", "l1", "l2"]
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
