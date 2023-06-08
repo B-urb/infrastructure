@@ -43,9 +43,9 @@ function createUmamiDeployments(website: WebService, secret: Secret): Deployment
           }
         },
         "spec": {
-          nodeSelector: {
-            "owner": "bjoern"
-          },
+          // nodeSelector: {
+          //
+          // },
           "containers": [
             {
               "name": website.name,

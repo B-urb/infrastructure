@@ -1,23 +1,23 @@
 import * as k8s from "@pulumi/kubernetes"
-import {namespaceGitlab} from "./index";
+import {Namespace, ServiceAccount} from "@pulumi/kubernetes/core/v1";
+import {Role} from "@pulumi/kubernetes/rbac/v1";
 
 
 
-function createServiceAccount() {
+export function createServiceAccount(namespace: Namespace) {
   return new k8s.core.v1.ServiceAccount("gitlab-runner",
       {
         metadata: {
           name: "gitlab-runner",
-          namespace: namespaceGitlab.metadata.name
+          namespace: namespace.metadata.name
         }
       })
 }
-export const serviceAccount = createServiceAccount();
-function createRole() {
+export function createRole(namespace:Namespace) {
   return new k8s.rbac.v1.Role("gitlab-runner", {
     metadata: {
       name: "gitlab-runner",
-      namespace: namespaceGitlab.metadata.name
+      namespace: namespace.metadata.name
     },
     rules: [
       { apiGroups: [""],
@@ -27,12 +27,11 @@ function createRole() {
     ]
   })
 }
-export const role = createRole();
-function createRoleBinding() {
+export function createRoleBinding(namespace:Namespace, role: Role, serviceAccount: ServiceAccount) {
   return new k8s.rbac.v1.RoleBinding("gitlab-runner", {
     metadata: {
       name: "gitlab-runner",
-      namespace: namespaceGitlab.metadata.name
+      namespace: namespace.metadata.name
     },
     roleRef: {
       apiGroup: "rbac.authorization.k8s.io",
@@ -41,9 +40,8 @@ function createRoleBinding() {
     subjects: [{
       kind: "ServiceAccount",
       name: serviceAccount.metadata.name,
-      namespace: namespaceGitlab.metadata.name
+      namespace: namespace.metadata.name
     }]
   })
 
 }
-export const rolebinding = createRoleBinding()

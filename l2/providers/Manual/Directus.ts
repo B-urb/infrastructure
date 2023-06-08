@@ -6,7 +6,7 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
-  const website =  new WebService("directus", "cms.tecios.de", namespace, "registry.gitlab.com/privateprojectsbu/directus", "main", {}, "prod");
+  const website =  new WebService("directus", "cms.tecios.de", namespace, "directus/directus", "10.0", {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
@@ -44,9 +44,8 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
           }
         },
         "spec": {
-          nodeSelector: {
-            "owner": "bjoern"
-          },
+          // nodeSelector: {
+          // },
           "containers": [
             {
               "name": website.name,
@@ -55,7 +54,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
               "env": [
                 {
                   name: "KEY",
-                  valueFrom: {configMapKeyRef: {name: secret.metadata.name, key: "directus-key"}}
+                  valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "directus-key"}}
                 },
                 {
                   name: "SECRET",
@@ -87,7 +86,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {
                   name: "ADMIN_PASSWORD",
-                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "admin-mail"}}
+                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "admin-password"}}
                 },
                 {name: "DB_CLIENT", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "db-client"}}},
                 {name: "DB_HOST", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "db-host"}}}, //
@@ -101,8 +100,8 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 //S3
                 {name: "STORAGE_LOCATIONS", value: "s3"},
                 {name: "STORAGE_S3_DRIVER", value: "s3"},
-                {name: "STORAGE_S3_REGION", value: "eu-central-1"},
-                {name: "STORAGE_S3_ENDPOINT", value: "http://minio.minio"},
+                {name: "STORAGE_S3_REGION", value: "EU"},
+                {name: "STORAGE_S3_ENDPOINT", value: "https://eu2.contabostorage.com"},
                 {
                   name: "STORAGE_S3_KEY",
                   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-key"}}

@@ -7,19 +7,20 @@ const token = ""
 
 // if gitlab
 
-const example = new gitlab.GroupVariable("kubeconfig", {
-  environmentScope: "*",
-  group: "12345",
-  key: "kubeconfig",
-  masked: false,
-  "protected": false,
-  value: token,
-  variableType: "file"
-});
+// const example = new gitlab.GroupVariable("kubeconfig", {
+//   environmentScope: "*",
+//   group: "12345",
+//   key: "kubeconfig",
+//   masked: false,
+//   "protected": false,
+//   value: token,
+//   variableType: "file"
+// });
 // Create Gitlab Runner
 
 //else github
 import * as github from "@pulumi/github";
+import {Domain} from "@pulumi/mailgun";
 /*
 const exampleSecretActionsEnvironmentSecret = new github.ActionsEnvironmentSecret("exampleSecretActionsEnvironmentSecret", {
   environment: "example_environment",
@@ -32,5 +33,15 @@ const exampleSecretIndex_actionsEnvironmentSecretActionsEnvironmentSecret = new 
   encryptedValue: _var.some_encrypted_secret_string,
 });
 */
+
+//TODO: use pulumi for mailgun
+// const _default = new Domain("default", {
+//   dkimKeySize: 1024,
+//   region: "eu",
+//   smtpPassword: "supersecretpassword1234",
+//   spamAction: "disabled",
+// });
+
 export const namespaceGitlab = createNamespace("gitlab")
+
 const gitlabRunner = createGitlabRunner(namespaceGitlab)

@@ -1,12 +1,12 @@
 import * as k8s from "@pulumi/kubernetes"
 import {Namespace} from "@pulumi/kubernetes/core/v1";
-
-const dbPassword = process.env.CI_DB_PASSWORD
-const dbUsername = process.env.CI_DB_USERNAME
-const dbRootPassword = process.env.CI_DB_ROOT_PASSWORD;
+import {dbUsername} from "../../../util/env";
+import {RandomPassword} from "@pulumi/random";
 
 
-export function createPostgresHelm(namespace: Namespace) {
+
+
+export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomPassword, appDbPassword: RandomPassword) {
   return new k8s.helm.v3.Chart("postgres", {
         chart: "postgresql",
         namespace: namespace.metadata.name,
@@ -19,10 +19,10 @@ export function createPostgresHelm(namespace: Namespace) {
            "storageClass": "juice",
            "postgresql":{
              "auth": {
-               "database": "directus",
-               "username": dbUsername,
-               "password": dbPassword,
-               "postgresPassword": dbRootPassword
+               "database": "applications",
+               "username": "applicationsDbAdmin",
+               "password": appDbPassword.result,
+               "postgresPassword": dbRootPassword.result
              }
            }
          }
