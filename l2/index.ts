@@ -1,11 +1,8 @@
 import {createDirectus} from "./directus";
-import { createGitlabSecret } from "../src/resources/kubernetes/Secrets";
-import {createNamespace} from "../l0/namespace";
-import * as k8s from "@pulumi/kubernetes";
+import {createNamespace} from "./namespace";
 import {createUmami} from "./umami";
 import {createDirectusConfigMap } from "./configs";
 import {DirectusConfig} from "../util/types";
-import * as env from "../util/env";
 import * as postgresql from "@pulumi/postgresql";
 import {Provider, Role} from "@pulumi/postgresql";
 import {RandomPassword} from "@pulumi/random";
@@ -64,7 +61,6 @@ const umami  = new postgresql.Grant("umamiFull", {
 export const namespaceMedusa = createNamespace("medusa")
 export const namespaceUmami = createNamespace("umami")
 export const namespaceDirectus = createNamespace("directus")
-export const gitlabSecretDi = createGitlabSecret("pulumi", env.pullSecret, "gitlab-pull-secret-directus", namespaceDirectus);
 
 
 export const adminPassword = new RandomPassword("admin-password", {length: 19, special: true}).result.apply(
