@@ -4,27 +4,7 @@ import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {backupSecret, medusaSecret } from "../../../l2/secrets";
 import * as pulumi from "@pulumi/pulumi"
 
-export function createGitlabSecret(username: string, token: string,name:string, namespace: Namespace): k8s.core.v1.Secret {
-  let secretData = {
-    "auths":
-        {
-          "registry.gitlab.com":
-              {"auth": Buffer.from(username + ":" + token).toString('base64')}
-        }
-  };
-  let encodedSecret = Buffer.from(JSON.stringify(secretData)).toString('base64')
-  const pullSecretName = pulumi.interpolate `gitlab-pull-secret-${namespace.metadata.name}`;
-  return new k8s.core.v1.Secret(name, {
-    metadata: {
-      name: pullSecretName,
-      namespace: namespace.metadata.name,
-    },
-    type: "kubernetes.io/dockerconfigjson",
-    data: {
-      ".dockerconfigjson": encodedSecret
-    }
-  });
-}
+export
 
 
 export function createBackupSecret(namespace: Namespace) {
@@ -73,45 +53,7 @@ export function createDbSecret(user: string, password: string, name: string, nam
 
 
 
-export function createBasicAuthSecret(user: string, password: string) {
 
-  const credentials = new Htpasswd('credentials', {
-    algorithm: HtpasswdAlgorithm.Bcrypt,
-    entries: [{
-      // example with a specific username + password
-      username: user,
-      password: password,
-    }],
-  });
-
-  const authString = credentials.result
-
-  return new k8s.core.v1.Secret("basic-auth", {
-    metadata: {
-      name: "basic-auth",
-      namespace: "kube-system"
-    },
-    stringData: {
-      "users": authString,
-    }
-  })
-}
-
-export function createMiddleware(secret: Secret) {
-  return new k8s.apiextensions.CustomResource("middleware-ba", {
-    apiVersion: "traefik.containo.us/v1alpha1",
-    kind: "Middleware",
-    metadata: {
-      name: "basic-auth",
-      namespace: "kube-system"
-    },
-    spec: {
-      basicAuth: {
-        secret: secret.metadata.name
-      }
-    }
-  })
-}
 
 
 

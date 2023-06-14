@@ -36,13 +36,13 @@ export const medusaSecret = {
   "postgres-connection-string": `postgresql://${medusaUser}:${medusaPassword}@postgres-postgresql.postgres:5432/medusa`,
   "redis-connection-string": `redis://redis-headless.redis:6379?ConnectTimeout=5000&password=${redisDBPassword}&IdleTimeOutSecs=180`
 }
-export function createBackupSecret(namespace: Namespace) {
+export function createBackupSecret(namespace: Input<string>, backupSecretData: Input<{[key: string]: Input<string>}>) {
   return new k8s.core.v1.Secret("postgres-backup", {
     metadata: {
       name: "postgres-backup",
-      namespace: namespace.metadata.name
+      namespace: namespace
     },
-    stringData: backupSecret
+    stringData: backupSecretData
   })
 }
 export function createUmamiSecret(namespace: Namespace, umamiSecret: Input<{[key: string]: Input<string>}> ) {

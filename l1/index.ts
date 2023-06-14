@@ -1,24 +1,15 @@
 import * as pulumi from "@pulumi/pulumi";
 import {createNamespace} from "./namespace";
 import {createPostgres} from "./postgres";
-import {createEtcd} from "./providers/charts/Etcd";
-import {createRedis} from "./redis";
-import * as k8s from "@pulumi/kubernetes";
-import {
-  createBasicAuthSecret,
-  createEtcdSecret,
-  createGitlabSecret,
-  createMiddleware
-} from "../src/resources/kubernetes/Secrets";
-import * as env from "../util/env";
+
 import {RandomPassword} from "@pulumi/random";
-import {Database, Grant, Provider, Role, Schema} from "@pulumi/postgresql";
 import {Config, secret} from "@pulumi/pulumi";
+import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
+import * as k8s from "@pulumi/kubernetes";
+import {Secret} from "@pulumi/kubernetes/core/v1";
 const namespacePostgres = createNamespace("postgres");
+export const postgresNamespace = namespacePostgres.metadata.name
 const namespaceEtcd = createNamespace("etcd")
-//const namespaceRedis = createNamespace("redis")
-//const baSecret = createBasicAuthSecret(env.basicAuthUser, env.basicAuthPassword);
-//const middleware = createMiddleware(baSecret)
 const config = new Config()
  const dbRootPassword = new RandomPassword("postgresRootPassword", {
   length: 16,
@@ -28,11 +19,14 @@ const appDbPassword = new RandomPassword("applicationDBPassword", {
   length: 16,
   special: true,
 });
+
 // Databases Setup
 const postgres = createPostgres("helm", namespacePostgres, dbRootPassword, appDbPassword)
 
 
 export const postgresService = postgres.getResource("v1/Service", "postgres/postgres-postgresql")
+
+
 postgresService.metadata.name.apply(value => pulumi.log.info(value))
 export const postgresUrl = pulumi.interpolate`${postgresService.metadata.name}.${postgresService.metadata.namespace}`
 
@@ -58,5 +52,46 @@ export const mailgunKey =  config.requireSecret("mailgunKey") //TODO: Replace wi
 //const etcd = createEtcd(namespaceEtcd, etcdSecret)
 //const redis = createRedis("helm",namespaceRedis);
 export const postgresRootPassword = dbRootPassword.result
+
+
+export function createBasicAuthSecret(user: string, password: string) {
+
+  const credentials = new Htpasswd('credentials', {
+    algorithm: HtpasswdAlgorithm.Bcrypt,
+    entries: [{
+      // example with a specific username + password
+      username: user,
+      password: password,
+    }],
+  });
+
+  const authString = credentials.result
+
+  return new k8s.core.v1.Secret("basic-auth", {
+    metadata: {
+      name: "basic-auth",
+      namespace: "kube-system"
+    },
+    stringData: {
+      "users": authString,
+    }
+  })
+}
+
+export function createMiddleware(secret: Secret) {
+  return new k8s.apiextensions.CustomResource("middleware-ba", {
+    apiVersion: "traefik.containo.us/v1alpha1",
+    kind: "Middleware",
+    metadata: {
+      name: "basic-auth",
+      namespace: "kube-system"
+    },
+    spec: {
+      basicAuth: {
+        secret: secret.metadata.name
+      }
+    }
+  })
+}
 
 

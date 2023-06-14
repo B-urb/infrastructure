@@ -6,8 +6,10 @@ import {DirectusConfig} from "../util/types";
 import * as postgresql from "@pulumi/postgresql";
 import {Provider, Role} from "@pulumi/postgresql";
 import {RandomPassword} from "@pulumi/random";
-import {Config, getStack, Input, interpolate, log, StackReference} from "@pulumi/pulumi";
-import {createDirectusSecret, createUmamiSecret} from "./secrets";
+import {Config, getStack, interpolate, jsonParse, log, Output, StackReference} from "@pulumi/pulumi";
+import {createBackupSecret, createDirectusSecret, createUmamiSecret} from "./secrets";
+import {Namespace} from "@pulumi/kubernetes/core/v1";
+import createBackupCronjob from "./CronJob";
 
 const config = new Config();
 const stack = getStack();
@@ -21,13 +23,30 @@ const password = new RandomPassword("directusDbPassword", {
   length: 16,
   special: true,
 });
-
+const postgresNamespace = stackRef.getOutput("postgresNamespace").apply(namespace =>  interpolate `${namespace}`)
 //Initialize Postgres Provider. NOTE: Requires port-forward for now
 const dbAuthPassword = stackRef.getOutput("postgresRootPassword").apply(authPW => interpolate `${authPW}`)
 const mailgunKey = stackRef.getOutput("mailgunKey").apply(authPW => interpolate `${authPW}`)
 
+
+
 const postgresProvider = new Provider("custom", {host: "localhost", password: dbAuthPassword, username: "postgres", sslmode:"disable"})
 
+// Create Backup for Database
+const backupPGPassword = new RandomPassword("backupPGPassword", {
+  length: 16,
+  special: true,
+});
+const backupRole = new Role("backup", {login: true,name:"backup", password: backupPGPassword.result, superuser: true, replication: true}, {provider:postgresProvider});
+const backUpSecret = {
+  "db-user": backupRole.name,
+  "db-password": backupPGPassword.result,
+  "s3-user-key":  config.get("s3-key")!!,
+  "s3-user-secret": config.get("s3-secret")!!,
+}
+
+createBackupCronjob(postgresNamespace, createBackupSecret(postgresNamespace, backUpSecret))
+export const backupPassword = backupPGPassword.result
 // Create Database for DirectusCMS
 const directusDb = new postgresql.Database("directus", {name: "directus"},{provider:postgresProvider});
 const role = new Role("directus", {login: true, name: "directus", password: password.result}, {provider:postgresProvider});
@@ -99,5 +118,3 @@ export const umamiSecret = {
   "db-connection-string": interpolate `postgresql://${umamiRole.name}:${umamiPassword.result}@postgres-postgresql.postgres:5432/${umamiDb.name}`
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
-//createMedusa("manual", namespaceMedusa, createMedusaSecret(namespaceMedusa))
-//export const plausible = createPlausible()

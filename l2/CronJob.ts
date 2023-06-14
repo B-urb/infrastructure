@@ -1,11 +1,12 @@
 import * as k8s from "@pulumi/kubernetes"
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+import {Input} from "@pulumi/pulumi";
 
-export default function createBackupCronjob(namespace: Namespace, backupSecret: Secret ) {
+export default function createBackupCronjob(namespace: Input<string>, backupSecret: Secret ) {
   return new k8s.batch.v1.CronJob("backup-database", {
     metadata: {
       name: "database-backup",
-      namespace: namespace.metadata.name
+      namespace: namespace
    },
     spec: {
       schedule: "0 2 * * *",
@@ -16,7 +17,7 @@ export default function createBackupCronjob(namespace: Namespace, backupSecret: 
               containers: [
                 {
                   name: "directus-backup",
-                  image: "bjoern5urban/postgres-s3-backup:latest",
+                  image: "bjoern5urban/postgres-s3-backup:v0.4",
                   imagePullPolicy: "Always",
                   env: [{
                     name: "DB_USER",
@@ -30,10 +31,10 @@ export default function createBackupCronjob(namespace: Namespace, backupSecret: 
                       valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "db-password"}}
                     },
                     {name: "S3_ENDPOINT",
-                      value: "minio.tecios.de"
+                      value: "https://eu2.contabostorage.com" //FIXME: Parameterize
                     },
                     {name: "AWS_REGION",
-                    value: "US"},
+                    value: "EU"},
                     {
                       name: "S3_BUCKET_NAME",
                       value: "postgres-backup"
