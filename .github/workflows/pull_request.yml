@@ -10,7 +10,7 @@ jobs:
       matrix:
         workdir: [ l0, l1, l2 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.5.0
         with:
           node-version: '19.9.0'
@@ -21,7 +21,7 @@ jobs:
           args: get pods
       - run: npm install
         working-directory: ${{ matrix.workdir }}
-      - uses: pulumi/actions@v3
+      - uses: pulumi/actions@v4
         with:
           command: preview
           work-dir: ${{ matrix.workdir }}
