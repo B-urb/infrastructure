@@ -27,10 +27,12 @@ const postgresNamespace = stackRef.getOutput("postgresNamespace").apply(namespac
 //Initialize Postgres Provider. NOTE: Requires port-forward for now
 const dbAuthPassword = stackRef.getOutput("postgresRootPassword").apply(authPW => interpolate `${authPW}`)
 const mailgunKey = stackRef.getOutput("mailgunKey").apply(authPW => interpolate `${authPW}`)
+const postgresUrl = stackRef.getOutput("postgresUrl").apply(url =>  interpolate `${url}`)
 
 
 
-const postgresProvider = new Provider("custom", {host: "localhost", password: dbAuthPassword, username: "postgres", sslmode:"disable"})
+
+const postgresProvider = new Provider("custom", {host: postgresUrl , password: dbAuthPassword, username: "postgres", sslmode:"disable"})
 
 // Create Backup for Database
 const backupPGPassword = new RandomPassword("backupPGPassword", {
