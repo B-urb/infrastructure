@@ -46,15 +46,9 @@ export function createSurrealManual() {
    namespace: namespace.metadata.name
   },
   spec: {
-   volumeName: name,
    accessModes: ["ReadWriteOnce"],
-   storageClassName: "longhorn",
-   resources: {
-    requests: {
-     storage: "8Gi"
-    }
-   }
-  }
+   resources: { requests: { storage: "10Gi" } },
+  },
  });
  new StatefulSet(name, {
   "metadata": {
@@ -117,6 +111,7 @@ export function createSurrealManual() {
        "volumeMounts": [
         {
          "name": surrealPvc.spec.volumeName,
+         mountPropagation: "HostToContainer",
          "mountPath": "/.surreal"
         }
        ]
