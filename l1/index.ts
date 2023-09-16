@@ -7,6 +7,7 @@ import {Config, secret} from "@pulumi/pulumi";
 import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
 import * as k8s from "@pulumi/kubernetes";
 import {Secret} from "@pulumi/kubernetes/core/v1";
+import {createSurrealManual} from "./providers/Manual/Surreal";
 const namespacePostgres = createNamespace("postgres");
 export const postgresNamespace = namespacePostgres.metadata.name
 const namespaceEtcd = createNamespace("etcd")
@@ -21,16 +22,14 @@ const appDbPassword = new RandomPassword("applicationDBPassword", {
 });
 
 // Databases Setup
+// Postgres
 const postgres = createPostgres("helm", namespacePostgres, dbRootPassword, appDbPassword)
-
-
 export const postgresService = postgres.getResource("v1/Service", "postgres/postgres-postgresql")
-
-
 postgresService.metadata.name.apply(value => pulumi.log.info(value))
 export const postgresUrl = pulumi.interpolate`${postgresService.metadata.name}.${postgresService.metadata.namespace}`
 
-
+// Surreal
+createSurrealManual()
 
 
 
