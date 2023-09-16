@@ -55,7 +55,7 @@ export function createSurrealManual() {
    "name": name,
    "namespace": namespace.metadata.name,
    annotations: {
-    "pulumi.com/timeoutSeconds": "60" // Only wait 1 minute for pulumi to timeout
+    "pulumi.com/timeoutSeconds": "120" // Only wait 1 minute for pulumi to timeout
    }
   },
   "spec": {
