@@ -53,7 +53,10 @@ export function createSurrealManual() {
  new StatefulSet(name, {
   "metadata": {
    "name": name,
-   "namespace": namespace.metadata.name
+   "namespace": namespace.metadata.name,
+   annotations: {
+    "pulumi.com/timeoutSeconds": "60" // Only wait 1 minute for pulumi to timeout
+   }
   },
   "spec": {
    "serviceName": `${name}-service`,
