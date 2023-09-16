@@ -42,7 +42,8 @@ export function createSurrealManual() {
 
  const surrealPvc = new PersistentVolumeClaim(name, {
   metadata: {
-   name: name
+   name: name,
+   namespace: namespace.metadata.name
   },
   spec: {
    volumeName: name,
