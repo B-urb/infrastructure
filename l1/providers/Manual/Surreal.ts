@@ -114,18 +114,6 @@ export function createSurrealManual() {
          "containerPort": 8000
         }
        ],
-       "livenessProbe": {
-        httpGet: {
-         path: "/",
-         port: "surreal"
-        }
-       },
-       readinessProbe: {
-        httpGet: {
-         path: "/",
-         port: "surreal"
-        }
-       },
        "volumeMounts": [
         {
          "name": surrealPvc.spec.volumeName,
@@ -139,7 +127,6 @@ export function createSurrealManual() {
        "name": surrealPvc.spec.volumeName,
        "persistentVolumeClaim": {
         "claimName": surrealPvc.metadata.name,
-
        }
       }
      ],
