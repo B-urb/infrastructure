@@ -110,8 +110,8 @@ export function createSurrealManual() {
        ],
        "volumeMounts": [
         {
-         "name": surrealPvc.spec.volumeName,
-         mountPropagation: "HostToContainer",
+         "name": surrealPvc.metadata.name,
+         "mountPropagation": "HostToContainer",
          "mountPath": "/data"
         }
        ]
@@ -119,7 +119,7 @@ export function createSurrealManual() {
      ],
      "volumes": [
       {
-       "name": surrealPvc.spec.volumeName,
+       "name": surrealPvc.metadata.name,
        "persistentVolumeClaim": {
         "claimName": surrealPvc.metadata.name,
        }
