@@ -1,8 +1,9 @@
-import {ConfigMap, StatefulSet} from "@pulumi/kubernetesx";
+import {ConfigMap} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
 import exp = require("constants");
+import {StatefulSet} from "@pulumi/kubernetes/apps/v1";
 
 const name = "surrealdb"
 const namespaceName = "surrealdb"
