@@ -41,7 +41,11 @@ export function createSurrealManual() {
  })
 
  const surrealPvc = new PersistentVolumeClaim(name, {
+  metadata: {
+   name: name
+  },
   spec: {
+   volumeName: name,
    accessModes: ["ReadWriteOnce"],
    storageClassName: "longhorn",
    resources: {
@@ -123,7 +127,7 @@ export function createSurrealManual() {
        },
        "volumeMounts": [
         {
-         "name": "surreal-volume",
+         "name": surrealPvc.spec.volumeName,
          "mountPath": "/.surreal"
         }
        ]
@@ -131,7 +135,7 @@ export function createSurrealManual() {
      ],
      "volumes": [
       {
-       "name": "surreal-volume",
+       "name": surrealPvc.spec.volumeName,
        "persistentVolumeClaim": {
         "claimName": surrealPvc.metadata.name,
 
