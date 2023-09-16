@@ -80,6 +80,9 @@ export function createSurrealManual() {
        "name": name,
        "image": image + ":" + tag,
        "imagePullPolicy": "Always",
+       "securityContext": {
+        "runAsUser": 0
+       },
        "args": ["start", "--log", "$(LOG_LEVEL)", "--user", "$(SURREAL_USER)", "--pass", "$(SURREAL_PASSWORD)", "file:$(FILE_PATH)"],
        "env": [
         {
