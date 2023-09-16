@@ -35,8 +35,8 @@ export function createSurrealManual() {
    namespace: namespace.metadata.name
   },
   data: {
-   "log-level": "error",
-   "file-path": "/data/db"
+   "log-level": "trace",
+   "file-path": "/var/db"
   }
  })
 
@@ -80,7 +80,7 @@ export function createSurrealManual() {
        "name": name,
        "image": image + ":" + tag,
        "imagePullPolicy": "Always",
-       "args": ["start", "--log", "$(LOG_LEVEL)", "--user", "$(SURREAL_USER)", "--pass", "$(SURREAL_PASSWORD)", "file:~/data/db"],
+       "args": ["start", "--log", "$(LOG_LEVEL)", "--user", "$(SURREAL_USER)", "--pass", "$(SURREAL_PASSWORD)", "file:$(FILE_PATH)"],
        "env": [
         {
          name: "FILE_PATH",
@@ -112,7 +112,7 @@ export function createSurrealManual() {
         {
          "name": surrealPvc.metadata.name,
          "mountPropagation": "HostToContainer",
-         "mountPath": "~/data"
+         "mountPath": "/var"
         }
        ]
       }
