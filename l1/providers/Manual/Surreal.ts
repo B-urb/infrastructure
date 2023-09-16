@@ -80,10 +80,7 @@ export function createSurrealManual() {
        "name": name,
        "image": image + ":" + tag,
        "imagePullPolicy": "Always",
-       "command": ["/bin/sh", "-c"],
-       "args": [
-        "surreal start --log $(LOG_LEVEL) --user $(SURREAL_USER) --pass $(SURREAL_PASSWORD) file:$(FILE_PATH)"
-       ],
+       "command": ["surreal", "start", "--log", "$(LOG_LEVEL)", "--user", "$(SURREAL_USER)", "--pass", "$(SURREAL_PASSWORD)", "file:$(FILE_PATH)"],
        "env": [
         {
          name: "FILE_PATH",
