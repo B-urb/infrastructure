@@ -1,21 +1,26 @@
 import {ConfigMap, StatefulSet} from "@pulumi/kubernetesx";
 import {keelAnnotationsProd} from "../../../util/globals";
-import {Secret} from "@pulumi/kubernetes/core/v1";
+import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
 import exp = require("constants");
 
 const name = "surrealdb"
-const namespace = "surrealdb"
+const namespaceName = "surrealdb"
 const image = "surrealdb/surrealdb"
 const tag = "1.0.0"
 
 export const surrealPassword = new RandomPassword("surrealPassword",{length: 16, special: true})
 
 export function createSurrealManual() {
+ const namespace = new Namespace(name, {
+  metadata: {
+   name: name,
+  }
+ })
  const secret = new Secret(name, {
   metadata: {
    name: name,
-   namespace: namespace
+   namespace: namespace.metadata.name
   },
   stringData: {
    "surreal-user": "root",
@@ -26,7 +31,7 @@ export function createSurrealManual() {
  const config = new ConfigMap(name, {
   metadata: {
    name: name,
-   namespace: namespace
+   namespace: namespace.metadata.name
   },
   data: {
    "log-level": "error",
@@ -35,7 +40,8 @@ export function createSurrealManual() {
  })
  new StatefulSet(name, {
   "metadata": {
-   "name": name
+   "name": name,
+   "namespace": namespace.metadata.name
   },
   "spec": {
    "serviceName": `${name}-service`,
