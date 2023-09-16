@@ -1,4 +1,4 @@
-import {ConfigMap} from "@pulumi/kubernetes/core/v1";
+import {ConfigMap, PersistentVolumeClaim} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
@@ -39,6 +39,18 @@ export function createSurrealManual() {
    "file-path": "/.surreal"
   }
  })
+
+ const surrealPvc = new PersistentVolumeClaim(name, {
+  spec: {
+   accessModes: ["ReadWriteOnce"],
+   storageClassName: "longhorn",
+   resources: {
+    requests: {
+     storage: "8Gi"
+    }
+   }
+  }
+ });
  new StatefulSet(name, {
   "metadata": {
    "name": name,
@@ -121,7 +133,8 @@ export function createSurrealManual() {
       {
        "name": "surreal-volume",
        "persistentVolumeClaim": {
-        "claimName": "surreal-pvc"
+        "claimName": surrealPvc.metadata.name,
+
        }
       }
      ],
