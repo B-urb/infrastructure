@@ -148,7 +148,7 @@ export function createSurrealManual() {
     }
    ],
    "selector": {
-    "name": name
+    "name": `${name}-0`
    }
   }
  });
