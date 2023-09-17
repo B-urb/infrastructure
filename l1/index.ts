@@ -25,7 +25,6 @@ const appDbPassword = new RandomPassword("applicationDBPassword", {
 // Postgres
 const postgres = createPostgres("helm", namespacePostgres, dbRootPassword, appDbPassword)
 export const postgresService = postgres.getResource("v1/Service", "postgres/postgres-postgresql")
-postgresService.metadata.name.apply(value => pulumi.log.info(value))
 export const postgresUrl = pulumi.interpolate`${postgresService.metadata.name}.${postgresService.metadata.namespace}`
 
 // Surreal

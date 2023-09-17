@@ -1,4 +1,4 @@
-import {ConfigMap, PersistentVolumeClaim} from "@pulumi/kubernetes/core/v1";
+import {ConfigMap, PersistentVolumeClaim, Service} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
@@ -132,4 +132,24 @@ export function createSurrealManual() {
    }
   }
  })
+
+ new Service(name, {
+  "metadata": {
+   name: name,
+   namespace: namespace.metadata.name
+  },
+  "spec": {
+   "ports": [
+    {
+     "name": "surreal",
+     "port": 8000,
+     "protocol": "TCP",
+     "targetPort": "surreal"
+    }
+   ],
+   "selector": {
+    "name": name
+   }
+  }
+ });
 }
