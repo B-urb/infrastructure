@@ -17,6 +17,9 @@ export function createVaultwardenHelmchart() {
           repo: "https://charts.cronce.io/",
         },
         values: {
+          "image": {
+            "tag": "1.29.2-alpine"
+          },
           "ingress": {
             "enabled": "true",
             "class": "none",
