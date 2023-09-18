@@ -25,7 +25,7 @@ export function createVaultwardenHelmchart() {
             "class": "traefik",
             "tls": [{
               "secretName": "vaultwarden" + "-legacy-tls",
-              "hosts": ["passwords.burban.me"]
+              "hosts": ["warden.burban.me"]
             }],
             "hosts": [
               {
@@ -35,7 +35,7 @@ export function createVaultwardenHelmchart() {
                     "path": "/"
                   }
                 ],
-                "host": 'passwords.burban.me'
+                "host": "warden.burban.me"
               }],
             "annotations": {
               "kubernetes.io/ingress.class": "traefik",
