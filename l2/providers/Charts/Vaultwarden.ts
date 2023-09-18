@@ -22,7 +22,7 @@ export function createVaultwardenHelmchart() {
           },
           "ingress": {
             "enabled": "true",
-            "class": "<none>",
+            "class": "traefik",
             "tls": [{
               "secretName": "vaultwarden" + "-legacy-tls",
               "hosts": ["passwords.burban.me"]
