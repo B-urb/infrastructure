@@ -14,7 +14,7 @@ export function createVaultwardenHelmchart() {
         chart: "bitwarden-rs",
         namespace: namespace.metadata.name,
         fetchOpts: {
-          repo: "https://charts.cronce.io/cronce",
+          repo: "https://charts.cronce.io/",
         },
         values: {
           "ingress": {
