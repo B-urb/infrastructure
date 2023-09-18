@@ -19,6 +19,7 @@ export function createVaultwardenHelmchart() {
         values: {
           "ingress": {
             "enabled": "true",
+            "class": "none",
             "tls": [{
               "secretName": "vaultwarden" + "-legacy-tls",
               "hosts": ["passwords.burban.me"]
