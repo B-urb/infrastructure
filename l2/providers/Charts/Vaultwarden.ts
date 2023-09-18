@@ -11,10 +11,10 @@ export function createVaultwardenHelmchart() {
   })
 
   return new k8s.helm.v3.Chart("bitwarden-rs", {
-        chart: "cronce/bitwarden-rs",
+        chart: "bitwarden-rs",
         namespace: namespace.metadata.name,
         fetchOpts: {
-          repo: "https://charts.cronce.io/",
+          repo: "https://charts.cronce.io/cronce",
         },
         values: {
           "ingress": {
