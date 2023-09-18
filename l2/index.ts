@@ -10,6 +10,7 @@ import { Config, getStack, interpolate, jsonParse, log, Output, StackReference }
 import { createBackupSecret, createDirectusSecret, createUmamiSecret } from "./secrets";
 import { Secret } from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
+import {createVaultwardenHelmchart} from "./providers/Charts/Vaultwarden";
 
 const config = new Config();
 const stack = getStack();
@@ -139,3 +140,4 @@ export const umamiSecret = {
   "db-connection-string": interpolate`postgresql://${umamiCredentials.user}:${umamiCredentials.password}@postgres-postgresql.postgres:5432/${umamiCredentials.db}`
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
+createVaultwardenHelmchart()
