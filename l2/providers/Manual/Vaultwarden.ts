@@ -6,7 +6,7 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createVaultwardenManual(namespace: Namespace) {
-  const website =  new WebService("vaultwarden", "warden.tecios.de", namespace, "vaultwarden/server", "10.4.3", {}, "prod");
+  const website =  new WebService("vaultwarden", "warden.tecios.de", namespace, "vaultwarden/server", "1.29.2-alpine", {}, "prod");
 
   const deployment = createVaultwardenDeployments(website);
   const service = createVaultwardenService(website);
@@ -57,7 +57,7 @@ function createVaultwardenDeployments(website: WebService): Deployment {
               "ports": [
                 {
                   "name": "http",
-                  "containerPort": 8055
+                  "containerPort": 80
                 },],
               "livenessProbe": {
                 httpGet: {
