@@ -11,6 +11,7 @@ import { createBackupSecret, createDirectusSecret, createUmamiSecret } from "./s
 import { Secret } from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
 import {createVaultwardenHelmchart} from "./providers/Charts/Vaultwarden";
+import {createVaultwardenManual} from "./providers/Manual/Vaultwarden";
 
 const config = new Config();
 const stack = getStack();
@@ -124,7 +125,7 @@ const directusSecret = {
 export const directusConfigMapData = {
   PUBLIC_URL: "https://cms.tecios.de",
   "db-client": "pg",
-  "db-host": "postgres-postgresql.postgres",
+  "db-host": postgresUrl,
   "db-port": "5432",
   "s3-bucket": "directus",
   "directus-key": "bjoern"
@@ -137,7 +138,8 @@ const directusConfig: DirectusConfig = {
 }
 const directus = createDirectus("manual", directusConfig);
 export const umamiSecret = {
-  "db-connection-string": interpolate`postgresql://${umamiCredentials.user}:${umamiCredentials.password}@postgres-postgresql.postgres:5432/${umamiCredentials.db}`
+  "db-connection-string": interpolate`postgresql://${umamiCredentials.user}:${umamiCredentials.password}@${postgresUrl}:5432/${umamiCredentials.db}`
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
-//createVaultwardenHelmchart()
+const vaultwardenNamespace = createNamespace("vaultwarden")
+createVaultwardenManual(vaultwardenNamespace)
