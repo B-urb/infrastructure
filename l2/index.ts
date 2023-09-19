@@ -140,4 +140,4 @@ export const umamiSecret = {
   "db-connection-string": interpolate`postgresql://${umamiCredentials.user}:${umamiCredentials.password}@postgres-postgresql.postgres:5432/${umamiCredentials.db}`
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
-createVaultwardenHelmchart()
+//createVaultwardenHelmchart()
