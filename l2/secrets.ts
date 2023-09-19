@@ -72,3 +72,13 @@ export function createDirectusSecret(name: string, namespace: Namespace, directu
     stringData: directusSecret
   })
 }
+
+export function createSecretWrapper(name: string, namespace: Namespace, secretData: Input<{[key: string]:  Input<string>}> ) {
+  return new k8s.core.v1.Secret(name, {
+    metadata: {
+      name: name,
+      namespace: namespace.metadata.name
+    },
+    stringData: secretData
+  })
+}

@@ -8,7 +8,7 @@ import { Provider, Role } from "@pulumi/postgresql";
 import { RandomPassword } from "@pulumi/random";
 import { Config, getStack, interpolate, jsonParse, log, Output, StackReference } from "@pulumi/pulumi";
 import { createBackupSecret, createDirectusSecret, createUmamiSecret } from "./secrets";
-import { Secret } from "@pulumi/kubernetes/core/v1";
+import {ConfigMap, Secret} from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
 import {createVaultwardenHelmchart} from "./providers/Charts/Vaultwarden";
 import {createVaultwardenManual} from "./providers/Manual/Vaultwarden";
@@ -85,6 +85,8 @@ const grant = new postgresql.Grant("directusFull", {
 }, { provider: postgresProvider });
 
 const umamiCredentials = createDBCredentials("umami")
+const vaultwardenCredentials = createDBCredentials("vaultwarden")
+
 
 const lycheeIdent = "lychee"
 const lycheeCredentials = createDBCredentials(lycheeIdent)
@@ -141,5 +143,10 @@ export const umamiSecret = {
   "db-connection-string": interpolate`postgresql://${umamiCredentials.user}:${umamiCredentials.password}@${postgresUrl}:5432/${umamiCredentials.db}`
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
+
+export const vaultwardenSecret = {
+  "database-url": interpolate`postgresql://${vaultwardenCredentials.user}:${vaultwardenCredentials.password}@${postgresUrl}:5432/${vaultwardenCredentials.db}`
+}
 const vaultwardenNamespace = createNamespace("vaultwarden")
-createVaultwardenManual(vaultwardenNamespace)
+const configMap = new ConfigMap("vaultwarden", {data: {}})
+createVaultwardenManual(vaultwardenNamespace,configMap, vaultwardenSecret)

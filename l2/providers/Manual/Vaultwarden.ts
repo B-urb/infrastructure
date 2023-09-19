@@ -2,17 +2,30 @@ import * as k8s from "@pulumi/kubernetes"
 import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "../../types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
-import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+import {ConfigMap, Namespace, PersistentVolumeClaim, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
+import {createSecretWrapper} from "../../secrets";
+import {Input} from "@pulumi/pulumi";
 
-export function createVaultwardenManual(namespace: Namespace) {
+export function createVaultwardenManual(namespace: Namespace, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>) {
   const website =  new WebService("vaultwarden", "warden.tecios.de", namespace, "vaultwarden/server", "1.29.2-alpine", {}, "prod");
 
-  const deployment = createVaultwardenDeployments(website);
+  const deployment = createVaultwardenDeployments(website, configMap, secretData);
   const service = createVaultwardenService(website);
   const ingress = createVaultwardenIngress(website);
 }
-function createVaultwardenDeployments(website: WebService): Deployment {
+function createVaultwardenDeployments(website: WebService, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>): Deployment {
+  const secret = createSecretWrapper(website.name, website.namespace, secretData)
+  const wardenPvc = new PersistentVolumeClaim(website.name, {
+    metadata: {
+      name: website.name,
+      namespace: website.namespace.metadata.name
+    },
+    spec: {
+      accessModes: ["ReadWriteOnce"],
+      resources: { requests: { storage: "10Gi" } },
+    },
+  });
   return new k8s.apps.v1.Deployment(website.name, {
     metadata: {
       name: website.name,
@@ -52,6 +65,8 @@ function createVaultwardenDeployments(website: WebService): Deployment {
               "image": website.registryImage + ":" + website.imageTag,
               "imagePullPolicy": "Always",
               "env": [
+                {name: "DATABASE_URL",
+                valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "database-url" }}}
 
               ],
               "ports": [
@@ -70,6 +85,21 @@ function createVaultwardenDeployments(website: WebService): Deployment {
                   path: "/",
                   port: "http"
                 }
+              },
+              "volumeMounts": [
+                {
+                  "name": wardenPvc.metadata.name,
+                  "mountPropagation": "HostToContainer",
+                  "mountPath": "/data"
+                }
+              ]
+            }
+          ],
+          "volumes": [
+            {
+              "name": wardenPvc.metadata.name,
+              "persistentVolumeClaim": {
+                "claimName": wardenPvc.metadata.name,
               }
             }
           ],
