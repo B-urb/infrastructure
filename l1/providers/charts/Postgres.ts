@@ -16,16 +16,20 @@ export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomP
         },
         values: {
          "global": {
-           "storageClass": "juice",
+           "storageClass": "local-path",
            "postgresql":{
              "auth": {
                "database": "applications",
-               "username": "applicationsDbAdmin",
+               "username": "applicationDbAdmin",
                "password": appDbPassword.result,
                "postgresPassword": dbRootPassword.result
              }
            }
-         }
+         },
+          "architecture": "replication",
+          "readReplicas": {
+           "replicaCount": 2
+          }
         }
       }
   );
