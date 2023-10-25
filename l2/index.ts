@@ -29,7 +29,7 @@ const postgresNamespace = stackRef.getOutput("postgresNamespace").apply(namespac
 //Initialize Postgres Provider. NOTE: Requires port-forward for now
 const dbAuthPassword = stackRef.getOutput("postgresRootPassword").apply(authPW => interpolate`${authPW}`)
 const mailgunKey = stackRef.getOutput("mailgunKey").apply(authPW => interpolate`${authPW}`)
-const postgresUrl = "localhost" //stackRef.getOutput("postgresUrl").apply(url => interpolate`${url}`)
+const postgresUrl = stackRef.getOutput("postgresUrl").apply(url => interpolate`${url}`)
 
 
 
