@@ -148,5 +148,5 @@ export const vaultwardenSecret = {
   "database-url": interpolate`postgresql://${vaultwardenCredentials.user}:${vaultwardenCredentials.password}@${postgresUrl}:5432/${vaultwardenCredentials.db}`
 }
 const vaultwardenNamespace = createNamespace("vaultwarden")
-const configMap = new ConfigMap("vaultwarden", {data: {}})
+const configMap = new ConfigMap("vaultwarden", {metadata: {namespace: vaultwardenNamespace.metadata.name},data: {}})
 createVaultwardenManual(vaultwardenNamespace,configMap, vaultwardenSecret)
