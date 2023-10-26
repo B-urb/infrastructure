@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-node@v3.5.0
         with:
           node-version: '19.9.0'
-      - uses: actions/kubectl@v1.27.2
+      - uses: actions-hub/kubectl@v1.27.2
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
