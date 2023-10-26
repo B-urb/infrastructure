@@ -1,0 +1,13 @@
+{
+    "name": "l0",
+    "main": "index.ts",
+
+    "dependencies": {
+        "@pulumi/mailgun": "^3.4.1",
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/github": "^5.9.0",
+        "@pulumi/gitlab": "^4.10.0",
+        "@pulumi/kubernetes": "^3.29.0",
+        "@types/node": "^16"
+    }
+}

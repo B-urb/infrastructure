@@ -1,0 +1,30 @@
+name: Pulumi
+on:
+  - pull_request
+jobs:
+  preview:
+    name: Preview
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workdir: [ l0, l1, l2 ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.5.0
+        with:
+          node-version: '19.9.0'
+      - uses: actions/kubectl@v1.27.2
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: get pods
+      - run: npm install
+        working-directory: ${{ matrix.workdir }}
+      - uses: pulumi/actions@v4
+        with:
+          command: preview
+          work-dir: ${{ matrix.workdir }}
+          stack-name: prod
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
