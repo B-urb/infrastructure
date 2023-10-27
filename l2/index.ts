@@ -130,7 +130,9 @@ export const directusConfigMapData = {
   "db-host": postgresUrl,
   "db-port": "5432",
   "s3-bucket": "directus",
-  "directus-key": "bjoern"
+  "directus-key": "bjoern",
+  "redis-host": "redis-redis-master.redis",
+  "redis-port": "6379"
 
 }
 const directusConfig: DirectusConfig = {

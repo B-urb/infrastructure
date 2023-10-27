@@ -97,6 +97,10 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {name: "DB_USER", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "db-user"}}},
                 {name: "DB_DATABASE", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "db-name"}}},
+                {name: "REDIS_HOST",
+                valueFrom: {configMapKeyRef: {name: config.metadata.name, key:"redis-host"}}},
+                {name: "REDIS_PORT",
+                  valueFrom: {configMapKeyRef: {name: config.metadata.name, key:"redis-port"}}},
                 //S3
                 {name: "STORAGE_LOCATIONS", value: "s3"},
                 {name: "STORAGE_S3_DRIVER", value: "s3"},
