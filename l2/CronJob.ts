@@ -25,7 +25,7 @@ export default function createBackupCronjob(namespace: Input<string>, backupSecr
                   },
                     {
                       name: "DB_HOST",
-                      value: "postgres-postgresql.postgres"
+                      value: "postgres-postgresql-read.postgres"
                     }, {
                     name: "DB_PASSWORD",
                       valueFrom: {secretKeyRef: {name: backupSecret.metadata.name, key: "db-password"}}
