@@ -20,12 +20,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
       labels: {
         name: website.name
       },
-      "annotations": {
-        "keel.sh/trigger": "poll",
-        "keel.sh/pollSchedule": "@every 5m",
-        ...keelAnnotationsProd
-
-      }
     },
     "spec": {
       "strategy": {

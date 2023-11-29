@@ -44,7 +44,10 @@ const paperlessMediaPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-media
 const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
   metadata: {
     name: "paperless",
-    namespace: namespace.metadata.name
+    namespace: namespace.metadata.name,
+    labels: {
+      name: "paperless"
+    }
   },
   spec: {
     selector: { matchLabels: { app: "paperless" } },
@@ -57,7 +60,7 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
           image: "ghcr.io/paperless-ngx/paperless-ngx:latest",
           ports: [{ containerPort: 8000 }],
           env: [
-            { name: "PAPERLESS_REDIS", value: "redis://broker:6379" },
+            { name: "PAPERLESS_REDIS", value: "redis://redis-redis-master.redis:6379" },
             { name: "PAPERLESS_DBHOST", valueFrom:{configMapKeyRef:{name: config.metadata.name, key: "postgresHost"}}},
             { name: "PAPERLESS_DBUSER", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresUser"}}},
             { name: "PAPERLESS_DBPASS", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresPassword"}}},
