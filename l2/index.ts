@@ -85,7 +85,6 @@ const grant = new postgresql.Grant("directusFull", {
 }, { provider: postgresProvider });
 
 const umamiCredentials = createDBCredentials("umami")
-const vaultwardenCredentials = createDBCredentials("vaultwarden")
 
 
 const lycheeIdent = "lychee"
@@ -146,9 +145,23 @@ export const umamiSecret = {
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
 
+
+
+const vaultwardenCredentials = createDBCredentials("vaultwarden")
 export const vaultwardenSecret = {
   "database-url": interpolate`postgresql://${vaultwardenCredentials.user}:${vaultwardenCredentials.password}@${postgresUrl}:5432/${vaultwardenCredentials.db}`
 }
 const vaultwardenNamespace = createNamespace("vaultwarden")
 const configMap = new ConfigMap("vaultwarden", {metadata: {name: "vaultwarden", namespace: vaultwardenNamespace.metadata.name},data: {}})
 createVaultwardenManual(vaultwardenNamespace,configMap, vaultwardenSecret)
+
+
+const paperlessDbCredentials = createDBCredentials("paperless")
+const paperlessNamespace = createNamespace("paperless")
+const paperlessSecret = {
+  "database"
+}
+const paperlessConfigMap = new ConfigMap("paperless", {metadata: {name: "paperless", namespace: vaultwardenNamespace.metadata.name},data: {
+  url: "test"
+  }})
+
