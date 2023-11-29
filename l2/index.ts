@@ -7,11 +7,12 @@ import * as postgresql from "@pulumi/postgresql";
 import { Provider, Role } from "@pulumi/postgresql";
 import { RandomPassword } from "@pulumi/random";
 import { Config, getStack, interpolate, jsonParse, log, Output, StackReference } from "@pulumi/pulumi";
-import { createBackupSecret, createDirectusSecret, createUmamiSecret } from "./secrets";
+import {createBackupSecret, createDirectusSecret, createSecretWrapper, createUmamiSecret} from "./secrets";
 import {ConfigMap, Secret} from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
 import {createVaultwardenHelmchart} from "./providers/Charts/Vaultwarden";
 import {createVaultwardenManual} from "./providers/Manual/Vaultwarden";
+import {createPaperless} from "./providers/Manual/paperless/Paperless";
 
 const config = new Config();
 const stack = getStack();
@@ -156,12 +157,15 @@ const configMap = new ConfigMap("vaultwarden", {metadata: {name: "vaultwarden", 
 createVaultwardenManual(vaultwardenNamespace,configMap, vaultwardenSecret)
 
 
+
 const paperlessDbCredentials = createDBCredentials("paperless")
 const paperlessNamespace = createNamespace("paperless")
 const paperlessSecret = {
-  "database"
+ "postgresHost": postgresUrl,
+ "postgresUser": paperlessDbCredentials.user,
+ "postgresPassword": paperlessDbCredentials.password,
+ "postgresDBName": paperlessDbCredentials.db,
 }
 const paperlessConfigMap = new ConfigMap("paperless", {metadata: {name: "paperless", namespace: vaultwardenNamespace.metadata.name},data: {
-  url: "test"
   }})
-
+createPaperless(paperlessNamespace, createSecretWrapper("paperless", paperlessNamespace, paperlessSecret), paperlessConfigMap)

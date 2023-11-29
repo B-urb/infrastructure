@@ -3,15 +3,6 @@ import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
-const config = new pulumi.Config();
-
-// Reading Postgres connection details from Pulumi stack config
-const postgresUser = config.require("postgresUser");
-const postgresPassword = config.require("postgresPassword");
-const postgresDb = config.require("postgresDb");
-const postgresHost = config.require("postgresHost");
-
-
 export function createPaperless(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "docs.burban.me"
 // Define PVCs for Paperless
@@ -69,8 +60,8 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
             { name: "PAPERLESS_DBPASS", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresPassword"}}},
             { name: "PAPERLESS_DBNAME", valueFrom:{configMapKeyRef:{name: config.metadata.name, key: "postgresDBName"}}},
             { name: "PAPERLESS_TIKA_ENABLED", value: "1" },
-            { name: "PAPERLESS_TIKA_GOTENBERG_ENDPOINT", value: "http://gotenberg:3000" },
-            { name: "PAPERLESS_TIKA_ENDPOINT", value: "http://tika:9998" },
+            { name: "PAPERLESS_TIKA_GOTENBERG_ENDPOINT", value: "http://gotenberg" },
+            { name: "PAPERLESS_TIKA_ENDPOINT", value: "http://tika" },
           ],
           volumeMounts: [
             {
@@ -132,7 +123,7 @@ const tikaService = new k8s.core.v1.Service("tika-service", {
   },
   spec: {
     selector: { app: "tika" },
-    ports: [{ port: 9998, targetPort: 9998 }],
+    ports: [{ port: 80, targetPort: 9998 }],
     type: "ClusterIP",
   },
 });
@@ -169,7 +160,7 @@ const gotenbergService = new k8s.core.v1.Service("gotenberg-service", {
   },
   spec: {
     selector: { app: "gotenberg" },
-    ports: [{ port: 3000, targetPort: 3000 }],
+    ports: [{ port: 80, targetPort: 3000 }],
     type: "ClusterIP",
   },
 });
