@@ -8,6 +8,7 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
 // Define PVCs for Paperless
 const paperlessDataPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-data-pvc", {
   metadata: {
+    name: "paperless-data",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -17,12 +18,13 @@ const paperlessDataPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-data-p
         storage: "10Gi", // Adjust the size as needed
       },
     },
-    storageClassName: "standard", // Using the default storage class
+    storageClassName: "local-path", // Using the default storage class
   },
 });
 
 const paperlessMediaPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-media-pvc", {
   metadata: {
+    name: "paperless-media",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -32,7 +34,7 @@ const paperlessMediaPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-media
         storage: "10Gi", // Adjust the size as needed
       },
     },
-    storageClassName: "standard", // Using the default storage class
+    storageClassName: "local-path", // Using the default storage class
   },
 });
 
@@ -41,6 +43,7 @@ const paperlessMediaPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-media
 // Paperless Deployment
 const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
   metadata: {
+    name: "paperless",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -99,6 +102,7 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
 // Tika Deployment
 const tikaDeployment = new k8s.apps.v1.Deployment("tika-deployment", {
   metadata: {
+    name: "tika",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -119,6 +123,7 @@ const tikaDeployment = new k8s.apps.v1.Deployment("tika-deployment", {
 // Tika Service
 const tikaService = new k8s.core.v1.Service("tika-service", {
   metadata: {
+    name: "tika",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -131,6 +136,7 @@ const tikaService = new k8s.core.v1.Service("tika-service", {
 // Gotenberg Deployment
 const gotenbergDeployment = new k8s.apps.v1.Deployment("gotenberg-deployment", {
   metadata: {
+    name: "gotenberg",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -156,6 +162,7 @@ const gotenbergDeployment = new k8s.apps.v1.Deployment("gotenberg-deployment", {
 // Gotenberg Service
 const gotenbergService = new k8s.core.v1.Service("gotenberg-service", {
   metadata: {
+    name: "gotenberg",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -167,6 +174,7 @@ const gotenbergService = new k8s.core.v1.Service("gotenberg-service", {
 // Paperless Service
 const paperlessService = new k8s.core.v1.Service("paperless-service", {
   metadata: {
+    name: "paperless",
     namespace: namespace.metadata.name
   },
   spec: {
@@ -179,6 +187,7 @@ const paperlessService = new k8s.core.v1.Service("paperless-service", {
 // Paperless Ingress
 const ingress = new k8s.networking.v1.Ingress("paperless-ingress", {
       metadata: {
+        name: "paperless",
         annotations: {
           "kubernetes.io/ingress.class": "traefik",
           "cert-manager.io/cluster-issuer": "letsencrypt",
