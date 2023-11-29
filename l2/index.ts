@@ -1,12 +1,12 @@
-import { createDirectus } from "./directus";
-import { createNamespace } from "./namespace";
-import { createUmami } from "./umami";
-import { createDirectusConfigMap } from "./configs";
-import { DirectusConfig } from "../util/types";
+import {createDirectus} from "./directus";
+import {createNamespace} from "./namespace";
+import {createUmami} from "./umami";
+import {createDirectusConfigMap} from "./configs";
+import {DirectusConfig} from "../util/types";
 import * as postgresql from "@pulumi/postgresql";
-import { Provider, Role } from "@pulumi/postgresql";
-import { RandomPassword } from "@pulumi/random";
-import { Config, getStack, interpolate, jsonParse, log, Output, StackReference } from "@pulumi/pulumi";
+import {Provider, Role} from "@pulumi/postgresql";
+import {RandomPassword} from "@pulumi/random";
+import {Config, getStack, interpolate, jsonParse, log, Output, StackReference} from "@pulumi/pulumi";
 import {createBackupSecret, createDirectusSecret, createSecretWrapper, createUmamiSecret} from "./secrets";
 import {ConfigMap, Secret} from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
@@ -21,7 +21,6 @@ const org = config.require("org");
 const stackRef = new StackReference(`${org}/l1/${stack}`)
 
 
-
 const password = new RandomPassword("directusDbPassword", {
   length: 16,
   special: true,
@@ -33,16 +32,25 @@ const mailgunKey = stackRef.getOutput("mailgunKey").apply(authPW => interpolate`
 const postgresUrl = stackRef.getOutput("postgresUrl").apply(url => interpolate`${url}`)
 
 
-
-
-const postgresProvider = new Provider("custom", { host: postgresUrl, password: dbAuthPassword, username: "postgres", sslmode: "disable" })
+const postgresProvider = new Provider("custom", {
+  host: postgresUrl,
+  password: dbAuthPassword,
+  username: "postgres",
+  sslmode: "disable"
+})
 
 // Create Backup for Database
 const backupPGPassword = new RandomPassword("backupPGPassword", {
   length: 16,
   special: true,
 });
-const backupRole = new Role("backup", { login: true, name: "backup", password: backupPGPassword.result, superuser: true, replication: true }, { provider: postgresProvider });
+const backupRole = new Role("backup", {
+  login: true,
+  name: "backup",
+  password: backupPGPassword.result,
+  superuser: true,
+  replication: true
+}, {provider: postgresProvider});
 const backUpSecret = {
   "db-user": backupRole.name,
   "db-password": backupPGPassword.result,
@@ -58,15 +66,15 @@ function createDBCredentials(ident: string) {
     length: 26,
     special: false,
   });
-  const db = new postgresql.Database(ident, { name: ident }, { provider: postgresProvider });
+  const db = new postgresql.Database(ident, {name: ident}, {provider: postgresProvider});
 
-  const role = new Role(ident, { login: true, name: ident, password: password.result }, { provider: postgresProvider });
+  const role = new Role(ident, {login: true, name: ident, password: password.result}, {provider: postgresProvider});
   new postgresql.Grant(`${ident}Full`, {
     database: db.name,
     objectType: "database",
     privileges: ["ALL"],
     role: role.name,
-  }, { provider: postgresProvider });
+  }, {provider: postgresProvider});
 
   return {
     user: role.name,
@@ -76,14 +84,18 @@ function createDBCredentials(ident: string) {
 }
 
 // Create Database for DirectusCMS
-const directusDb = new postgresql.Database("directus", { name: "directus" }, { provider: postgresProvider });
-const role = new Role("directus", { login: true, name: "directus", password: password.result }, { provider: postgresProvider });
+const directusDb = new postgresql.Database("directus", {name: "directus"}, {provider: postgresProvider});
+const role = new Role("directus", {
+  login: true,
+  name: "directus",
+  password: password.result
+}, {provider: postgresProvider});
 const grant = new postgresql.Grant("directusFull", {
   database: directusDb.name,
   objectType: "database",
   privileges: ["ALL"],
   role: role.name,
-}, { provider: postgresProvider });
+}, {provider: postgresProvider});
 
 const umamiCredentials = createDBCredentials("umami")
 
@@ -98,7 +110,7 @@ new Secret(lycheeIdent, {
     namespace: lycheeNS.metadata.name,
   },
   type: "Opaque",
-  stringData: { ...lycheeCredentials },
+  stringData: {...lycheeCredentials},
 })
 
 // Create apps for general usage
@@ -107,11 +119,11 @@ export const namespaceUmami = createNamespace("umami")
 export const namespaceDirectus = createNamespace("directus")
 
 
-export const adminPassword = new RandomPassword("admin-password", { length: 19, special: true }).result.apply(
-  password => interpolate`${password}`
+export const adminPassword = new RandomPassword("admin-password", {length: 19, special: true}).result.apply(
+    password => interpolate`${password}`
 )
-const directusSecretKey = new RandomPassword("directus-secret", { length: 24 }).result.apply(
-  password => interpolate`${password}`
+const directusSecretKey = new RandomPassword("directus-secret", {length: 24}).result.apply(
+    password => interpolate`${password}`
 )
 const directusSecret = {
   "db-user": role.name,
@@ -147,25 +159,37 @@ export const umamiSecret = {
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
 
 
-
 const vaultwardenCredentials = createDBCredentials("vaultwarden")
 export const vaultwardenSecret = {
   "database-url": interpolate`postgresql://${vaultwardenCredentials.user}:${vaultwardenCredentials.password}@${postgresUrl}:5432/${vaultwardenCredentials.db}`
 }
 const vaultwardenNamespace = createNamespace("vaultwarden")
-const configMap = new ConfigMap("vaultwarden", {metadata: {name: "vaultwarden", namespace: vaultwardenNamespace.metadata.name},data: {}})
-createVaultwardenManual(vaultwardenNamespace,configMap, vaultwardenSecret)
+const configMap = new ConfigMap("vaultwarden", {
+  metadata: {
+    name: "vaultwarden",
+    namespace: vaultwardenNamespace.metadata.name
+  }, data: {}
+})
+createVaultwardenManual(vaultwardenNamespace, configMap, vaultwardenSecret)
 
-
-
+const paperlessSecretKey = new RandomPassword("paperlessSecretKey", {
+  length: 16,
+  special: true,
+});
 const paperlessDbCredentials = createDBCredentials("paperless")
 const paperlessNamespace = createNamespace("paperless")
 const paperlessSecret = {
- "postgresHost": postgresUrl,
- "postgresUser": paperlessDbCredentials.user,
- "postgresPassword": paperlessDbCredentials.password,
- "postgresDBName": paperlessDbCredentials.db,
+  "postgresHost": postgresUrl,
+  "postgresUser": paperlessDbCredentials.user,
+  "postgresPassword": paperlessDbCredentials.password,
+  "postgresDBName": paperlessDbCredentials.db,
+  "usermap-uid": config.get("paperlessUsermapUid")!!,
+  "usermap-gid": config.get("paperlessUserGid")!!,
+  "secret": paperlessSecretKey.result,
+  "adminUser": config.get("paperlessAdminUser")!!,
+  "adminPassword": config.get("paperlessAdminPw")!!,
 }
-const paperlessConfigMap = new ConfigMap("paperless", {metadata: {name: "paperless", namespace: vaultwardenNamespace.metadata.name},data: {
-  }})
+const paperlessConfigMap = new ConfigMap("paperless", {
+  metadata: {name: "paperless", namespace: vaultwardenNamespace.metadata.name}, data: {}
+})
 createPaperless(paperlessNamespace, createSecretWrapper("paperless", paperlessNamespace, paperlessSecret), paperlessConfigMap)

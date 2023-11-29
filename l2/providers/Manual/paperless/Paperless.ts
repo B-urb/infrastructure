@@ -5,6 +5,91 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 export function createPaperless(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "docs.burban.me"
+
+// Tika Deployment
+  const tikaDeployment = new k8s.apps.v1.Deployment("tika-deployment", {
+    metadata: {
+      name: "tika",
+      namespace: namespace.metadata.name
+    },
+    spec: {
+      selector: { matchLabels: { app: "tika" } },
+      replicas: 1,
+      template: {
+        metadata: { labels: { app: "tika" } },
+        spec: {
+          containers: [{
+            name: "tika",
+            image: "ghcr.io/paperless-ngx/tika:latest",
+          }],
+        },
+      },
+    },
+  });
+
+// Tika Service
+  const tikaService = new k8s.core.v1.Service("tika-service", {
+    metadata: {
+      name: "tika",
+      namespace: namespace.metadata.name
+    },
+    spec: {
+      selector: { app: "tika" },
+      ports: [{ port: 80, targetPort: 9998 }],
+      type: "ClusterIP",
+    },
+  });
+
+// Gotenberg Deployment
+  const gotenbergDeployment = new k8s.apps.v1.Deployment("gotenberg-deployment", {
+    metadata: {
+      name: "gotenberg",
+      namespace: namespace.metadata.name
+    },
+    spec: {
+      selector: { matchLabels: { app: "gotenberg" } },
+      replicas: 1,
+      template: {
+        metadata: { labels: { app: "gotenberg" } },
+        spec: {
+          containers: [{
+            name: "gotenberg",
+            image: "docker.io/gotenberg/gotenberg:7.8",
+            command: [
+              "gotenberg",
+              "--chromium-disable-javascript=true",
+              "--chromium-allow-list=file:///tmp/.*",
+            ],
+          }],
+        },
+      },
+    },
+  });
+
+// Gotenberg Service
+  const gotenbergService = new k8s.core.v1.Service("gotenberg-service", {
+    metadata: {
+      name: "gotenberg",
+      namespace: namespace.metadata.name
+    },
+    spec: {
+      selector: { app: "gotenberg" },
+      ports: [{ port: 80, targetPort: 3000 }],
+      type: "ClusterIP",
+    },
+  });
+// Paperless Service
+  const paperlessService = new k8s.core.v1.Service("paperless-service", {
+    metadata: {
+      name: "paperless",
+      namespace: namespace.metadata.name
+    },
+    spec: {
+      selector: { app: "paperless" },
+      ports: [{ port: 80, targetPort: 8000 }],
+      type: "ClusterIP",
+    },
+  });
 // Define PVCs for Paperless
 const paperlessDataPvc = new k8s.core.v1.PersistentVolumeClaim("paperless-data-pvc", {
   metadata: {
@@ -66,8 +151,15 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
             { name: "PAPERLESS_DBPASS", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresPassword"}}},
             { name: "PAPERLESS_DBNAME", valueFrom:{configMapKeyRef:{name: config.metadata.name, key: "postgresDBName"}}},
             { name: "PAPERLESS_TIKA_ENABLED", value: "1" },
-            { name: "PAPERLESS_TIKA_GOTENBERG_ENDPOINT", value: "http://gotenberg" },
-            { name: "PAPERLESS_TIKA_ENDPOINT", value: "http://tika" },
+            { name: "PAPERLESS_TIKA_GOTENBERG_ENDPOINT", value: pulumi.interpolate`http://${gotenbergService.metadata.name}.${gotenbergService.metadata.namespace}` },
+            { name: "PAPERLESS_TIKA_ENDPOINT", value: pulumi.interpolate`http://${tikaService.metadata.name}.${tikaService.metadata.namespace}`},
+            {name: "USERMAP_UID", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "usermap-uid"}}},
+            {name: "USERMAP_GID", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "usermap-gid"}}},
+            {name: "PAPERLESS_TIME_ZONE", value: "Europe/Berlin" },
+            {name: "PAPERLESS_OCR_LANGUAGE", value: "deu+eng" },
+            {name: "PAPERLESS_SECRET_KEY", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "secret"}}},
+            {name: "PAPERLESS_ADMIN_USER", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "adminUser"}}},
+            {name: "PAPERLESS_ADMIN_PASSWORD", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "adminPassword"}}},
           ],
           volumeMounts: [
             {
@@ -101,91 +193,6 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
   },
 });
 
-
-// Tika Deployment
-const tikaDeployment = new k8s.apps.v1.Deployment("tika-deployment", {
-  metadata: {
-    name: "tika",
-    namespace: namespace.metadata.name
-  },
-  spec: {
-    selector: { matchLabels: { app: "tika" } },
-    replicas: 1,
-    template: {
-      metadata: { labels: { app: "tika" } },
-      spec: {
-        containers: [{
-          name: "tika",
-          image: "ghcr.io/paperless-ngx/tika:latest",
-        }],
-      },
-    },
-  },
-});
-
-// Tika Service
-const tikaService = new k8s.core.v1.Service("tika-service", {
-  metadata: {
-    name: "tika",
-    namespace: namespace.metadata.name
-  },
-  spec: {
-    selector: { app: "tika" },
-    ports: [{ port: 80, targetPort: 9998 }],
-    type: "ClusterIP",
-  },
-});
-
-// Gotenberg Deployment
-const gotenbergDeployment = new k8s.apps.v1.Deployment("gotenberg-deployment", {
-  metadata: {
-    name: "gotenberg",
-    namespace: namespace.metadata.name
-  },
-  spec: {
-    selector: { matchLabels: { app: "gotenberg" } },
-    replicas: 1,
-    template: {
-      metadata: { labels: { app: "gotenberg" } },
-      spec: {
-        containers: [{
-          name: "gotenberg",
-          image: "docker.io/gotenberg/gotenberg:7.8",
-          command: [
-            "gotenberg",
-            "--chromium-disable-javascript=true",
-            "--chromium-allow-list=file:///tmp/.*",
-          ],
-        }],
-      },
-    },
-  },
-});
-
-// Gotenberg Service
-const gotenbergService = new k8s.core.v1.Service("gotenberg-service", {
-  metadata: {
-    name: "gotenberg",
-    namespace: namespace.metadata.name
-  },
-  spec: {
-    selector: { app: "gotenberg" },
-    ports: [{ port: 80, targetPort: 3000 }],
-    type: "ClusterIP",
-  },
-});
-// Paperless Service
-const paperlessService = new k8s.core.v1.Service("paperless-service", {
-  metadata: {
-    name: "paperless",
-    namespace: namespace.metadata.name
-  },
-  spec: {
-    selector: { app: "paperless" },
-    ports: [{ port: 80, targetPort: 8000 }],
-    type: "ClusterIP",
-  },
-});
 
 // Paperless Ingress
 const ingress = new k8s.networking.v1.Ingress("paperless-ingress", {
