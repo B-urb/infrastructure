@@ -184,7 +184,7 @@ const paperlessSecret = {
   "postgresPassword": paperlessDbCredentials.password,
   "postgresDBName": paperlessDbCredentials.db,
   "usermap-uid": config.get("paperlessUsermapUid")!!,
-  "usermap-gid": config.get("paperlessUserGid")!!,
+  "usermap-gid": config.get("paperlessUsermapGid")!!,
   "secret": paperlessSecretKey.result,
   "adminUser": config.get("paperlessAdminUser")!!,
   "adminPassword": config.get("paperlessAdminPw")!!,
