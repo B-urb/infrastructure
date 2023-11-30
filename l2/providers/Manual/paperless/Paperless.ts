@@ -149,7 +149,7 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
             { name: "PAPERLESS_DBHOST", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresHost"}}},
             { name: "PAPERLESS_DBUSER", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresUser"}}},
             { name: "PAPERLESS_DBPASS", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresPassword"}}},
-            { name: "PAPERLESS_DBNAME", valueFrom:{configMapKeyRef:{name: config.metadata.name, key: "postgresDBName"}}},
+            { name: "PAPERLESS_DBNAME", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresDBName"}}},
             { name: "PAPERLESS_TIKA_ENABLED", value: "1" },
             { name: "PAPERLESS_TIKA_GOTENBERG_ENDPOINT", value: pulumi.interpolate`http://${gotenbergService.metadata.name}.${gotenbergService.metadata.namespace}` },
             { name: "PAPERLESS_TIKA_ENDPOINT", value: pulumi.interpolate`http://${tikaService.metadata.name}.${tikaService.metadata.namespace}`},
