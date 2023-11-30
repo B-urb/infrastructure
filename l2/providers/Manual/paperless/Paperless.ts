@@ -146,6 +146,7 @@ const paperlessDeployment = new k8s.apps.v1.Deployment("paperless-deployment", {
           ports: [{ containerPort: 8000 }],
           env: [
             { name: "PAPERLESS_REDIS", value: "redis://redis-redis-master.redis:6379" },
+            { name: "PAPERLESS_URL", value: "https://"+url },
             { name: "PAPERLESS_PORT", value: "8000" },
             { name: "PAPERLESS_DBHOST", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresHost"}}},
             { name: "PAPERLESS_DBUSER", valueFrom:{secretKeyRef:{name: secret.metadata.name, key: "postgresUser"}}},
