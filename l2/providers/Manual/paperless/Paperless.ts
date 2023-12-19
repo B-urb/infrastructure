@@ -19,6 +19,16 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
         metadata: {labels: {app: "tika"}},
         spec: {
           containers: [{
+            resources: {
+              requests: {
+                memory: "200Mi",
+                cpu: "300m"
+              },
+              limits: {
+                memory: "1Gi",
+                cpu: "700m"
+              }
+            },
             name: "tika",
             image: "ghcr.io/paperless-ngx/tika:latest",
           }],
@@ -55,6 +65,16 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
           containers: [{
             name: "gotenberg",
             image: "docker.io/gotenberg/gotenberg:7.8",
+            resources: {
+              requests: {
+                memory: "300Mi",
+                cpu: "300m"
+              },
+              limits: {
+                memory: "1Gi",
+                cpu: "700m"
+              }
+            },
             command: [
               "gotenberg",
               "--chromium-disable-javascript=true",
@@ -146,11 +166,11 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
             resources: {
               requests: {
                 memory: "512Mi",
-                cpu: "500m"
+                cpu: "1000m"
               },
               limits: {
-                memory: "1Gi",
-                cpu: "1000m"
+                memory: "2Gi",
+                cpu: "3000m"
               }
             },
             env: [

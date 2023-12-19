@@ -45,6 +45,16 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
               "name": website.name,
               "image": website.registryImage + ":" + website.imageTag,
               "imagePullPolicy": "Always",
+              resources: {
+                requests: {
+                  memory: "2Gi",
+                  cpu: "2000m"
+                },
+                limits: {
+                  memory: "3Gi",
+                  cpu: "3000m"
+                }
+              },
               "env": [
                 {
                   name: "KEY",
