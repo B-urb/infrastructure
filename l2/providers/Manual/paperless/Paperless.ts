@@ -5,7 +5,7 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 export function createPaperless(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "docs.burban.me"
-
+  const memoryLimit = "3000"
 // Tika Deployment
   const tikaDeployment = new k8s.apps.v1.Deployment("tika-deployment", {
     metadata: {
@@ -169,7 +169,7 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
                 cpu: "1000m"
               },
               limits: {
-                memory: "2Gi",
+                memory: `${memoryLimit}Mi`,
                 cpu: "3000m"
               }
             },
@@ -177,6 +177,7 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
               {name: "PAPERLESS_REDIS", value: "redis://redis-redis-master.redis:6379"},
               {name: "PAPERLESS_URL", value: "https://" + url},
               {name: "PAPERLESS_PORT", value: "8000"},
+              {name: "PAPERLESS_CONVERT_MEMORY_LIMIT", value: memoryLimit},
               {name: "PAPERLESS_DBHOST", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "postgresHost"}}},
               {name: "PAPERLESS_DBUSER", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "postgresUser"}}},
               {
