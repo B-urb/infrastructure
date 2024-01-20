@@ -1,9 +1,10 @@
 import * as hcloud from "@pulumi/hcloud"
 import {Network, NetworkSubnet, Provider, Server, SshKey, Volume} from "@pulumi/hcloud";
 import * as fs from "fs";
+import {Input} from "@pulumi/pulumi";
 
 const datacenterId = "fsn1-dc14"
-export function createCluster(hcloudToken: string) {
+export function createCluster(hcloudToken: Input<string>) {
 
   const publicKey = fs.readFileSync('~/.ssh/id_rsa.pub', 'utf8');
 

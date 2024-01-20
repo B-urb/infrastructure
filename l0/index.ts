@@ -2,9 +2,15 @@ import * as pulumi from "@pulumi/pulumi";
 import {createNamespace} from "./namespace";
 import {createGitlabRunner} from "./GitlabRunner";
 import * as gitlab from "@pulumi/gitlab";
+import * as github from "@pulumi/github";
+import {createCluster} from "./infra/nodes";
+import {Domain} from "@pulumi/mailgun";
 
-const token = ""
 
+const config = new pulumi.Config();
+const hcloudToken = config.requireSecret("hcloudToken");
+
+const cluster = createCluster(hcloudToken)
 // if gitlab
 
 // const example = new gitlab.GroupVariable("kubeconfig", {
@@ -19,8 +25,6 @@ const token = ""
 // Create Gitlab Runner
 
 //else github
-import * as github from "@pulumi/github";
-import {Domain} from "@pulumi/mailgun";
 /*
 const exampleSecretActionsEnvironmentSecret = new github.ActionsEnvironmentSecret("exampleSecretActionsEnvironmentSecret", {
   environment: "example_environment",
