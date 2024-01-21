@@ -5,12 +5,16 @@ import * as gitlab from "@pulumi/gitlab";
 import * as github from "@pulumi/github";
 import {createCluster} from "./infra/nodes";
 import {Domain} from "@pulumi/mailgun";
+import {HCloudOrchestrator} from "./cloud_providers/hetzner/HCloudOrchestrator";
+import {K3sCluster} from "./k3s/K3sCluster";
 
 
 const config = new pulumi.Config();
 const hcloudToken = config.requireSecret("hcloudToken");
-
-const cluster = createCluster(hcloudToken)
+const datacenterId = "fsn1-dc14"
+const location = "fsn1"
+const hetznerOrchestrator = new HCloudOrchestrator(hcloudToken, datacenterId, location);
+const k3sCluster = new K3sCluster(hetznerOrchestrator);
 // if gitlab
 
 // const example = new gitlab.GroupVariable("kubeconfig", {
@@ -46,6 +50,6 @@ const exampleSecretIndex_actionsEnvironmentSecretActionsEnvironmentSecret = new 
 //   spamAction: "disabled",
 // });
 
-export const namespaceGitlab = createNamespace("gitlab")
+//export const namespaceGitlab = createNamespace("gitlab")
 
-const gitlabRunner = createGitlabRunner(namespaceGitlab)
+//const gitlabRunner = createGitlabRunner(namespaceGitlab)
