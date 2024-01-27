@@ -1,5 +1,5 @@
 import {ConfigMap, PersistentVolumeClaim, Service} from "@pulumi/kubernetes/core/v1";
-import {keelAnnotationsProd} from "../../../util/globals";
+import {keelAnnotationsProd} from "../../../../util/globals";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
 import exp = require("constants");

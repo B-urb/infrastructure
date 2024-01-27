@@ -1,21 +1,45 @@
 import * as pulumi from "@pulumi/pulumi";
 import {createNamespace} from "./namespace";
-import {createGitlabRunner} from "./GitlabRunner";
+import {createGitlabRunner} from "./components/GitlabRunner";
 import * as gitlab from "@pulumi/gitlab";
 import * as github from "@pulumi/github";
-import {createCluster} from "./infra/nodes";
 import {Domain} from "@pulumi/mailgun";
+import * as hcloud from "@pulumi/hcloud"
 import {HCloudOrchestrator} from "./cloud_providers/hetzner/HCloudOrchestrator";
 import {K3sCluster} from "./k3s/K3sCluster";
+import * as fs from "fs";
+import {Provider} from "@pulumi/kubernetes";
+import {installCertManager, installCilium, installClusterIssuer, installCSIDriver} from "./components/addons";
+import {RandomPassword} from "@pulumi/random";
 
 
 const config = new pulumi.Config();
+const clusterName = "urban"
+const filename = `${clusterName}.yaml`;
+const mail = config.get("emailAdress")
 const hcloudToken = config.requireSecret("hcloudToken");
 const datacenterId = "fsn1-dc14"
 const location = "fsn1"
-const hetznerOrchestrator = new HCloudOrchestrator(hcloudToken, datacenterId, location);
-const k3sCluster = new K3sCluster(hetznerOrchestrator);
-// if gitlab
+const provider = new hcloud.Provider("hcloud-provider", { token: hcloudToken})
+const hetznerOrchestrator = new HCloudOrchestrator(provider, datacenterId, location);
+const k3sToken = new RandomPassword("k3sToken", {
+  special: false,
+  length: 30
+})
+const k3sCluster = new K3sCluster(hetznerOrchestrator, provider, hcloudToken, k3sToken);
+const result = k3sCluster.createCluster(clusterName, true)
+// Write to a file
+result.kubeconfig.apply(value => {
+  fs.writeFileSync(filename, value, 'utf8');
+  console.log(`File written: ${filename}`);
+});
+
+const kubernetesProvider = new Provider("kube-provider", {kubeconfig: result.kubeconfig, cluster: clusterName, context: clusterName })
+const cilium = installCilium({provider:kubernetesProvider});
+installCSIDriver(hcloudToken,{provider: kubernetesProvider, dependsOn: [cilium]})
+const certManager = installCertManager({provider:kubernetesProvider})
+installClusterIssuer(mail,{provider: kubernetesProvider, dependsOn: [certManager]})
+
 
 // const example = new gitlab.GroupVariable("kubeconfig", {
 //   environmentScope: "*",

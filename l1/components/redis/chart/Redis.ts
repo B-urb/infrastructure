@@ -1,6 +1,6 @@
 import * as k8s from "@pulumi/kubernetes"
 import {Namespace} from "@pulumi/kubernetes/core/v1";
-import {redisDBPassword} from "../../../util/env";
+import {redisDBPassword} from "../../../../util/env";
 
 export function createRedisHelm(namespace: Namespace) {
   return new k8s.helm.v3.Chart("redis", {

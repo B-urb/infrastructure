@@ -3,34 +3,66 @@ import * as cloudinit from "@pulumi/cloudinit"
 import * as command from "@pulumi/command"
 import * as pulumi from "@pulumi/pulumi";
 import * as hcloud from "@pulumi/hcloud";
-import {Input} from "@pulumi/pulumi";
-import {createCluster} from "../infra/nodes";
-import {ICloudOrchestrator} from "../common/interfaces/ICloudOrchestrator";
 import {CloudProviderTypes} from "../common/types/cloudProviderTypes";
+import {masterConfig, workerConfig} from "./cloudinit";
+import {Input} from "@pulumi/pulumi";
+import {HCloudOrchestrator} from "../cloud_providers/hetzner/HCloudOrchestrator";
+import * as tls from "@pulumi/tls";
+import {PrivateKey} from "@pulumi/tls";
+import {updateKubeConfig} from "../utils";
+import {RandomPassword} from "@pulumi/random";
 
 
 export class K3sCluster<T extends keyof CloudProviderTypes> {
-  private orchestrator: ICloudOrchestrator;
+  private orchestrator: HCloudOrchestrator;
+  private provider: hcloud.Provider;
+  private hCloudToken: Input<string>;
+  private k3sToken: RandomPassword;
 
-  constructor(orchestrator: ICloudOrchestrator) {
+  constructor(orchestrator: HCloudOrchestrator, provider: hcloud.Provider, hCloudToken: Input<string>, k3sToken: RandomPassword) {
+    this.provider = provider;
     this.orchestrator = orchestrator;
-    this.createCluster()
+    this.hCloudToken = hCloudToken;
+    this.k3sToken = k3sToken;
   }
 
-   createCluster() {
+  createCluster(name: string, useCilium: boolean) {
 
-    const publicKey = fs.readFileSync('/Users/bjornurban/.ssh/id_rsa.pub', 'utf8');
-    const publicKeys = Array.from(publicKey)
+    const publicKeyHuman = fs.readFileSync('/Users/bjornurban/.ssh/id_rsa.pub', 'utf8');
+    const sshKey = new tls.PrivateKey("sshKey", {
+      algorithm: "RSA",
+      rsaBits: 4096,
+    });
+    const publicKeys = Array.of(pulumi.output(publicKeyHuman), sshKey.publicKeyOpenssh)
 
-     const userData = this.getCloudInit()
-// Create the SSH key resource on Hetzner Cloud
+
+    // Create the SSH key resource on Hetzner Cloud
     const network = this.orchestrator.createNetwork("main-network")
-    const subnet = this.orchestrator.createSubnet(network, "main-subnet")
+    //Network needs a subnet also we do not need to use the value later on manually
+    this.orchestrator.createSubnet(network, "main-subnet")
     const serverType = "cax21"
-    const initialNode = this.orchestrator.createServer(publicKeys, network, serverType, userData,"node-01")
+    const sshKeys = publicKeys.map((it, index) => new hcloud.SshKey(`ssh-${index}`, {
+      publicKey: it,
+    }, {provider: this.provider}));
+    const initialNode = this.orchestrator.createServer(sshKeys, network, serverType, masterConfig(this.k3sToken.result, useCilium), "master-01")
+    for (let i = 0; i < 1; i++) {
+      this.orchestrator.createServer(sshKeys, network, serverType, workerConfig(initialNode.ipv4Address, this.k3sToken.result, useCilium), `node-${i}`)
+    }
 
+    const kubeconfig = this.getConfig(initialNode.ipv4Address, sshKey); // Assuming this returns the kubeconfig as a string
+    const newContextName = `${name}`; // Replace with your new context name
+    const newClusterName = `${name}`; // Replace with your new cluster name
+    const updatedConfig = updateKubeConfig(kubeconfig, initialNode.ipv4Address, newContextName, newClusterName);
+  // Call the function
+    return {
+      "ip": initialNode.ipv4Address,
+      "sshKey": sshKey,
+      "kubeconfig": updatedConfig
+    }
   }
-   getCloudInit() {
+
+  getCloudInit(master: Boolean) {
+    const k3sInstallPath = master ? "./install-k3s-master.sh" : "./install-k3s.sh"
     return cloudinit.getConfig({
       gzip: false,
       base64Encode: false,
@@ -42,12 +74,13 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
         },
         {
           contentType: "text/x-shellscript",
-          content: fs.readFileSync("./install-k3s.sh", "utf8"),
+          content: fs.readFileSync(k3sInstallPath, "utf8"),
         },
       ],
     });
   }
-   createMasterNode(name: string, config: hcloud.ServerArgs, token: pulumi.Output<string>): pulumi.Output<hcloud.Server> {
+
+  createMasterNode(name: string, config: hcloud.ServerArgs, token: pulumi.Output<string>): pulumi.Output<hcloud.Server> {
     const modifiedConfig = {
       ...config,
       userData: token.apply(t => `#cloud-config\nyour-configuration-here\nK3S_TOKEN=${t}`),
@@ -56,7 +89,8 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
     const workerServer = new hcloud.Server(name, modifiedConfig);
     return pulumi.output(workerServer);
   }
-   createWorkerNode(name: string, config: hcloud.ServerArgs, token: pulumi.Output<string>): pulumi.Output<hcloud.Server> {
+
+  createWorkerNode(name: string, config: hcloud.ServerArgs, token: pulumi.Output<string>): pulumi.Output<hcloud.Server> {
     const modifiedConfig = {
       ...config,
       userData: token.apply(t => `#cloud-config\nyour-configuration-here\nK3S_TOKEN=${t}`),
@@ -65,17 +99,19 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
     const workerServer = new hcloud.Server(name, modifiedConfig);
     return pulumi.output(workerServer);
   }
-   getNodeToken(server: hcloud.Server, name: string): pulumi.Output<string> {
+
+  getNodeToken(server: hcloud.Server, name: string): pulumi.Output<string> {
     const tokenCommand = new command.local.Command(name, {
       create: `ssh user@${server.ipv4Address.apply(ip => ip)} 'cat /var/lib/rancher/k3s/server/node-token'`,
-    },{dependsOn: [server]});
+    }, {dependsOn: [server]});
 
     return tokenCommand.stdout;
   }
-   getConfig() {
+
+  getConfig(ip: Input<string>, sshKey: PrivateKey) {
     const fetchKubeconfig = new command.remote.Command("fetch-kubeconfig", {
       connection: {
-        host: k3sVm.ipv4Address,
+        host: ip,
         user: "root",
         privateKey: sshKey.privateKeyPem,
       },
@@ -84,10 +120,8 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
       // Then we sleep 10, just in-case the k3s server needs a moment to become healthy. Sorry?
           "until [ -f /etc/rancher/k3s/k3s.yaml ]; do sleep 5; done; cat /etc/rancher/k3s/k3s.yaml; sleep 10;",
     });
+    return fetchKubeconfig.stdout;
   }
-  const kubernetesProvider = new kubernetes.Provider("k3s", {
-    kubeconfig: fetchKubeconfig.stdout,
-  });
-
-
 }
+
+

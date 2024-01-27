@@ -1,6 +1,6 @@
 import * as k8s from "@pulumi/kubernetes"
 import {Namespace} from "@pulumi/kubernetes/core/v1";
-import {dbUsername} from "../../../util/env";
+import {dbUsername} from "../../../../util/env";
 import {RandomPassword} from "@pulumi/random";
 
 

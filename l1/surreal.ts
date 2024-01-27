@@ -1,7 +1,7 @@
 import {DirectusConfig, Source} from "../util/types";
 
 import * as postgresql from "@pulumi/postgresql";
-import {createPostgresHelm} from "./providers/charts/Postgres";
+import {createPostgresHelm} from "./components/postgres/chart/Postgres";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
 

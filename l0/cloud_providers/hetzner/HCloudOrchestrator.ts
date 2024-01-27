@@ -5,15 +5,14 @@ import {ICloudOrchestrator} from "../../common/interfaces/ICloudOrchestrator";
 import {Input, Output} from "@pulumi/pulumi";
 import {HCloudServer} from "./HCloudServer";
 
-export class HCloudOrchestrator implements ICloudOrchestrator {
+export class HCloudOrchestrator {
 
   private readonly provider: hcloud.Provider
   private datacenterId: string
   private location: string
 
-  constructor(token:Input<string>, datacenterId: string, location: string) {
-    this.provider = new hcloud.Provider("hcloud-provider", { token: token})
-
+  constructor(provider: hcloud.Provider, datacenterId: string, location: string) {
+this.provider = provider
     this.datacenterId = datacenterId
     this.location = location
   }
@@ -30,44 +29,45 @@ export class HCloudOrchestrator implements ICloudOrchestrator {
           type: "cloud",
           networkZone: "eu-central",
           ipRange: "10.0.1.0/24",
-        }
+        }, {provider: this.provider}
     );
   }
 
   createServer(
-      publicKeys: Array<string>,
+      sshKeys: Array<hcloud.SshKey>,
       network: hcloud.Network,
       serverType: string,
+      userData: Input<string>,
       name: string,
   ) {
 
-    const  sshKeys = publicKeys.map(it => new hcloud.SshKey("standard", {
-      publicKey: it,
-    }, {provider: this.provider}));
-    const primaryIpv4 = new hcloud.PrimaryIp(`${name}-primary_ip-v4`, {
-      datacenter: this.datacenterId,
-      type: "ipv4",
-      assigneeType: "server",
-      autoDelete: true,
-      labels: {
-        hallo: "welt",
-      },
-    }, {provider: this.provider});
-    const primaryIpv6 = new hcloud.PrimaryIp(`${name}-primary_ip-v6`, {
-      datacenter: this.datacenterId,
-      type: "ipv6",
-      assigneeType: "server",
-      autoDelete: true,
-      labels: {
-        hallo: "welt",
-      },
-    }, {provider: this.provider});
+
+    // const primaryIpv4 = new hcloud.PrimaryIp(`${name}-primary_ip-v4`, {
+    //   datacenter: this.datacenterId,
+    //   type: "ipv4",
+    //   assigneeType: "server",
+    //   autoDelete: true,
+    //   labels: {
+    //     hallo: "welt",
+    //   },
+    // }, {provider: this.provider});
+    // const primaryIpv6 = new hcloud.PrimaryIp(`${name}-primary_ip-v6`, {
+    //   datacenter: this.datacenterId,
+    //   type: "ipv6",
+    //   assigneeType: "server",
+    //   autoDelete: true,
+    //   labels: {
+    //     hallo: "welt",
+    //   },
+    // }, {provider: this.provider});
     //const volume = this.createVolume(name)
     const server = new hcloud.Server(name, {
       serverType: serverType,
+      name: name,
       datacenter: this.datacenterId,
       image: "ubuntu-22.04",
       sshKeys: sshKeys.map(it => it.name),
+      userData: userData,
       publicNets: [
         {
           //ipv4Enabled: true,
@@ -84,11 +84,11 @@ export class HCloudOrchestrator implements ICloudOrchestrator {
   }
 
   createVolume(name: string) {
-    return new hcloud.Volume(`${name}-volume`, {
+    return pulumi.output(new hcloud.Volume(`${name}-volume`, {
       size: 25, // Size of the volume in GB
       location: this.location,
       format: "ext4", // Specify the format (optional)
-    }, {provider: this.provider});
+    }, {provider: this.provider}));
   }
 
   attachVolumeToServer(volume: hcloud.Volume, server: hcloud.Server) {
