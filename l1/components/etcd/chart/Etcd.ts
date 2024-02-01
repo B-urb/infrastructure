@@ -24,7 +24,6 @@ export function createEtcd(namespace: Namespace, secret: Secret) {
             }
           },
       "persistence": {
-        "storageClass":"local-path",
         "size": "3Gi"
       },
       nodeSelector: {

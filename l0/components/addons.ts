@@ -16,6 +16,7 @@ export function installCilium(opts: CustomResourceOptions) {
 
 
 export function installCertManager(opts: CustomResourceOptions) {
+  //TODO: Switch to Helm Release, to enable Hook Support
   return new helm.v3.Chart("cert-manager", {
     chart: "cert-manager",
     version: "v1.13.3",

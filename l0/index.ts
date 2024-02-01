@@ -27,7 +27,7 @@ const k3sToken = new RandomPassword("k3sToken", {
   length: 30
 })
 const k3sCluster = new K3sCluster(hetznerOrchestrator, provider, hcloudToken, k3sToken);
-const result = k3sCluster.createCluster(clusterName, true)
+const result = k3sCluster.createCluster(clusterName, true, 2, 2)
 // Write to a file
 result.kubeconfig.apply(value => {
   fs.writeFileSync(filename, value, 'utf8');
@@ -38,7 +38,7 @@ const kubernetesProvider = new Provider("kube-provider", {kubeconfig: result.kub
 const cilium = installCilium({provider:kubernetesProvider});
 installCSIDriver(hcloudToken,{provider: kubernetesProvider, dependsOn: [cilium]})
 const certManager = installCertManager({provider:kubernetesProvider})
-installClusterIssuer(mail,{provider: kubernetesProvider, dependsOn: [certManager]})
+installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
 
 
 // const example = new gitlab.GroupVariable("kubeconfig", {

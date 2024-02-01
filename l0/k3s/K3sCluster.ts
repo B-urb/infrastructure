@@ -26,7 +26,11 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
     this.k3sToken = k3sToken;
   }
 
-  createCluster(name: string, useCilium: boolean) {
+  createCluster(name: string, useCilium: boolean, masterCount: number, agentCount: number) {
+    if (masterCount < 1)
+    {
+      throw Error("Master Count must at least one or the cluster would be empty.")
+    }
 
     const publicKeyHuman = fs.readFileSync('/Users/bjornurban/.ssh/id_rsa.pub', 'utf8');
     const sshKey = new tls.PrivateKey("sshKey", {
@@ -44,9 +48,11 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
     const sshKeys = publicKeys.map((it, index) => new hcloud.SshKey(`ssh-${index}`, {
       publicKey: it,
     }, {provider: this.provider}));
-    const initialNode = this.orchestrator.createServer(sshKeys, network, serverType, masterConfig(this.k3sToken.result, useCilium), "master-01")
-    for (let i = 0; i < 1; i++) {
-      this.orchestrator.createServer(sshKeys, network, serverType, workerConfig(initialNode.ipv4Address, this.k3sToken.result, useCilium), `node-${i}`)
+    const initialNode = this.orchestrator.createServer(sshKeys, network, serverType, masterConfig(this.k3sToken.result, useCilium), "master-main")
+    for (let i = 0; i < (agentCount + masterCount - 1); i++) {
+      const worker = i < masterCount - 1
+      const serverName = i < masterCount - 1 ? `master-${i+1}` : `node-${masterCount-i}`
+      this.orchestrator.createServer(sshKeys, network, serverType, workerConfig(initialNode.ipv4Address, this.k3sToken.result, useCilium, worker), serverName)
     }
 
     const kubeconfig = this.getConfig(initialNode.ipv4Address, sshKey); // Assuming this returns the kubeconfig as a string

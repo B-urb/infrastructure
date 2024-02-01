@@ -4,7 +4,6 @@ import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {backupSecret, medusaSecret } from "../../../l2/secrets";
 import * as pulumi from "@pulumi/pulumi"
 
-export
 
 
 export function createBackupSecret(namespace: Namespace) {
