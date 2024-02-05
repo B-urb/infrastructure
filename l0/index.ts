@@ -11,6 +11,8 @@ import * as fs from "fs";
 import {Provider} from "@pulumi/kubernetes";
 import {installCertManager, installCilium, installClusterIssuer, installCSIDriver} from "./components/addons";
 import {RandomPassword} from "@pulumi/random";
+import {installFlux} from "./components/flux/chart";
+import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 
 const config = new pulumi.Config();
@@ -27,7 +29,7 @@ const k3sToken = new RandomPassword("k3sToken", {
   length: 30
 })
 const k3sCluster = new K3sCluster(hetznerOrchestrator, provider, hcloudToken, k3sToken);
-const result = k3sCluster.createCluster(clusterName, true, 2, 2)
+const result = k3sCluster.createCluster(clusterName, true, 1, 1)
 // Write to a file
 result.kubeconfig.apply(value => {
   fs.writeFileSync(filename, value, 'utf8');
@@ -39,6 +41,14 @@ const cilium = installCilium({provider:kubernetesProvider});
 installCSIDriver(hcloudToken,{provider: kubernetesProvider, dependsOn: [cilium]})
 const certManager = installCertManager({provider:kubernetesProvider})
 installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
+//installFlux({provider:kubernetesProvider, dependsOn:[cilium]})
+new Namespace("flux-system", {
+  metadata: {
+    name: "flux-system"
+  },
+},
+{provider: kubernetesProvider}
+)
 
 
 // const example = new gitlab.GroupVariable("kubeconfig", {

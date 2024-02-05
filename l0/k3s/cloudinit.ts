@@ -16,7 +16,7 @@ export const masterConfig = (k3sToken: Input<string>, disableFlannel: boolean): 
   `;
 }
 
-export const workerConfig = (masterIp: Output<string>, k3sToken: Input<string>, disableFlannel: boolean, worker: boolean = true): Output<string> => {
+export const workerConfig = (masterIp: Output<string>, k3sToken: Input<string>, disableFlannel: boolean, isWorker: boolean = true): Output<string> => {
   return pulumi.interpolate`
   #cloud-config
   users:
@@ -25,7 +25,7 @@ export const workerConfig = (masterIp: Output<string>, k3sToken: Input<string>, 
   shell: /bin/bash
   runcmd:
     - | 
-      curl -sfL https://get.k3s.io | K3S_TOKEN=${k3sToken} K3S_KUBECONFIG_MODE="644" K3S_URL=https://${masterIp}:6443 sh -s - ${worker ? "agent" : "server"} \
-      ${disableFlannel ? "--flannel-backend none --disable-network-policy" : ""}
+      curl -sfL https://get.k3s.io | K3S_TOKEN=${k3sToken} K3S_URL=https://${masterIp}:6443 sh -s - ${isWorker ? "agent" : "server"} \
+      ${disableFlannel && !isWorker ? "--flannel-backend none --disable-network-policy" : ""}
   `;
 }

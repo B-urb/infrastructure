@@ -49,10 +49,14 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
       publicKey: it,
     }, {provider: this.provider}));
     const initialNode = this.orchestrator.createServer(sshKeys, network, serverType, masterConfig(this.k3sToken.result, useCilium), "master-main")
-    for (let i = 0; i < (agentCount + masterCount - 1); i++) {
-      const worker = i < masterCount - 1
-      const serverName = i < masterCount - 1 ? `master-${i+1}` : `node-${masterCount-i}`
-      this.orchestrator.createServer(sshKeys, network, serverType, workerConfig(initialNode.ipv4Address, this.k3sToken.result, useCilium, worker), serverName)
+    for (let i = 0; i < masterCount - 1; i++) {
+      const serverName = `master-${i+1}`
+      this.orchestrator.createServer(sshKeys, network, serverType, workerConfig(initialNode.ipv4Address, this.k3sToken.result, useCilium, false), serverName)
+    }
+
+      for (let i = 0; i < agentCount; i++) {
+      const serverName =  `node-${i}`
+      this.orchestrator.createServer(sshKeys, network, serverType, workerConfig(initialNode.ipv4Address, this.k3sToken.result, useCilium, true), serverName)
     }
 
     const kubeconfig = this.getConfig(initialNode.ipv4Address, sshKey); // Assuming this returns the kubeconfig as a string
