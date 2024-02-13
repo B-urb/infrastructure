@@ -16,7 +16,6 @@ export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomP
         },
         values: {
          "global": {
-           "storageClass": "local-path",
            "postgresql":{
              "auth": {
                "database": "applications",
