@@ -1,0 +1,7 @@
+name: flux-operator
+runtime: nodejs
+description: Deploy Kubernetes Operator with Typescript
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: https://github.com/pulumi/pulumi-kubernetes-operator/deploy/deploy-operator-ts
