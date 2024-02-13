@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import {createNamespace} from "./namespace";
-import {createPostgres} from "./postgres";
 
 import {RandomPassword} from "@pulumi/random";
 import {Config, secret} from "@pulumi/pulumi";
@@ -8,6 +7,7 @@ import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
 import * as k8s from "@pulumi/kubernetes";
 import {Secret} from "@pulumi/kubernetes/core/v1";
 import {createSurrealManual} from "./components/surrealdb/Manual/Surreal";
+import {createPostgres} from "./components/postgres";
 const namespacePostgres = createNamespace("postgres");
 export const postgresNamespace = namespacePostgres.metadata.name
 const namespaceEtcd = createNamespace("etcd")
