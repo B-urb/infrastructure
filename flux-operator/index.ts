@@ -22,7 +22,16 @@ const programCRD = new kubernetes.yaml.ConfigFile("programcrd", {
 });
 
 const deploymentOptions = {dependsOn: [stackCRD, programCRD]};
-
+const operatorClusterRole = new kubernetes.rbac.v1.ClusterRole(`operator-cluster-role`, {
+  rules: [
+    {
+      apiGroups: ["*"],
+      resources: ["*"],
+      verbs: ["create", "delete", "get", "list", "patch", "update", "watch"],
+    },
+    // Add other rules as needed
+  ],
+});
 for (let ns of deployNamespaceList) {
   const operatorServiceAccount = new kubernetes.core.v1.ServiceAccount(`operator-service-account-${ns}`, {
     metadata: {
@@ -46,7 +55,6 @@ for (let ns of deployNamespaceList) {
           "events",
           "configmaps",
           "secrets",
-          "namespaces"
         ],
         verbs: [
           "create",
@@ -144,6 +152,23 @@ for (let ns of deployNamespaceList) {
     },
   });
 
+
+// Bind the ClusterRole to the service account
+  const operatorClusterRoleBinding = new kubernetes.rbac.v1.ClusterRoleBinding(`operator-cluster-role-binding`, {
+    metadata: {
+      name: `operator-cluster-role-binding`,
+    },
+    subjects: [{
+      kind: "ServiceAccount",
+      name: operatorServiceAccount.metadata.name,
+      namespace: ns, // Specify the namespace of the ServiceAccount
+    }],
+    roleRef: {
+      kind: "ClusterRole",
+      name: operatorClusterRole.metadata.name,
+      apiGroup: "rbac.authorization.k8s.io",
+    },
+  });
   const operatorDeployment = new kubernetes.apps.v1.Deployment(`pulumi-kubernetes-operator-${ns}`, {
     metadata: {
       "namespace": ns,

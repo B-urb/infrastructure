@@ -10,7 +10,7 @@ export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomP
   return new k8s.helm.v3.Chart("postgres", {
         chart: "postgresql",
         namespace: namespace.metadata.name,
-        version: "11.9.13",
+        version: "14.0.5",
         fetchOpts: {
           repo: "https://charts.bitnami.com/bitnami",
         },
