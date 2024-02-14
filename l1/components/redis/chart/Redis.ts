@@ -16,6 +16,9 @@ export function createRedisHelm(namespace: Namespace) {
                 "password": redisDBPassword,
             }
           },
+          replica: {
+            replicaCount: 1
+          }
         }
       }
   );
