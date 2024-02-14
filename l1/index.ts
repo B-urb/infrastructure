@@ -10,7 +10,7 @@ import {createSurrealManual} from "./components/surrealdb/Manual/Surreal";
 import {createPostgres} from "./components/postgres";
 const namespacePostgres = createNamespace("postgres");
 export const postgresNamespace = namespacePostgres.metadata.name
-const namespaceEtcd = createNamespace("etcd")
+//const namespaceEtcd = createNamespace("etcd")
 const config = new Config()
  const dbRootPassword = new RandomPassword("postgresRootPassword", {
   length: 16,

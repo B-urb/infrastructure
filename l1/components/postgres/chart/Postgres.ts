@@ -30,7 +30,8 @@ export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomP
             "extendedConfiguration": "max_connections = 400"
             },
           "readReplicas": {
-           "replicaCount": 2
+            "extendedConfiguration": "max_connections = 400",
+            "replicaCount": 1
           }
         }
       }
