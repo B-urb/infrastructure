@@ -8,6 +8,7 @@ import * as k8s from "@pulumi/kubernetes";
 import {Secret} from "@pulumi/kubernetes/core/v1";
 import {createSurrealManual} from "./components/surrealdb/Manual/Surreal";
 import {createPostgres} from "./components/postgres";
+import {createRedis} from "./redis";
 const namespacePostgres = createNamespace("postgres");
 export const postgresNamespace = namespacePostgres.metadata.name
 //const namespaceEtcd = createNamespace("etcd")
@@ -48,7 +49,8 @@ export const mailgunKey =  config.requireSecret("mailgunKey") //TODO: Replace wi
 
 //export const etcdSecret = createEtcdSecret(env.etcdRootPassword, namespaceEtcd);
 //const etcd = createEtcd(namespaceEtcd, etcdSecret)
-//const redis = createRedis("helm",namespaceRedis);
+const namespaceRedis = createNamespace("redis")
+const redis = createRedis("helm",namespaceRedis);
 export const postgresRootPassword = dbRootPassword.result
 
 
