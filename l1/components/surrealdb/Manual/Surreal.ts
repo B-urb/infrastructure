@@ -8,7 +8,7 @@ import {StatefulSet} from "@pulumi/kubernetes/apps/v1";
 const name = "surrealdb"
 const namespaceName = "surrealdb"
 const image = "surrealdb/surrealdb"
-const tag = "1.0.0"
+const tag = "v1.2.0"
 
 export const surrealPassword = new RandomPassword("surrealPassword",{length: 16, special: true})
 
@@ -47,7 +47,7 @@ export function createSurrealManual() {
   },
   spec: {
    accessModes: ["ReadWriteOnce"],
-   resources: { requests: { storage: "10Gi" } },
+   resources: { requests: { storage: "5Gi" } },
   },
  });
  new StatefulSet(name, {
