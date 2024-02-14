@@ -6,7 +6,7 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
-  const website =  new WebService("directus", "cms.tecios.de", namespace, "directus/directus", "10.8.2", {}, "prod");
+  const website =  new WebService("directus", "cms.tecios.de", namespace, "directus/directus", "10.9.1", {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
