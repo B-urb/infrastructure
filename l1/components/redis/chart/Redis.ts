@@ -6,7 +6,7 @@ export function createRedisHelm(namespace: Namespace) {
   return new k8s.helm.v3.Chart("redis", {
         chart: "redis",
         namespace: namespace.metadata.name,
-        version: "17.3.8",
+        version: "18.13.0",
         fetchOpts: {
           repo: "https://charts.bitnami.com/bitnami",
         },

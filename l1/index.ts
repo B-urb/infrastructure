@@ -50,7 +50,7 @@ export const mailgunKey =  config.requireSecret("mailgunKey") //TODO: Replace wi
 //export const etcdSecret = createEtcdSecret(env.etcdRootPassword, namespaceEtcd);
 //const etcd = createEtcd(namespaceEtcd, etcdSecret)
 const namespaceRedis = createNamespace("redis")
-const redis = createRedis("helm",namespaceRedis);
+const redis = createRedis("helm",namespaceRedis); //FIXME: Update chart
 export const postgresRootPassword = dbRootPassword.result
 
 
