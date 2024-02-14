@@ -28,7 +28,7 @@ export function createKafka(namespace: Namespace, secret: Secret) {
         "size": "3Gi"
       },
       nodeSelector: {
-        owner: "bjoern"
+       // owner: "bjoern"
       }
 
     }

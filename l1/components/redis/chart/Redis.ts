@@ -16,11 +16,6 @@ export function createRedisHelm(namespace: Namespace) {
                 "password": redisDBPassword,
             }
           },
-          master: {
-            nodeSelector: {
-              owner: "bjoern"
-            }
-          }
         }
       }
   );
