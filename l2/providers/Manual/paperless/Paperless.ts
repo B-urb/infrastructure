@@ -123,7 +123,6 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
           storage: "10Gi", // Adjust the size as needed
         },
       },
-      storageClassName: "local-path", // Using the default storage class
     },
   });
 

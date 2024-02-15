@@ -149,7 +149,7 @@ const ns = deployNamespaceList[0]
           }
         },
         stack: "hetzner",
-        projectRepo: "https://github.com/tecios/infrastructure",
+        projectRepo: "https://github.com/B-urb/infrastructure",
         repoDir: "/l1",
         branch: "development",
         retryOnUpdateConflict: true,
@@ -175,7 +175,7 @@ const ns = deployNamespaceList[0]
         }
       },
       stack: "hetzner",
-      projectRepo: "https://github.com/tecios/infrastructure",
+      projectRepo: "https://github.com/B-Urb/infrastructure",
       repoDir: "/l2",
       branch: "development",
       prerequisites: [
