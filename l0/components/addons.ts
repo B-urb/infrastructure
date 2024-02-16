@@ -35,14 +35,14 @@ export function installClusterIssuer(mail: Input<string>, opts: CustomResourceOp
     apiVersion: "cert-manager.io/v1",
     kind: "ClusterIssuer",
     metadata: {
-      name: "letsencrypt-prod",
+      name: "letsencrypt",
     },
     spec: {
       acme: {
         server: "https://acme-v02.api.letsencrypt.org/directory",
         email: mail,
         privateKeySecretRef: {
-          name: "letsencrypt-prod",
+          name: "letsencrypt",
         },
         solvers: [{
           http01: {

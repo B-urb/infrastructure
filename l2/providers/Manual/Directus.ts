@@ -6,13 +6,16 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
-  const website =  new WebService("directus", "cms.tecios.de", namespace, "directus/directus", "10.9.1", {}, "prod");
+  const url = "cms.burban.me"
+  const website =  new WebService("directus", url, namespace, "directus/directus", "10.9.1", {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
   const ingress = createDirectusIngress(website);
 }
 function createDirectusDeployments(website: WebService, secret: Secret, config: ConfigMap): Deployment {
+  const url = "cms.burban.me"
+
   return new k8s.apps.v1.Deployment(website.name, {
     metadata: {
       name: website.name,
@@ -71,7 +74,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {
                   name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
-                  value: "array:'self',https://cms.tecios.de"
+                  value: "array:'self',https://" + url
                 }, {
                   name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
                   value: "array:'self', 'unsafe-inline'"
@@ -121,7 +124,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
                 {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
                 {name: "EMAIL_VERIFY_SETUP", value: "true"},
-                {name: "EMAIL_FROM", value: "no-reply@cms.burban.me"},
+                {name: "EMAIL_FROM", value: "no-reply"+url},
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
                 {name: "EMAIL_MAILGUN_DOMAIN", value: "mg.burban.me"},
                 {name: "EMAIL_MAILGUN_API_KEY", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "mg-api-key"}}

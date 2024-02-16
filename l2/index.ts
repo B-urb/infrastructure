@@ -139,7 +139,7 @@ const directusSecret = {
   "directus-secret": directusSecretKey
 }
 export const directusConfigMapData = {
-  PUBLIC_URL: "https://cms.tecios.de",
+  PUBLIC_URL: "https://cms.burban.me",
   "db-client": "pg",
   "db-host": postgresUrl,
   "db-port": "5432",

@@ -17,7 +17,7 @@ import {Namespace} from "@pulumi/kubernetes/core/v1";
 
 const config = new pulumi.Config();
 const clusterName = "urban"
-const filename = `~/${clusterName}.yaml`;
+const filename = `${clusterName}.yaml`;
 const mail = config.get("emailAdress")
 const hcloudToken = config.requireSecret("hcloudToken");
 const datacenterId = "fsn1-dc14"

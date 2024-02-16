@@ -17,7 +17,7 @@ export default function createBackupCronjob(namespace: Input<string>, backupSecr
               containers: [
                 {
                   name: "directus-backup",
-                  image: "bjoern5urban/postgres-s3-backup:v0.4",
+                  image: "bjoern5urban/postgres-s3-backup:v0.5",
                   imagePullPolicy: "Always",
                   env: [{
                     name: "DB_USER",
