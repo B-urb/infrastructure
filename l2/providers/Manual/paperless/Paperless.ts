@@ -123,7 +123,6 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
           storage: "10Gi", // Adjust the size as needed
         },
       },
-      storageClassName: "local-path", // Using the default storage class
     },
   });
 
@@ -139,7 +138,6 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
           storage: "10Gi", // Adjust the size as needed
         },
       },
-      storageClassName: "local-path", // Using the default storage class
     },
   });
 
@@ -174,7 +172,7 @@ export function createPaperless(namespace: Namespace, secret: Secret, config: Co
               }
             },
             env: [
-              {name: "PAPERLESS_REDIS", value: "redis://redis-redis-master.redis:6379"},
+              {name: "PAPERLESS_REDIS", value: "redis://redis-master.redis:6379"},
               {name: "PAPERLESS_URL", value: "https://" + url},
               {name: "PAPERLESS_PORT", value: "8000"},
               {name: "PAPERLESS_CONVERT_MEMORY_LIMIT", value: memoryLimit},

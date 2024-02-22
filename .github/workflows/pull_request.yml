@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        workdir: [ l0, l1, l2 ]
+        workdir: [ l1, l2 ]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.5.0

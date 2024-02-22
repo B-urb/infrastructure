@@ -1,16 +1,17 @@
 import * as pulumi from "@pulumi/pulumi";
 import {createNamespace} from "./namespace";
-import {createPostgres} from "./postgres";
 
 import {RandomPassword} from "@pulumi/random";
 import {Config, secret} from "@pulumi/pulumi";
 import {Htpasswd, HtpasswdAlgorithm} from "pulumi-htpasswd";
 import * as k8s from "@pulumi/kubernetes";
 import {Secret} from "@pulumi/kubernetes/core/v1";
-import {createSurrealManual} from "./providers/Manual/Surreal";
+import {createSurrealManual} from "./components/surrealdb/Manual/Surreal";
+import {createPostgres} from "./components/postgres";
+import {createRedis} from "./redis";
 const namespacePostgres = createNamespace("postgres");
 export const postgresNamespace = namespacePostgres.metadata.name
-const namespaceEtcd = createNamespace("etcd")
+//const namespaceEtcd = createNamespace("etcd")
 const config = new Config()
  const dbRootPassword = new RandomPassword("postgresRootPassword", {
   length: 16,
@@ -48,7 +49,8 @@ export const mailgunKey =  config.requireSecret("mailgunKey") //TODO: Replace wi
 
 //export const etcdSecret = createEtcdSecret(env.etcdRootPassword, namespaceEtcd);
 //const etcd = createEtcd(namespaceEtcd, etcdSecret)
-//const redis = createRedis("helm",namespaceRedis);
+const namespaceRedis = createNamespace("redis")
+const redis = createRedis("helm",namespaceRedis); //FIXME: Update chart
 export const postgresRootPassword = dbRootPassword.result
 
 

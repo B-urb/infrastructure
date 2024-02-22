@@ -1,13 +1,13 @@
-import {DirectusConfig, Source} from "../util/types";
+import {DirectusConfig, Source} from "../../../util/types";
 
 import * as postgresql from "@pulumi/postgresql";
-import {createPostgresHelm} from "./components/postgres/chart/Postgres";
+import {createPostgresHelm} from "./chart/Postgres";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
 
 
 
-export function createSurreal(by: Source, namespace: Namespace, dbRootPassword: RandomPassword, appDbPassword: RandomPassword) {
+export function createPostgres(by: Source, namespace: Namespace, dbRootPassword: RandomPassword, appDbPassword: RandomPassword) {
   switch (by) {
     case "manual":
       throw Error("Not Implemented")

@@ -66,9 +66,9 @@ function createDBCredentials(ident: string) {
     length: 26,
     special: false,
   });
-  const db = new postgresql.Database(ident, {name: ident}, {provider: postgresProvider});
 
   const role = new Role(ident, {login: true, name: ident, password: password.result}, {provider: postgresProvider});
+  const db = new postgresql.Database(ident, {name: ident, owner: role.name}, {provider: postgresProvider});
   new postgresql.Grant(`${ident}Full`, {
     database: db.name,
     objectType: "database",
@@ -84,18 +84,20 @@ function createDBCredentials(ident: string) {
 }
 
 // Create Database for DirectusCMS
-const directusDb = new postgresql.Database("directus", {name: "directus"}, {provider: postgresProvider});
 const role = new Role("directus", {
   login: true,
   name: "directus",
   password: password.result
 }, {provider: postgresProvider});
+const directusDb = new postgresql.Database("directus", {name: "directus", owner: role.name}, {provider: postgresProvider});
+
 const grant = new postgresql.Grant("directusFull", {
   database: directusDb.name,
   objectType: "database",
   privileges: ["ALL"],
   role: role.name,
 }, {provider: postgresProvider});
+
 
 const umamiCredentials = createDBCredentials("umami")
 
@@ -137,13 +139,13 @@ const directusSecret = {
   "directus-secret": directusSecretKey
 }
 export const directusConfigMapData = {
-  PUBLIC_URL: "https://cms.tecios.de",
+  PUBLIC_URL: "https://cms.burban.me",
   "db-client": "pg",
   "db-host": postgresUrl,
   "db-port": "5432",
   "s3-bucket": "directus",
   "directus-key": "bjoern",
-  "redis-host": "redis-redis-master.redis",
+  "redis-host": "redis-master.redis",
   "redis-port": "6379"
 
 }

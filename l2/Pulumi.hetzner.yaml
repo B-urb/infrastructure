@@ -1,0 +1,15 @@
+config:
+  l2:admin-mail: bjoclurban@gmail.com
+  l2:org: bjoern_urban_5
+  l2:paperlessAdminPw:
+    secure: AAABAEtG6Gbz8vJDGyd90/awJ7oaR7MQz63BbSExv5QvR9WzXGREAaagGCHAQ/oQGRipIw==
+  l2:paperlessAdminUser:
+    secure: AAABAH8jcjBQ8Dvr6SGWyNb1KW9B2xYWSjDa2eE31qN0uJ87ZhZ3GJPB+9fCIdpL0V7ktg==
+  l2:paperlessUsermapGid:
+    secure: AAABACvvMUsj5894CDfUgUSgOuns1GuR6NQV361VDp1jlA==
+  l2:paperlessUsermapUid:
+    secure: AAABAKCe90oXvG7YFCdwWdmuhbpBHujqIRFtt/UFOeZ4BY8=
+  l2:s3-key:
+    secure: AAABAD/h/5wcP3a2K4aZY3e8zhvSFxpvP4aYzkV3iPl2UE4qauHXV6fMndab2TzKyjoqWOYUAGJWjwW4xRNK0Q==
+  l2:s3-secret:
+    secure: AAABAOyJpJFwRpQnQVyFz3S7Pgf41EmOOts3Fzh4QfOMDL+3XY3AHeYjyyIr15NCCTsN879eOJDYgbKl/sWiFg==
