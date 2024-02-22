@@ -21,7 +21,7 @@ jobs:
           args: get pods
       - run: npm install
         working-directory: ${{ matrix.workdir }}
-      - uses: pulumi/actions@v4
+      - uses: pulumi/actions@v5
         with:
           command: preview
           work-dir: ${{ matrix.workdir }}
