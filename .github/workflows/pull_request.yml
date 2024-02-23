@@ -10,18 +10,18 @@ jobs:
       matrix:
         workdir: [ l1, l2 ]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.5.0
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.2
         with:
           node-version: '19.9.0'
-      - uses: actions-hub/kubectl@v1.27.2
+      - uses: actions-hub/kubectl@v1.29.2
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
           args: get pods
       - run: npm install
         working-directory: ${{ matrix.workdir }}
-      - uses: pulumi/actions@v4
+      - uses: pulumi/actions@v5
         with:
           command: preview
           work-dir: ${{ matrix.workdir }}
