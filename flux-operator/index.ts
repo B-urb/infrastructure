@@ -151,7 +151,7 @@ const ns = deployNamespaceList[0]
         stack: "hetzner",
         projectRepo: "https://github.com/B-urb/infrastructure",
         repoDir: "/l1",
-        branch: "development",
+        branch: "master",
         retryOnUpdateConflict: true,
         destroyOnFinalize: true,
       }
@@ -177,7 +177,7 @@ const ns = deployNamespaceList[0]
       stack: "hetzner",
       projectRepo: "https://github.com/B-Urb/infrastructure",
       repoDir: "/l2",
-      branch: "development",
+      branch: "master",
       prerequisites: [
         {name: "l1"}
       ],
