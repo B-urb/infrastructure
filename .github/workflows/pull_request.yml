@@ -11,7 +11,7 @@ jobs:
         workdir: [ l1, l2 ]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.5.0
+      - uses: actions/setup-node@v4.0.2
         with:
           node-version: '19.9.0'
       - uses: actions-hub/kubectl@v1.27.2
