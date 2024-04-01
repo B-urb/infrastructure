@@ -7,7 +7,7 @@ import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "cms.burban.me"
-  const website =  new WebService("directus", url, namespace, "directus/directus", "10.9.1", {}, "prod");
+  const website =  new WebService("directus", url, namespace, "directus/directus", "10.10.4", {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
@@ -16,6 +16,20 @@ export function createDirectusManual(namespace: Namespace, secret: Secret, confi
 function createDirectusDeployments(website: WebService, secret: Secret, config: ConfigMap): Deployment {
   const url = "cms.burban.me"
 
+  const directusDataPvc = new k8s.core.v1.PersistentVolumeClaim("directus-data-pvc", {
+    metadata: {
+      name: "directus-data",
+      namespace: website.namespace.metadata.name
+    },
+    spec: {
+      accessModes: ["ReadWriteOnce"],
+      resources: {
+        requests: {
+          storage: "10Gi", // Adjust the size as needed
+        },
+      },
+    },
+  });
   return new k8s.apps.v1.Deployment(website.name, {
     metadata: {
       name: website.name,
@@ -110,19 +124,19 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                   valueFrom: {configMapKeyRef: {name: config.metadata.name, key:"redis-port"}}},
                 //S3
                 {name: "STORAGE_LOCATIONS", value: "s3"},
-                {name: "STORAGE_S3_DRIVER", value: "s3"},
-                {name: "STORAGE_S3_REGION", value: "EU"},
-                {name: "STORAGE_S3_ENDPOINT", value: "https://eu2.contabostorage.com"},
-                {
-                  name: "STORAGE_S3_KEY",
-                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-key"}}
-                },
-                {
-                  name: "STORAGE_S3_SECRET",
-                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-secret"}}
-                },
-                {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
-                {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
+                {name: "STORAGE_S3_DRIVER", value: "local"},
+                // {name: "STORAGE_S3_REGION", value: "EU"},
+                // {name: "STORAGE_S3_ENDPOINT", value: "https://eu2.contabostorage.com"},
+                // {
+                //   name: "STORAGE_S3_KEY",
+                //   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-key"}}
+                // },
+                // {
+                //   name: "STORAGE_S3_SECRET",
+                //   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-secret"}}
+                // },
+                // {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
+                // {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
                 {name: "EMAIL_VERIFY_SETUP", value: "true"},
                 {name: "EMAIL_FROM", value: "no-reply"+url},
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
@@ -131,6 +145,14 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"}
               ],
+              volumeMounts: [
+                {
+                  name: "data",
+                  mountPath: "/directus/uploads",
+                },
+                // Mount other volumes if necessary
+              ],
+
               "ports": [
                 {
                   "name": "http",
@@ -149,6 +171,15 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 }
               }
             }
+          ],
+          volumes: [
+            {
+              name: "data",
+              persistentVolumeClaim: {
+                claimName: directusDataPvc.metadata.name,
+              },
+            },
+            // Define other volumes if necessary
           ],
         }
 
