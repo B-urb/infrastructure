@@ -135,10 +135,10 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                   name: "STORAGE_S3_SECRET",
                   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-secret"}}
                 },
-                {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
+                {name: "STORAGE_S3_BUCKET", value: "directus" },
                 {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
-                {name: "STORAGE_AMAZON_REGION", value: "eu-central-1"},
-                {name: "STORAGE_AMAZON_ENDPOINT", value: "s3.eu-central-1.amazonaws.com"},
+                {name: "STORAGE_AMAZON_REGION", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "aws-s3-region"}}},
+                {name: "STORAGE_AMAZON_ENDPOINT", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "aws-s3-endpoint"}}},
                 {
                   name: "STORAGE_AMAZON_KEY",
                   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "aws-s3-user-key"}}
