@@ -62,7 +62,7 @@ export function createDirectus(postgresProvider: Provider, stackRef: StackRefere
     "db-client": "pg",
     "db-host": postgresUrl,
     "db-port": "5432",
-    "s3-bucket": directusBucket.bucketName,
+    "aws-s3-bucket": directusBucket.bucketName,
     "aws-s3-region": directusBucket.region,
     "aws-s3-endpoint": directusBucket.endpoint,
     "directus-key": "bjoern",
