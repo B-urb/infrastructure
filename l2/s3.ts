@@ -17,15 +17,6 @@ export function createS3Bucket(bucketName: string): S3BucketCredentials {
   const bucket = new aws.s3.Bucket(bucketName, {
     bucket: bucketName,
     acl: "private",
-    lifecycleRules: [{
-      enabled: true,
-      noncurrentVersionExpiration: {
-        days: 0,
-      },
-      expiration: {
-        days: 0,
-      },
-    }],
   }, { provider: awsProvider });  // Use the singleton provider
 
   const user = new aws.iam.User(`${bucketName}-user`, {}, { provider: awsProvider });
