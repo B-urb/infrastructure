@@ -137,6 +137,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {name: "STORAGE_S3_BUCKET", value: "directus" },
                 {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
+                {name: "STORAGE_AMAZON_DRIVER", value: "s3"},
                 {name: "STORAGE_AMAZON_REGION", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "aws-s3-region"}}},
                 {name: "STORAGE_AMAZON_ENDPOINT", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "aws-s3-endpoint"}}},
                 {
@@ -149,6 +150,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {name: "STORAGE_AMAZON_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "aws-s3-bucket"}}},
                 {name: "STORAGE_AMAZON_FORCE_PATH_STYLE", value: "true"},
+                {name: "STORAGE_LOCAL_DRIVER", value: "local"},
                 {name: "EMAIL_VERIFY_SETUP", value: "true"},
                 {name: "EMAIL_FROM", value: "no-reply"+url},
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
