@@ -1,5 +1,9 @@
 config:
   l2:admin-mail: bjoclurban@gmail.com
+  l2:aws-key:
+    secure: AAABAH+G7d4mCSV7glyYVGEUU4HC/KyrxS9lxC1SXsWEtbt+kpxOAuzmrbiyZNbCTVytug==
+  l2:aws-secret:
+    secure: AAABAL797teIKI/r6I4G2ekFfvhzpjc01Ebm2WwAEbvlvQjYeeQqBYBBxSi/672PWYyQ5Sl2jtQ2pbWEDvEmFkxYRg5oUb4Y
   l2:org: bjoern_urban_5
   l2:paperlessAdminPw:
     secure: AAABAEtG6Gbz8vJDGyd90/awJ7oaR7MQz63BbSExv5QvR9WzXGREAaagGCHAQ/oQGRipIw==

@@ -123,20 +123,32 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "REDIS_PORT",
                   valueFrom: {configMapKeyRef: {name: config.metadata.name, key:"redis-port"}}},
                 //S3
-                {name: "STORAGE_LOCATIONS", value: "s3"},
-                {name: "STORAGE_S3_DRIVER", value: "local"},
-                // {name: "STORAGE_S3_REGION", value: "EU"},
-                // {name: "STORAGE_S3_ENDPOINT", value: "https://eu2.contabostorage.com"},
-                // {
-                //   name: "STORAGE_S3_KEY",
-                //   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-key"}}
-                // },
-                // {
-                //   name: "STORAGE_S3_SECRET",
-                //   valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-secret"}}
-                // },
-                // {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
-                // {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
+                {name: "STORAGE_LOCATIONS", value: "s3,amazon,local"},
+                {name: "STORAGE_S3_DRIVER", value: "s3"},
+                {name: "STORAGE_S3_REGION", value: "EU"},
+                {name: "STORAGE_S3_ENDPOINT", value: "https://eu2.contabostorage.com"},
+                {
+                  name: "STORAGE_S3_KEY",
+                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-key"}}
+                },
+                {
+                  name: "STORAGE_S3_SECRET",
+                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "s3-user-secret"}}
+                },
+                {name: "STORAGE_S3_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "s3-bucket"}}},
+                {name: "STORAGE_S3_FORCE_PATH_STYLE", value: "true"},
+                {name: "STORAGE_AMAZON_REGION", value: "eu-central-1"},
+                {name: "STORAGE_AMAZON_ENDPOINT", value: "s3.eu-central-1.amazonaws.com"},
+                {
+                  name: "STORAGE_AMAZON_KEY",
+                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "aws-s3-user-key"}}
+                },
+                {
+                  name: "STORAGE_AMAZON_SECRET",
+                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "aws-s3-user-secret"}}
+                },
+                {name: "STORAGE_AMAZON_BUCKET", valueFrom: {configMapKeyRef: {name: config.metadata.name, key: "aws-s3-bucket"}}},
+                {name: "STORAGE_AMAZON_FORCE_PATH_STYLE", value: "true"},
                 {name: "EMAIL_VERIFY_SETUP", value: "true"},
                 {name: "EMAIL_FROM", value: "no-reply"+url},
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
@@ -209,6 +221,7 @@ function createDirectusService(webservice: WebService): k8s.core.v1.Service {
         }
       });
 }
+
 function createDirectusIngress(webservice: WebService): k8s.networking.v1.Ingress {
 
   return new k8s.networking.v1.Ingress(webservice.name, {

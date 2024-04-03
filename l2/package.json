@@ -2,6 +2,7 @@
     "name": "l2",
     "main": "index.ts",
     "dependencies": {
+        "@pulumi/aws": "^6.28.2",
         "@pulumi/kubernetes": "^4.0.0",
         "@pulumi/postgresql": "^3.10.1",
         "@pulumi/pulumi": "^3.0.0",
