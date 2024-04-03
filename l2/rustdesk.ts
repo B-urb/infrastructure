@@ -1,12 +1,11 @@
-import {createDirectusHelmChart} from "./providers/Charts/Directus";
-import {DirectusConfig, Source} from "../util/types";
-import {createDirectusManual} from "./providers/Manual/Directus";
+import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
+import {createRustdeskManual} from "./providers/Manual/Rustdesk";
 
 
-export function createDirectus(by: Source, params: DirectusConfig) {
+export function createRustdesk(by: string, namespace: Namespace, secret: Secret, config: ConfigMap) {
    switch (by) {
      case "manual":
-       return createDirectusManual(params.namespace, params.secret, params.config)
+       return createRustdeskManual(namespace, secret, config)
      case "gke":
        console.log("Not Implemented")
        return null
@@ -14,7 +13,7 @@ export function createDirectus(by: Source, params: DirectusConfig) {
        console.log("Not Implemented")
        return null
      case "helm":
-       return createDirectusHelmChart(params.namespace, params.secret, params.config)
+       return createRustdeskManual(namespace, secret, config)
      case "aws":
        console.log("Not Implemented")
        return null

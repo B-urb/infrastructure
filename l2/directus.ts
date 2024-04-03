@@ -3,7 +3,7 @@ import {DirectusConfig, Source} from "../util/types";
 import {createDirectusManual} from "./providers/Manual/Directus";
 
 
-export function createDirectus(by: Source, params: DirectusConfig) {
+export function createDirectusResources(by: Source, params: DirectusConfig) {
    switch (by) {
      case "manual":
        return createDirectusManual(params.namespace, params.secret, params.config)
