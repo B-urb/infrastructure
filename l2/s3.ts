@@ -15,7 +15,7 @@ type S3BucketCredentials = {
 
 export function createS3Bucket(bucketName: string): S3BucketCredentials {
   const bucket = new aws.s3.Bucket(bucketName, {
-    bucket: bucketName,
+    bucketPrefix: bucketName,
     acl: "private",
   }, { provider: awsProvider });  // Use the singleton provider
 

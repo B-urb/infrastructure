@@ -41,7 +41,7 @@ export function createDirectus(postgresProvider: Provider, stackRef: StackRefere
   }, {provider: postgresProvider});
 
 
-  const directusBucket = createS3Bucket("directus-burban-eu");
+  const directusBucket = createS3Bucket("directus");
 
   const directusSecret = {
     "db-user": role.name,
