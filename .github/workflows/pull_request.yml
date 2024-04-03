@@ -9,6 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         workdir: [ l1, l2 ]
+        stack: [hetzner]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
@@ -25,6 +26,6 @@ jobs:
         with:
           command: preview
           work-dir: ${{ matrix.workdir }}
-          stack-name: prod
+          stack-name: ${{ matrix.stack }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

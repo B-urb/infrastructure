@@ -36,8 +36,7 @@ export const awsProvider = new aws.Provider("my-aws-provider", {
   accessKey: config.getSecret("aws-key"),
   secretKey: config.getSecret("aws-secret"),
   // Optional: If you are using temporary credentials, you also need to specify a session token
-  token: "YOUR_SESSION_TOKEN",
-  region: "us-west-2",
+  region: "eu-central-1",
 });
 
 // Create Backup for Database
