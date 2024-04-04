@@ -123,7 +123,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "REDIS_PORT",
                   valueFrom: {configMapKeyRef: {name: config.metadata.name, key:"redis-port"}}},
                 //S3
-                {name: "STORAGE_LOCATIONS", value: "s3,amazon,local"},
+                {name: "STORAGE_LOCATIONS", value: "amazon,s3,local"},
                 {name: "STORAGE_S3_DRIVER", value: "s3"},
                 {name: "STORAGE_S3_REGION", value: "EU"},
                 {name: "STORAGE_S3_ENDPOINT", value: "https://eu2.contabostorage.com"},
