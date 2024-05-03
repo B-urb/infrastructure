@@ -3,7 +3,7 @@
     "main": "index.ts",
     "dependencies": {
         "@pulumi/cloudinit": "^1.4.0",
-        "@pulumi/command": "^0.9.2",
+        "@pulumi/command": "^0.10.0",
         "@pulumi/github": "^6.0.0",
         "@pulumi/gitlab": "^6.0.0",
         "@pulumi/hcloud": "^1.17.0",
