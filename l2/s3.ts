@@ -50,7 +50,7 @@ export function createS3Bucket(bucketName: string): S3BucketCredentials {
     accessKeyId: accessKey.id,
     secretAccessKey: accessKey.secret,
     region: region,
-    endpoint: bucket.bucketRegionalDomainName.apply(domainName => `https://s3.${region}.amazonaws.com`),
+    endpoint: pulumi.interpolate `https://s3.${region}.amazonaws.com`,
   };
 }
 

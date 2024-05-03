@@ -162,10 +162,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "EMAIL_MAILGUN_API_KEY", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "mg-api-key"}}
                 },
                 {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"},
-                {
-                  name: "ISR_TOKEN_BURBAN",
-                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "admin-password"}}
-                },
                 {name:"FLOWS_ENV_ALLOW_LIST", value: "ISR_TOKEN_*"}
 
               ],
