@@ -7,7 +7,7 @@ import {keelAnnotationsProd} from "../../../util/globals";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "cms.burban.me"
-  const website =  new WebService("directus", url, namespace, "directus/directus", "10.10.4", {}, "prod");
+  const website =  new WebService("directus", url, namespace, "directus/directus", "10.10.7", {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
@@ -16,6 +16,7 @@ export function createDirectusManual(namespace: Namespace, secret: Secret, confi
 function createDirectusDeployments(website: WebService, secret: Secret, config: ConfigMap): Deployment {
   const url = "cms.burban.me"
 
+  const secretNameISR = "isr-token-secret"
   const directusDataPvc = new k8s.core.v1.PersistentVolumeClaim("directus-data-pvc", {
     metadata: {
       name: "directus-data",
@@ -72,6 +73,9 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                   cpu: "3000m"
                 }
               },
+              envFrom: [{
+                secretRef: { name: secretNameISR },
+              }],
               "env": [
                 {
                   name: "KEY",
@@ -157,7 +161,13 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "EMAIL_MAILGUN_DOMAIN", value: "mg.burban.me"},
                 {name: "EMAIL_MAILGUN_API_KEY", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "mg-api-key"}}
                 },
-                {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"}
+                {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"},
+                {
+                  name: "ISR_TOKEN_BURBAN",
+                  valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "admin-password"}}
+                },
+                {name:"FLOWS_ENV_ALLOW_LIST", value: "ISR_TOKEN_*"}
+
               ],
               volumeMounts: [
                 {

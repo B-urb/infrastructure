@@ -9,7 +9,13 @@ import {HCloudOrchestrator} from "./cloud_providers/hetzner/HCloudOrchestrator";
 import {K3sCluster} from "./k3s/K3sCluster";
 import * as fs from "fs";
 import {Provider} from "@pulumi/kubernetes";
-import {installCertManager, installCilium, installClusterIssuer, installCSIDriver} from "./components/addons";
+import {
+  installCertManager,
+  installCilium,
+  installClusterIssuer,
+  installCSIDriver,
+  installExternalSecretsOperator, installIstio
+} from "./components/addons";
 import {RandomPassword} from "@pulumi/random";
 import {installFlux} from "./components/flux/chart";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
@@ -41,6 +47,8 @@ const cilium = installCilium({provider:kubernetesProvider});
 installCSIDriver(hcloudToken,{provider: kubernetesProvider, dependsOn: [cilium]})
 const certManager = installCertManager({provider:kubernetesProvider})
 installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
+installIstio({provider: kubernetesProvider})
+const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
 //installFlux({provider:kubernetesProvider, dependsOn:[cilium]})
 new Namespace("flux-system", {
   metadata: {

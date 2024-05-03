@@ -3,7 +3,6 @@
  */
 import * as k8s from "@pulumi/kubernetes"
 import * as pulumi from "@pulumi/pulumi"
-import { getIngress } from "../utils"
 
 const ident = "juicefs"
 const ns = new k8s.core.v1.Namespace(ident, {
@@ -91,7 +90,6 @@ new k8s.helm.v3.Release("juicefs-gateway", {
     ingress: {
       enabled: true,
       className: "",
-      ...getIngress("juicefs.tecios.de"),
     },
   },
 })

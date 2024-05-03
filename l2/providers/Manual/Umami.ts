@@ -5,7 +5,7 @@ import { Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsDev} from "../../../util/globals";
 
 export function createUmamiManual(namespace: Namespace, secret: Secret) {
-  const website =  new WebService("umami", "stats.burban.me", namespace, "docker.umami.dev/umami-software/umami", "postgresql-latest", {}, "prod");
+  const website =  new WebService("umami", "stats.burban.me", namespace, "docker.umami.dev/umami-software/umami", "postgresql-v2.11.2", {}, "prod");
 
   const deployment = createUmamiDeployments(website, secret);
   const service = createUmamiService(website);

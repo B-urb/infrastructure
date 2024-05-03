@@ -78,20 +78,5 @@ export function createBasicAuthSecret(user: string, password: string) {
   })
 }
 
-export function createMiddleware(secret: Secret) {
-  return new k8s.apiextensions.CustomResource("middleware-ba", {
-    apiVersion: "traefik.containo.us/v1alpha1",
-    kind: "Middleware",
-    metadata: {
-      name: "basic-auth",
-      namespace: "kube-system"
-    },
-    spec: {
-      basicAuth: {
-        secret: secret.metadata.name
-      }
-    }
-  })
-}
 
 
