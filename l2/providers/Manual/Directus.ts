@@ -22,8 +22,8 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
   const url = "cms.burban.me"
 
   const token  = new RandomPassword("isrToken", {
-    length: 16,
-    special: true,
+    length: 24,
+    special: false,
   });
   const secretISR = createSecretWrapper("isr-token-secret", website.namespace, {"ISR_TOKEN":token.result})
   const externalSecretData: PushSecretData[] = [{
