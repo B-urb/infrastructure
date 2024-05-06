@@ -13,6 +13,7 @@ import {createDirectus} from "./create/directus";
 import * as aws from "@pulumi/aws"
 import {createSecretStore} from "./secretstore";
 import * as k8s from "@pulumi/kubernetes"
+import exp = require("node:constants");
 
 const config = new Config();
 const stack = getStack();
@@ -45,7 +46,7 @@ const kubeConfig  = stackRefl0.getOutput("kubeconfig").apply(kubeconfig => inter
 const clusterName  = stackRefl0.getOutput("cluster").apply(cluster => interpolate`${cluster}`);
 export const kubernetesProvider = new k8s.Provider("kube-provider", {kubeconfig: kubeConfig, cluster: clusterName, context: clusterName})
 
-const secretStore = createSecretStore(kubernetesProvider)
+export const secretStore = createSecretStore(kubernetesProvider)
 
 // Create Backup for Database
 const backupPGPassword = new RandomPassword("backupPGPassword", {

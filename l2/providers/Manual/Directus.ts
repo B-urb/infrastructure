@@ -4,7 +4,7 @@ import {WebService} from "../../types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
-import {createExternalPushSecret, createSecretWrapper, PushSecretData} from "../../secrets";
+import {createExternalPushSecret, createSecretWrapper, PushSecretData, PushSecretProps} from "../../secrets";
 import {getRandomPassword} from "@pulumi/aws/secretsmanager";
 import {RandomPassword} from "@pulumi/random";
 import {create} from "node:domain";
@@ -27,17 +27,16 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
   });
   const secretISR = createSecretWrapper("isr-token-secret", website.namespace, {"ISR_TOKEN":token.result})
   const externalSecretData: PushSecretData[] = [{
-    key: "apikey",
-    content: {
-      valueFrom: {
-        secretKeyRef: {
-          name: "isr-token-secret",
-          key: "ISR_TOKEN"
-        }
-      }
+    conversionStrategy: "None",
+    match: {
+      secretKey: "ISR_TOKEN",
+      remoteRef: {
+        remoteKey: "ISR_TOKEN"
+      },
     }
   }]
-  const externalPushSecret = createExternalPushSecret("isr-token-push-secret", externalSecretData, kubernetesProvider)
+  const externalSecretProps: PushSecretProps = {secretName: "isr-token-secret", secretData: externalSecretData}
+  const externalPushSecret = createExternalPushSecret("isr-token-push-secret", externalSecretProps, kubernetesProvider, website.namespace)
 
 
   const directusDataPvc = new k8s.core.v1.PersistentVolumeClaim("directus-data-pvc", {
