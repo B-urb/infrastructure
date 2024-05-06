@@ -124,12 +124,12 @@ export function createExternalPushSecret(name: string, props: PushSecretProps, p
         }
       },
       updatePolicy: "Replace",
-      deletePolicy: "Delete",
+      deletionPolicy: "Delete",
       refreshInterval: "10d",
-      secretStoreRefs: {
+      secretStoreRefs: [{
         name: secretStore.metadata.name,
         kind: "SecretStore"
-      },
+      }],
       // Spec to define how the secret is pushed to Kubernetes
       // This should match the actual data structure and requirements of your setup
 
