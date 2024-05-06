@@ -42,14 +42,21 @@ result.kubeconfig.apply(value => {
   console.log(`File written: ${filename}`);
 });
 
-const kubernetesProvider = new Provider("kube-provider", {kubeconfig: result.kubeconfig, cluster: clusterName, context: clusterName })
+const kubernetesProviderConfig = {kubeconfig: result.kubeconfig, cluster: clusterName, context: clusterName }
+// Export config for other stacks and levels
+export const kubeconfig = pulumi.secret(result.kubeconfig)
+export const cluster = clusterName
+
+
+const kubernetesProvider = new Provider("kube-provider", kubernetesProviderConfig)
+
+// install kubernetes extensions
 const cilium = installCilium({provider:kubernetesProvider});
 installCSIDriver(hcloudToken,{provider: kubernetesProvider, dependsOn: [cilium]})
 const certManager = installCertManager({provider:kubernetesProvider})
 installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
 installIstio({provider: kubernetesProvider})
 const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
-//installFlux({provider:kubernetesProvider, dependsOn:[cilium]})
 new Namespace("flux-system", {
   metadata: {
     name: "flux-system"
@@ -57,41 +64,3 @@ new Namespace("flux-system", {
 },
 {provider: kubernetesProvider}
 )
-
-
-// const example = new gitlab.GroupVariable("kubeconfig", {
-//   environmentScope: "*",
-//   group: "12345",
-//   key: "kubeconfig",
-//   masked: false,
-//   "protected": false,
-//   value: token,
-//   variableType: "file"
-// });
-// Create Gitlab Runner
-
-//else github
-/*
-const exampleSecretActionsEnvironmentSecret = new github.ActionsEnvironmentSecret("exampleSecretActionsEnvironmentSecret", {
-  environment: "example_environment",
-  secretName: "example_secret_name",
-  plaintextValue: _var.some_secret_string,
-});
-const exampleSecretIndex_actionsEnvironmentSecretActionsEnvironmentSecret = new github.ActionsEnvironmentSecret("exampleSecretIndex/actionsEnvironmentSecretActionsEnvironmentSecret", {
-  environment: "example_environment",
-  secretName: "example_secret_name",
-  encryptedValue: _var.some_encrypted_secret_string,
-});
-*/
-
-//TODO: use pulumi for mailgun
-// const _default = new Domain("default", {
-//   dkimKeySize: 1024,
-//   region: "eu",
-//   smtpPassword: "supersecretpassword1234",
-//   spamAction: "disabled",
-// });
-
-//export const namespaceGitlab = createNamespace("gitlab")
-
-//const gitlabRunner = createGitlabRunner(namespaceGitlab)

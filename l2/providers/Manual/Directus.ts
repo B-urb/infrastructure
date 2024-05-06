@@ -4,6 +4,11 @@ import {WebService} from "../../types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {keelAnnotationsProd} from "../../../util/globals";
+import {createExternalPushSecret, createSecretWrapper, PushSecretData} from "../../secrets";
+import {getRandomPassword} from "@pulumi/aws/secretsmanager";
+import {RandomPassword} from "@pulumi/random";
+import {create} from "node:domain";
+import {kubernetesProvider} from "../../index";
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "cms.burban.me"
@@ -16,7 +21,25 @@ export function createDirectusManual(namespace: Namespace, secret: Secret, confi
 function createDirectusDeployments(website: WebService, secret: Secret, config: ConfigMap): Deployment {
   const url = "cms.burban.me"
 
-  const secretNameISR = "isr-token-secret"
+  const token  = new RandomPassword("isrToken", {
+    length: 16,
+    special: true,
+  });
+  const secretISR = createSecretWrapper("isr-token-secret", website.namespace, {"ISR_TOKEN":token.result})
+  const externalSecretData: PushSecretData[] = [{
+    key: "apikey",
+    content: {
+      valueFrom: {
+        secretKeyRef: {
+          name: "isr-token-secret",
+          key: "ISR_TOKEN"
+        }
+      }
+    }
+  }]
+  const externalPushSecret = createExternalPushSecret("isr-token-push-secret", externalSecretData, kubernetesProvider)
+
+
   const directusDataPvc = new k8s.core.v1.PersistentVolumeClaim("directus-data-pvc", {
     metadata: {
       name: "directus-data",
@@ -74,7 +97,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 }
               },
               envFrom: [{
-                secretRef: { name: secretNameISR },
+                secretRef: { name: secretISR.metadata.name },
               }],
               "env": [
                 {
@@ -162,7 +185,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "EMAIL_MAILGUN_API_KEY", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "mg-api-key"}}
                 },
                 {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"},
-                {name:"FLOWS_ENV_ALLOW_LIST", value: "ISR_TOKEN_*"}
+                {name:"FLOWS_ENV_ALLOW_LIST", value: "ISR_TOKEN"}
 
               ],
               volumeMounts: [

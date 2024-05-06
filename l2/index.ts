@@ -3,20 +3,23 @@ import {createUmami} from "./umami";
 import * as postgresql from "@pulumi/postgresql";
 import {Provider, Role} from "@pulumi/postgresql";
 import {RandomPassword} from "@pulumi/random";
-import {Config, getStack, interpolate, jsonParse, log, Output, StackReference} from "@pulumi/pulumi";
-import {createBackupSecret, createDirectusSecret, createSecretWrapper, createUmamiSecret} from "./secrets";
-import {ConfigMap, Secret} from "@pulumi/kubernetes/core/v1";
+import {Config, getStack, interpolate, StackReference} from "@pulumi/pulumi";
+import {createBackupSecret, createSecretWrapper, createUmamiSecret} from "./secrets";
+import {ConfigMap} from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
 import {createVaultwardenManual} from "./providers/Manual/Vaultwarden";
 import {createPaperless} from "./providers/Manual/paperless/Paperless";
 import {createDirectus} from "./create/directus";
 import * as aws from "@pulumi/aws"
+import {createSecretStore} from "./secretstore";
+import * as k8s from "@pulumi/kubernetes"
 
 const config = new Config();
 const stack = getStack();
 const org = config.require("org");
 
 const stackRef = new StackReference(`${org}/l1/${stack}`)
+const stackRefl0 = new StackReference(`${org}/l0/${stack}`)
 
 
 const postgresNamespace = stackRef.getOutput("postgresNamespace").apply(namespace => interpolate`${namespace}`)
@@ -38,6 +41,11 @@ export const awsProvider = new aws.Provider("my-aws-provider", {
   // Optional: If you are using temporary credentials, you also need to specify a session token
   region: "eu-central-1",
 });
+const kubeConfig  = stackRefl0.getOutput("kubeconfig").apply(kubeconfig => interpolate`${kubeconfig}`);
+const clusterName  = stackRefl0.getOutput("cluster").apply(cluster => interpolate`${cluster}`);
+export const kubernetesProvider = new k8s.Provider("kube-provider", {kubeconfig: kubeConfig, cluster: clusterName, context: clusterName})
+
+const secretStore = createSecretStore(kubernetesProvider)
 
 // Create Backup for Database
 const backupPGPassword = new RandomPassword("backupPGPassword", {
