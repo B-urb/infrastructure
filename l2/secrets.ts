@@ -10,7 +10,6 @@ import {
 } from "../util/env";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import * as k8s from "@pulumi/kubernetes";
-import {DirectusSecret, UmamiSecret} from "../util/types";
 import {Input, Output} from "@pulumi/pulumi";
 
 
@@ -82,3 +81,56 @@ export function createSecretWrapper(name: string, namespace: Namespace, secretDa
     stringData: secretData
   })
 }
+export type PushSecretData = {
+  key: string;
+  content: PushSecretDataContent
+};
+type PushSecretDataContent = {
+  value?: string;
+  encoding?: string;
+  valueFrom?: {
+    secretKeyRef: {
+      name: string;
+      key: string;
+    }
+  };
+};
+
+// Create a PushSecret in Kubernetes
+export function createExternalPushSecret(name: string, data: PushSecretData[], provider: k8s.Provider)
+{
+  return  new k8s.apiextensions.CustomResource(name, {
+  apiVersion: "external-secrets.io/v1alpha1", // Use the correct API version
+  kind: "PushSecret",
+  metadata: {
+    name: name
+  },
+  spec: {
+    // Spec to define how the secret is pushed to Kubernetes
+    // This should match the actual data structure and requirements of your setup
+    data: data
+  }
+}, { provider: provider });
+}
+
+
+// [
+//   {
+//     key: "password",
+//     content: {
+//       value: "your-secure-password", // the actual secret data
+//       encoding: "utf-8" // specify encoding if necessary
+//     }
+//   },
+//   {
+//     key: "apikey",
+//     content: {
+//       valueFrom: {
+//         secretKeyRef: {
+//           name: "aws-secret", // referencing an existing secret
+//           key: "apikey"
+//         }
+//       }
+//     }
+//   }
+// ]
