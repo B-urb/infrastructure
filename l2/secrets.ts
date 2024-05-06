@@ -124,7 +124,7 @@ export function createExternalPushSecret(name: string, props: PushSecretProps, p
         }
       },
       updatePolicy: "Replace",
-      deletionPolicy: "Delete",
+      deletionPolicy: "None",
       refreshInterval: "240h",
       secretStoreRefs: [{
         name: secretStore.metadata.name,
