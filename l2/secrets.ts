@@ -117,12 +117,12 @@ export function createExternalPushSecret(name: string, props: PushSecretProps, p
       name: name,
       namespace: namespace.metadata.name
     },
-    selector: {
-      secret: {
-        name: props.secretName
-      }
-    },
     spec: {
+      selector: {
+        secret: {
+          name: props.secretName
+        }
+      },
       updatePolicy: "Replace",
       deletePolicy: "Delete",
       refreshInterval: "10d",
