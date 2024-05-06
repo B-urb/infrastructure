@@ -64,11 +64,13 @@ export function createSecretStore(k8sProvider: Provider) {
             secretRef: {
               accessKeyIDSecretRef: {
                 name: "aws-creds",
-                key: "accessKey"
+                key: "accessKey",
+                namespace: "kube-system"
               },
               secretAccessKeySecretRef: {
                 name: "aws-creds",
-                key: "secretAccessKey"
+                key: "secretAccessKey",
+                namespace: "kube-system"
               }
             }
           }

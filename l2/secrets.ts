@@ -111,7 +111,7 @@ export type PushSecretData = {
 // Create a PushSecret in Kubernetes
 export function createExternalPushSecret(name: string, props: PushSecretProps, provider: k8s.Provider, namespace: Namespace) {
   return new k8s.apiextensions.CustomResource(name, {
-    apiVersion: "external-secrets.io/v1alpha1", // Use the correct API version
+    apiVersion: "external-secrets.io/v1beta1", // Use the correct API version
     kind: "PushSecret",
     metadata: {
       name: name,
