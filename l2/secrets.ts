@@ -11,6 +11,7 @@ import {
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import * as k8s from "@pulumi/kubernetes";
 import {Input, Output} from "@pulumi/pulumi";
+import {secretStore} from "./index";
 
 
 export const directusSecret = {
@@ -35,7 +36,10 @@ export const medusaSecret = {
   "postgres-connection-string": `postgresql://${medusaUser}:${medusaPassword}@postgres-postgresql.postgres:5432/medusa`,
   "redis-connection-string": `redis://redis-headless.redis:6379?ConnectTimeout=5000&password=${redisDBPassword}&IdleTimeOutSecs=180`
 }
-export function createBackupSecret(namespace: Input<string>, backupSecretData: Input<{[key: string]: Input<string>}>) {
+
+export function createBackupSecret(namespace: Input<string>, backupSecretData: Input<{
+  [key: string]: Input<string>
+}>) {
   return new k8s.core.v1.Secret("postgres-backup", {
     metadata: {
       name: "postgres-backup",
@@ -44,7 +48,8 @@ export function createBackupSecret(namespace: Input<string>, backupSecretData: I
     stringData: backupSecretData
   })
 }
-export function createUmamiSecret(namespace: Namespace, umamiSecret: Input<{[key: string]: Input<string>}> ) {
+
+export function createUmamiSecret(namespace: Namespace, umamiSecret: Input<{ [key: string]: Input<string> }>) {
   return new k8s.core.v1.Secret("umami", {
     metadata: {
       name: "umami",
@@ -53,6 +58,7 @@ export function createUmamiSecret(namespace: Namespace, umamiSecret: Input<{[key
     stringData: umamiSecret
   })
 }
+
 export function createMedusaSecret(namespace: Namespace) {
   return new k8s.core.v1.Secret("medusa", {
     metadata: {
@@ -62,7 +68,10 @@ export function createMedusaSecret(namespace: Namespace) {
     stringData: medusaSecret
   })
 }
-export function createDirectusSecret(name: string, namespace: Namespace, directusSecret: Input<{[key: string]:  Input<string>}> ) {
+
+export function createDirectusSecret(name: string, namespace: Namespace, directusSecret: Input<{
+  [key: string]: Input<string>
+}>) {
   return new k8s.core.v1.Secret("directus", {
     metadata: {
       name: name,
@@ -72,7 +81,9 @@ export function createDirectusSecret(name: string, namespace: Namespace, directu
   })
 }
 
-export function createSecretWrapper(name: string, namespace: Namespace, secretData: Input<{[key: string]:  Input<string>}> ) {
+export function createSecretWrapper(name: string, namespace: Namespace, secretData: Input<{
+  [key: string]: Input<string>
+}>) {
   return new k8s.core.v1.Secret(name, {
     metadata: {
       name: name,
@@ -81,34 +92,46 @@ export function createSecretWrapper(name: string, namespace: Namespace, secretDa
     stringData: secretData
   })
 }
-export type PushSecretData = {
-  key: string;
-  content: PushSecretDataContent
-};
-type PushSecretDataContent = {
-  value?: string;
-  encoding?: string;
-  valueFrom?: {
-    secretKeyRef: {
-      name: string;
-      key: string;
-    }
-  };
+
+export type PushSecretProps = {
+  secretName: string;
+  secretData: PushSecretData[];
 };
 
-// Create a PushSecret in Kubernetes
-export function createExternalPushSecret(name: string, data: PushSecretData[], provider: k8s.Provider)
-{
-  return  new k8s.apiextensions.CustomResource(name, {
-  apiVersion: "external-secrets.io/v1alpha1", // Use the correct API version
-  kind: "PushSecret",
-  metadata: {
-    name: name
-  },
-  spec: {
-    // Spec to define how the secret is pushed to Kubernetes
-    // This should match the actual data structure and requirements of your setup
-    data: data
+export type PushSecretData= {
+  conversionStrategy: "None",
+  match: {
+    secretKey: string;
+    remoteRef: {
+      remoteKey: string;
+    }
   }
-}, { provider: provider });
+};
+// Create a PushSecret in Kubernetes
+export function createExternalPushSecret(name: string, props: PushSecretProps, provider: k8s.Provider, namespace: Namespace) {
+  return new k8s.apiextensions.CustomResource(name, {
+    apiVersion: "external-secrets.io/v1alpha1", // Use the correct API version
+    kind: "PushSecret",
+    metadata: {
+      name: name,
+      namespace: namespace.metadata.name
+    },
+    selector: {
+      secret: {
+        name: props.secretName
+      }
+    },
+    spec: {
+      updatePolicy: "Replace",
+      deletePolicy: "Delete",
+      refreshInterval: "10d",
+      secretStoreRefs: {
+        name: secretStore.metadata.name,
+        kind: "SecretStore"
+      },
+      // Spec to define how the secret is pushed to Kubernetes
+      // This should match the actual data structure and requirements of your setup
+    },
+    data: props.secretData,
+  }, {provider: provider});
 }
