@@ -98,7 +98,7 @@ export type PushSecretProps = {
   secretData: PushSecretData[];
 };
 
-export type PushSecretData= {
+export type PushSecretData = {
   conversionStrategy: "None",
   match: {
     secretKey: string;
@@ -107,6 +107,7 @@ export type PushSecretData= {
     }
   }
 };
+
 // Create a PushSecret in Kubernetes
 export function createExternalPushSecret(name: string, props: PushSecretProps, provider: k8s.Provider, namespace: Namespace) {
   return new k8s.apiextensions.CustomResource(name, {
@@ -131,7 +132,8 @@ export function createExternalPushSecret(name: string, props: PushSecretProps, p
       },
       // Spec to define how the secret is pushed to Kubernetes
       // This should match the actual data structure and requirements of your setup
-    },
-    data: props.secretData,
+
+      data: props.secretData,
+    }
   }, {provider: provider});
 }
