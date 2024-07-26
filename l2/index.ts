@@ -13,7 +13,7 @@ import {createDirectus} from "./create/directus";
 import * as aws from "@pulumi/aws"
 import {createSecretStore} from "./secretstore";
 import * as k8s from "@pulumi/kubernetes"
-import exp = require("node:constants");
+import {createKubevoyage} from "./create/kubevoyage";
 
 const config = new Config();
 const stack = getStack();
@@ -93,7 +93,8 @@ function createDBCredentials(ident: string) {
 }
 
 
-export const directus = createDirectus(postgresProvider, stackRef, config)
+createDirectus(postgresProvider, stackRef, config)
+createKubevoyage(postgresProvider, stackRef, config)
 
 
 const umamiCredentials = createDBCredentials("umami")
