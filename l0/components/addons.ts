@@ -6,7 +6,7 @@ import {Namespace} from "@pulumi/kubernetes/core/v1";
 export function installCilium(opts: CustomResourceOptions) {
   return new helm.v3.Chart("cilium", {
     chart: "cilium",
-    version: "1.14.6",
+    version: "1.15.6",
     namespace: "kube-system",
     fetchOpts: {
       repo: "https://helm.cilium.io/",
@@ -20,7 +20,7 @@ export function installCertManager(opts: CustomResourceOptions) {
   //TODO: Switch to Helm Release, to enable Hook Support
   return new helm.v3.Chart("cert-manager", {
     chart: "cert-manager",
-    version: "v1.13.3",
+    version: "v1.15.0",
     fetchOpts: {
       repo: "https://charts.jetstack.io",
     },
