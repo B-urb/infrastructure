@@ -13,19 +13,22 @@ export type KubevoyageConfig = {
   dbUrl: Output<string>;
 }
 
-export function createKubevoyageHelmChart(namespace: Namespace, config: KubevoyageConfig) {
+export function createKubevoyageHelmChart(config: KubevoyageConfig) {
 
   return new k8s.helm.v3.Chart("kubevoyage", {
         chart: "kubevoyage",
         version: "0.7.0",
-        namespace: namespace.metadata.name,
+        namespace: "default",
         fetchOpts: {
           repo: "https://b-urb.github.io/KubeVoyage/",
         },
         values: {
           "image": {
-            "tag": "v1.2.1-rc.8",
+            "repository": "bjoern5urban/kubevoyage",
+            "tag": "v1.2.1-rc.9",
           },
+          "app":
+              {"namespace": "kubevoyage"},
           "ingress": {
             "enabled": "true",
             "tls": [{
@@ -59,9 +62,9 @@ export function createKubevoyageHelmChart(namespace: Namespace, config: Kubevoya
             "baseUrl": "https://" + config.url,
           },
           "database": {
-           "type": "postgres",
+            "type": "postgres",
             "host": config.dbUrl,
-            "port": "5123",
+            "port": "5432",
             "user": config.dbUser,
             "password": config.dbPassword,
             "name": config.dbName

@@ -8,7 +8,7 @@ import {createSecretWrapper} from "../../secrets";
 import {Input} from "@pulumi/pulumi";
 
 export function createVaultwardenManual(namespace: Namespace, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>) {
-  const website =  new WebService("vaultwarden", "warden.burban.me", namespace, "vaultwarden/server", "1.30.0-alpine", {}, "prod");
+  const website =  new WebService("vaultwarden", "warden.burban.me", namespace, "vaultwarden/server", "1.32.0-alpine", {}, "prod");
 
   const deployment = createVaultwardenDeployments(website, configMap, secretData);
   const service = createVaultwardenService(website);
