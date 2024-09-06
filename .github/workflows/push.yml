@@ -2,7 +2,7 @@ name: Pulumi
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   update:
     name: Update
@@ -19,9 +19,9 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: npm install
-#      - uses: pulumi/actions@v3
-#        with:
-#          command: up
-#          stack-name: org-name/stack-name # When using an individual account, only use stack-name.
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: org-name/stack-name # When using an individual account, only use stack-name.
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

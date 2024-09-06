@@ -6,10 +6,9 @@ import {createKubevoyageHelmChart, KubevoyageConfig} from "../providers/Charts/K
 
 
 export function createKubevoyage(postgresProvider: Provider, stackRef: StackReference, config: Config) {
-  const jwtSecret = new RandomPassword("kubevoyage-secret", {length: 24}).result.apply(
+  const jwtSecret = new RandomPassword("kubevoyage-secret", {length: 24, special: false}).result.apply(
       password => interpolate`${password}`
   )
-  const namespaceKubevoyage = createNamespace("kubevoyage")
   const adminPassword = new RandomPassword("admin-password-kubevoyage", {length: 19, special: true}).result.apply(
       password => interpolate`${password}`
   )
@@ -46,5 +45,5 @@ export function createKubevoyage(postgresProvider: Provider, stackRef: StackRefe
     dbName: database.name
   }
 
-  createKubevoyageHelmChart(namespaceKubevoyage, voyageConfig)
+  createKubevoyageHelmChart(voyageConfig)
 }
