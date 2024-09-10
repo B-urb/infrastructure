@@ -1,18 +1,15 @@
 import * as k8s from "@pulumi/kubernetes"
-import {getEnv} from "@pulumi/kubernetes/utilities";
 import {WebService} from "../../types/WebService";
 import {Deployment} from "@pulumi/kubernetes/apps/v1";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
-import {keelAnnotationsProd} from "../../../util/globals";
 import {createExternalPushSecret, createSecretWrapper, PushSecretData, PushSecretProps} from "../../secrets";
-import {getRandomPassword} from "@pulumi/aws/secretsmanager";
 import {RandomPassword} from "@pulumi/random";
-import {create} from "node:domain";
 import {kubernetesProvider} from "../../index";
+import {versions} from "../../../versions"
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "cms.burban.me"
-  const website =  new WebService("directus", url, namespace, "directus/directus", "10.10.7", {}, "prod");
+  const website =  new WebService("directus", url, namespace, "directus/directus", versions.directus, {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);

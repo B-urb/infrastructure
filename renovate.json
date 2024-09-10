@@ -1,20 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "baseBranches": [
-    "development"
-  ],
+  "extends": ["config:recommended"],
+  "baseBranches": ["development"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor"],
       "groupName": "all minor updates",
       "groupSlug": "all-minor"
     },
+    {"matchUpdateTypes": ["patch"], "automerge": true}
+  ],
+  "customManagers": [
     {
-      "matchUpdateTypes": ["patch"],
-      "automerge": true
+      "customType": "regex",
+      "fileMatch": ["^versions\\.ts$"],
+      "matchStrings": [
+        "(?<depName>.*?):\\s*{[^}]*version:\\s*['\"]?(?<currentValue>.*?)['\"]?"
+      ],
+      "datasourceTemplate": "custom-versions"
     }
   ]
 }
