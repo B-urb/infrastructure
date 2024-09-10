@@ -9,7 +9,7 @@ import {versions} from "../../../versions"
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "cms.burban.me"
-  const website =  new WebService("directus", url, namespace, "directus/directus", versions.directus, {}, "prod");
+  const website =  new WebService("directus", url, namespace, "directus/directus", versions.directus.version, {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
   const service = createDirectusService(website);
