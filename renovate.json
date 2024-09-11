@@ -13,13 +13,14 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^versions\\.ts$"],
+      "fileMatch": ["(^|/)versions\\.ts$"],
       "matchStrings": [
-        "/[a-zA-Z]+:\\s*{\n\\s*version:\\s*(?<currentValue>.*),\n\\s*depName:\\s*(?<depName>.*),\n\\s*datasource:\\s*(?<datasource>.*),\n\\s*versioning:\\s*(?<versioning>.*),\n\\s*registryUrl:\\s*(?<registryUrl>.*).*\n\\s*}/"
+        "[a-zA-Z]+:\\s*\\{\\s*version:\\s*\"(?<currentValue>[^\"]*)\",\\s*depName:\\s*\"(?<depName>[^\"]*)\",\\s*datasource:\\s*\"(?<datasource>[^\"]*)\",\\s*versioning:\\s*\"(?<versioning>[^\"]*)\"(?:,\\s*registryUrl:\\s*\"(?<registryUrl>[^\"]*)\")?,?\\s*\\}"
       ],
       "datasourceTemplate": "{{datasource}}",
       "depNameTemplate": "{{depName}}",
       "versioningTemplate": "{{versioning}}",
-      "registryUrlTemplate": "{{#if registryUrl}}{{registryUrl}}{{/if}}"    }
+      "registryUrlTemplate": "{{#if registryUrl}}{{registryUrl}}{{/if}}"
+    }
   ]
 }
