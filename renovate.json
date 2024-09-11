@@ -17,7 +17,9 @@
       "matchStrings": [
         "/[a-zA-Z]+:\\s*{\n\\s*version:\\s*(?<currentValue>.*),\n\\s*depName:\\s*(?<depName>.*),\n\\s*datasource:\\s*(?<datasource>.*),\n\\s*versioning:\\s*(?<versioning>.*),\n\\s*registryUrl:\\s*(?<registryUrl>.*).*\n\\s*}/"
       ],
-      "datasourceTemplate": "custom-versions"
-    }
+      "datasourceTemplate": "{{datasource}}",
+      "depNameTemplate": "{{depName}}",
+      "versioningTemplate": "{{versioning}}",
+      "registryUrlTemplate": "{{#if registryUrl}}{{registryUrl}}{{/if}}"    }
   ]
 }
