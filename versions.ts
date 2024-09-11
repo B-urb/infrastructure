@@ -1,50 +1,54 @@
 // versions.ts
 
 export interface VersionEntry {
-  repoUrl: string;
   version: string;
-  type: "docker" | "helm" | "npm";
-  versioning: string;
   depName: string;
-  lookupName?: string;
+  datasource: string;
+  versioning: string;
+  registryUrl?: string;
 }
 
 export const versions: Record<string, VersionEntry> = {
-  nginx: {
-    repoUrl: "https://hub.docker.com/_/nginx",
-    version: "1.21.6",
-    type: "docker",
+  directus: {
+    version: "10.10.7",
+    depName: "directus/directus",
+    datasource: "docker",
     versioning: "semver",
+    registryUrl: "https://hub.docker.com"
+  },
+  nginx: {
+    version: "1.21.6",
     depName: "nginx",
+    datasource: "docker",
+    versioning: "semver",
+    registryUrl: "https://hub.docker.com"
   },
   postgresql: {
-    repoUrl: "https://hub.docker.com/_/postgres",
     version: "13.7",
-    type: "docker",
-    versioning: "semver",
     depName: "postgres",
+    datasource: "docker",
+    versioning: "semver",
+    registryUrl: "https://hub.docker.com"
   },
   redisChart: {
-    repoUrl: "https://charts.bitnami.com/bitnami",
     version: "17.3.14",
-    type: "helm",
+    depName: "bitnami/redis",
+    datasource: "helm",
     versioning: "semver",
-    depName: "redis",
-    lookupName: "bitnami/redis",
+    registryUrl: "https://charts.bitnami.com/bitnami"
   },
   expressJs: {
-    repoUrl: "https://www.npmjs.com/package/express",
     version: "4.18.1",
-    type: "npm",
-    versioning: "npm",
     depName: "express",
+    datasource: "npm",
+    versioning: "npm",
+    registryUrl: "https://registry.npmjs.org"
   },
   customApp: {
-    repoUrl: "https://github.com/myorg/custom-app",
     version: "2023.1.15",
-    type: "docker",
-    versioning: "regex:^(?<major>\\d{4})\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
     depName: "myorg/custom-app",
+    datasource: "github-releases",
+    versioning: "regex:^(?<major>\\d{4})\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
   }
 };
 
