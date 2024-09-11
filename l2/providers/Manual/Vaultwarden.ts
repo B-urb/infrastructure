@@ -6,9 +6,10 @@ import {ConfigMap, Namespace, PersistentVolumeClaim, Secret} from "@pulumi/kuber
 import {keelAnnotationsProd} from "../../../util/globals";
 import {createSecretWrapper} from "../../secrets";
 import {Input} from "@pulumi/pulumi";
+import versions from "../../../versions";
 
 export function createVaultwardenManual(namespace: Namespace, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>) {
-  const website =  new WebService("vaultwarden", "warden.burban.me", namespace, "vaultwarden/server", "1.32.0-alpine", {}, "prod");
+  const website =  new WebService("vaultwarden", "warden.burban.me", namespace, versions.vaultwarden.depName, versions.vaultwarden.version, {}, "prod");
 
   const deployment = createVaultwardenDeployments(website, configMap, secretData);
   const service = createVaultwardenService(website);
