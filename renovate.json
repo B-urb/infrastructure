@@ -15,9 +15,12 @@
       "customType": "regex",
       "fileMatch": ["^versions\\.ts$"],
       "matchStrings": [
-        "(?<depName>.*?):\\s*{[^}]*version:\\s*['\"]?(?<currentValue>.*?)['\"]?"
+        "(?<depName>\\w+):\\s*\\{[^\\}]*\\bversion:\\s*\"(?<currentValue>[^\"]+)\"[^\\}]*\\bdepName:\\s*\"(?<depName>[^\"]+)\"[^\\}]*\\bdatasource:\\s*\"(?<datasource>[^\"]+)\"[^\\}]*\\bversioning:\\s*\"(?<versioning>[^\"]+)\"(?:[^\\}]*\\bregistryUrl:\\s*\"(?<registryUrl>[^\"]+)\")?"
       ],
-      "datasourceTemplate": "custom-versions"
+      "datasourceTemplate": "{{datasource}}",
+      "depNameTemplate": "{{depName}}",
+      "versioningTemplate": "{{versioning}}",
+      "registryUrlTemplate": "{{#if registryUrl}}{{registryUrl}}{{/if}}"
     }
   ]
 }
