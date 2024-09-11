@@ -117,7 +117,9 @@ const configMap = new ConfigMap("vaultwarden", {
   metadata: {
     name: "vaultwarden",
     namespace: vaultwardenNamespace.metadata.name
-  }, data: {}
+  }, data: {
+    "url":"https://warden.burban.me"
+  }
 })
 createVaultwardenManual(vaultwardenNamespace, configMap, vaultwardenSecret)
 

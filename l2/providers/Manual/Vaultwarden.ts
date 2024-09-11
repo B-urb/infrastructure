@@ -67,8 +67,9 @@ function createVaultwardenDeployments(website: WebService, configMap: ConfigMap,
               "imagePullPolicy": "Always",
               "env": [
                 {name: "DATABASE_URL",
-                valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "database-url" }}}
-
+                valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "database-url" }}},
+                {name: "DOMAIN",
+                  valueFrom: {configMapKeyRef: { name: configMap.metadata.name, key: "url" }}}
               ],
               "ports": [
                 {
