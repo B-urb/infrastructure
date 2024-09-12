@@ -3,6 +3,7 @@
  */
 import * as k8s from "@pulumi/kubernetes"
 import * as pulumi from "@pulumi/pulumi"
+import versions from "../../l2/versions";
 
 const ident = "juicefs"
 const ns = new k8s.core.v1.Namespace(ident, {
@@ -48,10 +49,10 @@ const minioSecret = {
 const juiceStorageClassName = "juice"
 const juicefs = new k8s.helm.v3.Release("juicefs-driver", {
   namespace: ns.metadata.name,
-  chart: "juicefs-csi-driver",
-  version: "0.13.1",
+  chart: versions.juiceCsiDriver.depName,
+  version: versions.juiceCsiDriver.version,
   repositoryOpts: {
-    repo: "https://juicedata.github.io/charts",
+    repo: versions.juiceCsiDriver.registryUrl,
   },
   values: {
     storageClasses: [

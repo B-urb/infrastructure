@@ -2,13 +2,12 @@ import {ConfigMap, PersistentVolumeClaim, Service} from "@pulumi/kubernetes/core
 import {keelAnnotationsProd} from "../../../../util/globals";
 import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {RandomPassword} from "@pulumi/random";
-import exp = require("constants");
 import {StatefulSet} from "@pulumi/kubernetes/apps/v1";
-
+import versions from "../../../versions";
 const name = "surrealdb"
 const namespaceName = "surrealdb"
-const image = "surrealdb/surrealdb"
-const tag = "v1.2.0"
+const image = versions.surrealDB.depName
+const tag = versions.surrealDB.version
 
 export const surrealPassword = new RandomPassword("surrealPassword",{length: 16, special: true})
 

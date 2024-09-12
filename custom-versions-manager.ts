@@ -1,6 +1,6 @@
 // custom-versions-manager.ts
 import { ManagerApi, PackageDependency, PackageFile } from 'renovate/dist/manager/types';
-import versions from './versions';
+import versions from './l2/versions';
 
 export const customVersionsManager: ManagerApi = {
   defaultConfig: {},

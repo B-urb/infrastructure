@@ -5,7 +5,7 @@ import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 import {createExternalPushSecret, createSecretWrapper, PushSecretData, PushSecretProps} from "../../secrets";
 import {RandomPassword} from "@pulumi/random";
 import {kubernetesProvider} from "../../index";
-import {versions} from "../../../versions"
+import {versions} from "../../versions"
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
   const url = "cms.burban.me"
