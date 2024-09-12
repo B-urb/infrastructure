@@ -2,17 +2,18 @@ import * as k8s from "@pulumi/kubernetes"
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import {dbUsername} from "../../../../util/env";
 import {RandomPassword} from "@pulumi/random";
+import versions from "../../../versions";
 
 
 
 
 export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomPassword, appDbPassword: RandomPassword) {
   return new k8s.helm.v3.Chart("postgres", {
-        chart: "postgresql",
+        chart: versions.postgresql.depName,
         namespace: namespace.metadata.name,
-        version: "14.0.5",
+        version:versions.postgresql.version ,
         fetchOpts: {
-          repo: "https://charts.bitnami.com/bitnami",
+          repo: versions.postgresql.registryUrl,
         },
         values: {
          "global": {
