@@ -23,7 +23,7 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://charts.bitnami.com/bitnami"
   },
   postgresql: {
-    version: "14.3.3",
+    version: "16.0.1",
     depName: "postgresql",
     datasource: "helm",
     versioning: "helm",
