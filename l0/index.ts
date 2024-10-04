@@ -19,48 +19,22 @@ import {
 import {RandomPassword} from "@pulumi/random";
 import {installFlux} from "./components/flux/chart";
 import {Namespace} from "@pulumi/kubernetes/core/v1";
+import {createHetznerK3S} from "./create/Hetzner";
+import {getStack} from "@pulumi/pulumi";
+import {create} from "node:domain";
+import {createOpenstackK3S} from "./create/Openstack";
 
+
+const stack = getStack()
 
 const config = new pulumi.Config();
 const clusterName = "urban"
-const filename = `${clusterName}.yaml`;
-const mail = config.get("emailAdress")
-const hcloudToken = config.requireSecret("hcloudToken");
-const datacenterId = "fsn1-dc14"
-const location = "fsn1"
-const provider = new hcloud.Provider("hcloud-provider", { token: hcloudToken})
-const hetznerOrchestrator = new HCloudOrchestrator(provider, datacenterId, location);
-const k3sToken = new RandomPassword("k3sToken", {
-  special: false,
-  length: 30
-})
-const k3sCluster = new K3sCluster(hetznerOrchestrator, provider, hcloudToken, k3sToken);
-const result = k3sCluster.createCluster(clusterName, true, 1, 1)
-// Write to a file
-result.kubeconfig.apply(value => {
-  fs.writeFileSync(filename, value, 'utf8');
-  console.log(`File written: ${filename}`);
-});
-
-const kubernetesProviderConfig = {kubeconfig: result.kubeconfig, cluster: clusterName, context: clusterName }
-// Export config for other stacks and levels
-export const kubeconfig = pulumi.secret(result.kubeconfig)
-export const cluster = clusterName
-
-
-const kubernetesProvider = new Provider("kube-provider", kubernetesProviderConfig)
-
-// install kubernetes extensions
-const cilium = installCilium({provider:kubernetesProvider});
-installCSIDriver(hcloudToken,{provider: kubernetesProvider, dependsOn: [cilium]})
-const certManager = installCertManager({provider:kubernetesProvider})
-installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
-installIstio({provider: kubernetesProvider})
-const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
-new Namespace("flux-system", {
-  metadata: {
-    name: "flux-system"
-  },
-},
-{provider: kubernetesProvider}
-)
+const mail = config.get("emailAdress")!!
+const kubeconfig = "";
+if (stack == "hetzner") {
+  const kubeconfig = createHetznerK3S(config, clusterName, mail)
+} else if (stack == "openstack") {
+  createOpenstackK3S(config, clusterName, mail)
+} else {
+  throw Error("invalid stack")
+}
