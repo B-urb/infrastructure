@@ -29,13 +29,6 @@ export const versions: Record<string, VersionEntry> = {
     versioning: "helm",
     registryUrl: "https://charts.bitnami.com/bitnami"
   },
-  surrealDB: {
-    version: "v1.5.5",
-    depName: "surrealdb/surrealdb",
-    datasource: "docker",
-    versioning: "semver-coerced",
-  },
-  18.13.0
 };
 
 export default versions;
