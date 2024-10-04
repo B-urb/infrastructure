@@ -10,7 +10,7 @@ export interface VersionEntry {
 
 export const versions: Record<string, VersionEntry> = {
   surrealDB: {
-    version: "v1.5.5",
+    version: "v2.0.3",
     depName: "surrealdb/surrealdb",
     datasource: "docker",
     versioning: "semver-coerced",
