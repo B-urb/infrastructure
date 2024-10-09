@@ -42,8 +42,9 @@ function createVaultwardenDeployments(website: WebService, configMap: ConfigMap,
       }
     },
     "spec": {
+      replicas: 2,
       "strategy": {
-        "type": "Recreate"
+        "type": "RollingUpdate"
       },
       "selector": {
         "matchLabels": {
