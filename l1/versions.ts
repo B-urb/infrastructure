@@ -10,32 +10,25 @@ export interface VersionEntry {
 
 export const versions: Record<string, VersionEntry> = {
   surrealDB: {
-    version: "v1.2.0",
+    version: "v2.0.4",
     depName: "surrealdb/surrealdb",
     datasource: "docker",
     versioning: "semver-coerced",
   },
   redis: {
-    version: "18.13.0",
+    version: "18.19.4",
     depName: "redis",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://charts.bitnami.com/bitnami"
   },
   postgresql: {
-    version: "14.0.5",
+    version: "14.3.3",
     depName: "postgresql",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://charts.bitnami.com/bitnami"
   },
-  surrealDB: {
-    version: "v1.2.0",
-    depName: "surrealdb/surrealdb",
-    datasource: "docker",
-    versioning: "semver-coerced",
-  },
-  18.13.0
 };
 
 export default versions;
