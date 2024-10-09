@@ -10,7 +10,7 @@
         "@pulumi/kubernetes": "^4.0.0",
         "@pulumi/mailgun": "^3.4.1",
         "@pulumi/openstack": "^5.0.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/pulumi": "^3.135.1",
         "@pulumi/random": "^4.15.1",
         "@pulumi/tls": "^5.0.0",
         "@types/node": "^20.0.0",

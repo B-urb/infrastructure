@@ -24,6 +24,7 @@ export function createOpenstackK3S(config: pulumi.Config, clusterName: string, m
 
 // Create a web server
 //   const test_server = new openstack.compute.Instance("test-server", {});
+  clusterName = `${clusterName}-dev`
   const filename = `${clusterName}.yaml`;
   const cloudName = "openstack"
   const provider = new openstack.Provider("openstack-provider", {cloud: cloudName})
@@ -46,11 +47,11 @@ export function createOpenstackK3S(config: pulumi.Config, clusterName: string, m
   const kubernetesProvider = new Provider("kube-provider", kubernetesProviderConfig)
 
   // install kubernetes extensions
-  const cilium = installCilium({provider:kubernetesProvider});
+  // const cilium = installCilium({provider:kubernetesProvider});
   const certManager = installCertManager({provider:kubernetesProvider})
   installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
-  installIstio({provider: kubernetesProvider})
-  const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
+  // installIstio({provider: kubernetesProvider})
+  // const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
   new Namespace("flux-system", {
         metadata: {
           name: "flux-system"
