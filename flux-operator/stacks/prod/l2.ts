@@ -21,6 +21,8 @@ export function createStackL2Prod(ns: string, accessToken: Secret) {
         }
       },
       stack: "hetzner",
+      refresh: true,
+      useLocalStackOnly: true,
       projectRepo: "https://github.com/B-Urb/infrastructure",
       repoDir: "/l2",
       branch: "master",

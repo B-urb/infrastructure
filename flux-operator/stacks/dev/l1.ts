@@ -22,8 +22,10 @@ export function createStackL1Dev(ns: string, accessToken: Secret) {
         }
       },
       stack: "openstack",
+      useLocalStackOnly: true,
       projectRepo: "https://github.com/B-urb/infrastructure",
       repoDir: "/l1",
+      refresh: true,
       branch: "development",
       retryOnUpdateConflict: true,
       destroyOnFinalize: true,
