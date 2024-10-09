@@ -40,7 +40,7 @@ export function createOpenstackK3S(config: pulumi.Config, clusterName: string, m
     fs.writeFileSync(filename, value, 'utf8');
     console.log(`File written: ${filename}`);
   });
-  const kubernetesProviderConfig = {kubeconfig: result.kubeconfig, cluster: clusterName, context: clusterName }
+  const kubernetesProviderConfig = {kubeconfig: result.kubeconfig, cluster: clusterName, context: clusterName}
 // Export config for other stacks and levels
   const cluster = clusterName
   const kubeconfig = pulumi.secret(result.kubeconfig)
@@ -48,8 +48,8 @@ export function createOpenstackK3S(config: pulumi.Config, clusterName: string, m
 
   // install kubernetes extensions
   // const cilium = installCilium({provider:kubernetesProvider});
-  const certManager = installCertManager({provider:kubernetesProvider})
-  installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
+  const certManager = installCertManager({provider: kubernetesProvider})
+  installClusterIssuer(mail!!, {provider: kubernetesProvider, dependsOn: [certManager]})
   // installIstio({provider: kubernetesProvider})
   // const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
   new Namespace("flux-system", {
@@ -59,5 +59,5 @@ export function createOpenstackK3S(config: pulumi.Config, clusterName: string, m
       },
       {provider: kubernetesProvider}
   )
-  return result.kubeconfig
+  return {kubeconfig: result.kubeconfig, cluster: pulumi.output(clusterName)}
 }

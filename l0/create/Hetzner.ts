@@ -54,5 +54,5 @@ export function createHetznerK3S(config: pulumi.Config, clusterName: string, mai
       },
       {provider: kubernetesProvider}
   )
-  return kubeconfig
+  return {kubeconfig: kubeconfig, cluster: pulumi.output(cluster)}
 }

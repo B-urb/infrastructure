@@ -60,8 +60,9 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
     },
     "spec": {
       "strategy": {
-        "type": "Recreate"
+        "type": "RollingUpdate"
       },
+      replicas: 2,
       "selector": {
         "matchLabels": {
           "name": website.name
