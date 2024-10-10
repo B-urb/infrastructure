@@ -87,7 +87,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
               resources: {
                 requests: {
                   memory: "1Gi",
-                  cpu: "500mm"
+                  cpu: "500m"
                 },
                 limits: {
                   memory: "3Gi",
