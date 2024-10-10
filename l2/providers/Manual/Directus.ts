@@ -76,6 +76,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
           }
         },
         "spec": {
+          priority: 1000,
           // nodeSelector: {
           // },
           "containers": [
@@ -85,8 +86,8 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
               "imagePullPolicy": "Always",
               resources: {
                 requests: {
-                  memory: "2Gi",
-                  cpu: "2000m"
+                  memory: "1Gi",
+                  cpu: "500mm"
                 },
                 limits: {
                   memory: "3Gi",
