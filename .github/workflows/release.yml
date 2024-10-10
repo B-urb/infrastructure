@@ -7,7 +7,7 @@ on:
       - completed
     branches:
       - master
-
+jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
