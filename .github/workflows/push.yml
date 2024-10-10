@@ -1,21 +1,36 @@
 name: Pulumi
 on:
-  push:
-    branches:
-      - master
+  - push:
+      branches:
+        - "master"
+        - "development"
+  - pull_request
+
 jobs:
-  update:
-    name: Update
+  preview:
+    name: Preview
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workdir: [ l1, l2 ]
+        stack: [hetzner]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.4
         with:
-          node-version-file: package.json
+          node-version: '19.9.0'
+      - uses: actions-hub/kubectl@v1.31.1
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: get pods
       - run: npm install
+        working-directory: ${{ matrix.workdir }}
       - uses: pulumi/actions@v5
         with:
           command: preview
-          stack-name: hetzner # When using an individual account, only use stack-name.
+          work-dir: ${{ matrix.workdir }}
+          stack-name: ${{ matrix.stack }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
