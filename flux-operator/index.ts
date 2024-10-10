@@ -20,8 +20,8 @@ const crdVersion = config.get("crd-version") || defaultCRDVersion;
 const operatorVersion = config.get("operator-version") || defaultOperatorVersion;
 // Get the Pulumi API token.
 const pulumiAccessToken = config.requireSecret("pulumiAccessToken")
-const tagL1 = config.get("tag")
-const tagL2 = config.get("tag")
+const tagL1 = process.env.versionTag
+const tagL2 = process.env.versionTag
 if (tagL1 == undefined || tagL2 == undefined)
   throw Error("tag not set")
 const stackCRD = new kubernetes.yaml.ConfigFile("stackcrd", {
