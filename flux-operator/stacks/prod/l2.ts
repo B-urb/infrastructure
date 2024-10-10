@@ -25,7 +25,7 @@ export function createStackL2Prod(ns: string, accessToken: Secret, tagL2: string
       useLocalStackOnly: true,
       projectRepo: "https://github.com/B-Urb/infrastructure",
       repoDir: "/l2",
-      branch: tagL2,
+      branch: `refs/tags/${tagL2}`,
       prerequisites: [
         {name: "l1"}
       ],
