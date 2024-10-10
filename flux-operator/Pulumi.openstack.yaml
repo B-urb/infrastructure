@@ -1,0 +1,4 @@
+config:
+  flux-operator:namespace: flux-system
+  flux-operator:pulumiAccessToken:
+    secure: AAABAGbfKH24VjyD852ha34hJyFiZLoKaIbWGmFLgXcrv38Zb7a6RwXH73BhuvBuBjEcVMNVWfNHreNrEXpGss1nObuDO/HsBjb/0g==

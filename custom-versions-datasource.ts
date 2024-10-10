@@ -1,6 +1,6 @@
 // custom-versions-datasource.ts
 import { DataSource } from 'renovate/dist/datasource/types';
-import versions from './versions';
+import versions from './l2/versions';
 
 export const customVersionsDatasource: DataSource = {
   id: 'custom-versions',

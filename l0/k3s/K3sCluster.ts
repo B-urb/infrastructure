@@ -62,12 +62,13 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
     const kubeconfig = this.getConfig(initialNode.ipv4Address, sshKey); // Assuming this returns the kubeconfig as a string
     const newContextName = `${name}`; // Replace with your new context name
     const newClusterName = `${name}`; // Replace with your new cluster name
-    const updatedConfig = updateKubeConfig(kubeconfig, initialNode.ipv4Address, newContextName, newClusterName);
+    const updatedConfig = updateKubeConfig(kubeconfig.stdout, initialNode.ipv4Address, newContextName, newClusterName);
   // Call the function
     return {
       "ip": initialNode.ipv4Address,
       "sshKey": sshKey,
-      "kubeconfig": updatedConfig
+      "kubeconfig": updatedConfig,
+      "kubeconfig-command": kubeconfig
     }
   }
 
@@ -124,13 +125,14 @@ export class K3sCluster<T extends keyof CloudProviderTypes> {
         host: ip,
         user: "root",
         privateKey: sshKey.privateKeyPem,
+
       },
       create:
       // First, we use `until` to monitor for the k3s.yaml (our kubeconfig) being created.
       // Then we sleep 10, just in-case the k3s server needs a moment to become healthy. Sorry?
           "until [ -f /etc/rancher/k3s/k3s.yaml ]; do sleep 5; done; cat /etc/rancher/k3s/k3s.yaml; sleep 10;",
-    });
-    return fetchKubeconfig.stdout;
+    },{deleteBeforeReplace: true});
+    return fetchKubeconfig;
   }
 }
 

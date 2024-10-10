@@ -6,7 +6,7 @@ import {ConfigMap, Namespace, PersistentVolumeClaim, Secret} from "@pulumi/kuber
 import {keelAnnotationsProd} from "../../../util/globals";
 import {createSecretWrapper} from "../../secrets";
 import {Input} from "@pulumi/pulumi";
-import versions from "../../../versions";
+import versions from "../../versions";
 
 export function createVaultwardenManual(namespace: Namespace, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>) {
   const website =  new WebService("vaultwarden", "warden.burban.me", namespace, versions.vaultwarden.depName, versions.vaultwarden.version, {}, "prod");
@@ -42,8 +42,9 @@ function createVaultwardenDeployments(website: WebService, configMap: ConfigMap,
       }
     },
     "spec": {
+      replicas: 2,
       "strategy": {
-        "type": "Recreate"
+        "type": "RollingUpdate"
       },
       "selector": {
         "matchLabels": {
@@ -67,8 +68,9 @@ function createVaultwardenDeployments(website: WebService, configMap: ConfigMap,
               "imagePullPolicy": "Always",
               "env": [
                 {name: "DATABASE_URL",
-                valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "database-url" }}}
-
+                valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "database-url" }}},
+                {name: "DOMAIN",
+                  valueFrom: {configMapKeyRef: { name: configMap.metadata.name, key: "url" }}}
               ],
               "ports": [
                 {

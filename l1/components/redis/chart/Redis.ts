@@ -1,14 +1,15 @@
 import * as k8s from "@pulumi/kubernetes"
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import {redisDBPassword} from "../../../../util/env";
+import versions from "../../../versions";
 
 export function createRedisHelm(namespace: Namespace) {
   return new k8s.helm.v3.Chart("redis", {
-        chart: "redis",
+        chart: versions.redis.depName,
         namespace: namespace.metadata.name,
-        version: "18.13.0",
+        version: versions.redis.version,
         fetchOpts: {
-          repo: "https://charts.bitnami.com/bitnami",
+          repo: versions.redis.registryUrl,
         },
         values: {
           "global": {
