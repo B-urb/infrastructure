@@ -1,7 +1,7 @@
 import {Secret} from "@pulumi/kubernetes/core/v1";
 import {CustomResource} from "@pulumi/kubernetes/apiextensions";
 
-export function createStackL2Prod(ns: string, accessToken: Secret) {
+export function createStackL2Prod(ns: string, accessToken: Secret, tagL2: string) {
   const stackL2 = new CustomResource("l2", {
     apiVersion: 'pulumi.com/v1',
     kind: 'Stack',
@@ -25,7 +25,7 @@ export function createStackL2Prod(ns: string, accessToken: Secret) {
       useLocalStackOnly: true,
       projectRepo: "https://github.com/B-Urb/infrastructure",
       repoDir: "/l2",
-      branch: "master",
+      branch: tagL2,
       prerequisites: [
         {name: "l1"}
       ],

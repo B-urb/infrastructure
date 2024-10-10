@@ -6,6 +6,7 @@ import {createStackL1Prod} from "./stacks/prod/l1";
 import {createStackL2Prod} from "./stacks/prod/l2";
 import {createStackL1Dev} from "./stacks/dev/l1";
 import {createStackL2Dev} from "./stacks/dev/l2";
+import {throws} from "node:assert";
 
 
 const stack = pulumi.getStack()
@@ -19,7 +20,10 @@ const crdVersion = config.get("crd-version") || defaultCRDVersion;
 const operatorVersion = config.get("operator-version") || defaultOperatorVersion;
 // Get the Pulumi API token.
 const pulumiAccessToken = config.requireSecret("pulumiAccessToken")
-
+const tagL1 = config.get("tag")
+const tagL2 = config.get("tag")
+if (tagL1 == undefined || tagL2 == undefined)
+  throw Error("tag not set")
 const stackCRD = new kubernetes.yaml.ConfigFile("stackcrd", {
   file: `https://raw.githubusercontent.com/pulumi/pulumi-kubernetes-operator/${crdVersion}/deploy/crds/pulumi.com_stacks.yaml`
 });
@@ -137,8 +141,8 @@ const accessToken = new Secret("operator-accesstoken", {
 // Create an NGINX deployment in-cluster.
 
 if (stack == "hetzner") {
-  createStackL1Prod(ns, accessToken)
-  createStackL2Prod(ns, accessToken)
+  createStackL1Prod(ns, accessToken,tagL1)
+  createStackL2Prod(ns, accessToken, tagL2)
 } else if (stack == "openstack") {
   createStackL1Dev(ns, accessToken)
   createStackL2Dev(ns, accessToken)

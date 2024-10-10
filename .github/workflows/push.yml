@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      -
 jobs:
   update:
     name: Update

@@ -1,0 +1,38 @@
+name: Deploy Release
+on:
+ workflow_dispatch:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+env:
+  CI: true
+
+jobs:
+  pulumi-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - run: npm install
+        working-directory: deploy
+      - name: Decode kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d >  $HOME/.kube/config
+          cat $HOME/.kube/config
+        shell: bash
+      - name: Update Tag on Pulumi stack resource
+        uses: pulumi/actions@v6
+        with:
+          command: config set tag ${{ github.head_ref || github.ref_name }}
+          stack-name: hetzner
+          work-dir: flux-operator
+      - name: Deploy with Pulumi
+        uses: pulumi/actions@v6
+        with:
+          command: up
+          stack-name: hetzner
+          work-dir: flux-operator
+    env:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      registryImage: ${{ secrets.DOCKERHUB_USERNAME }}/webcv
+      imageTag: ${{ github.head_ref || github.ref_name }}

@@ -8,7 +8,7 @@ const stack = getStack()
 
 const config = new pulumi.Config();
 const clusterName = "urban"
-const mail = config.get("emailAdress")!!
+const mail = config.get("emailAddress")!!
 
 if (!(stack == "hetzner" || stack == "openstack")) {
   throw Error("invalid stack")
