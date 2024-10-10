@@ -1,10 +1,10 @@
 name: Pulumi
 on:
-  - push:
+  push:
       branches:
         - "master"
         - "development"
-  - pull_request
+        - "renovate/*"
 
 jobs:
   preview:
