@@ -26,7 +26,7 @@ export function createStackL1Prod(ns: string, accessToken: Secret, tagL1: string
       refresh: true,
       projectRepo: "https://github.com/B-urb/infrastructure",
       repoDir: "/l1",
-      branch: tagL1,
+      branch: `refs/tags/${tagL1}`,
       retryOnUpdateConflict: true,
       destroyOnFinalize: true,
     }
