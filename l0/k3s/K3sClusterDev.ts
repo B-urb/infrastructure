@@ -75,7 +75,8 @@ export class K3sClusterDev<T extends keyof CloudProviderTypes> {
     const kubeconfig = this.getConfig(initialNode.ip, sshKey, initialNode.associate, initialNode.server); // Assuming this returns the kubeconfig as a string
     const newContextName = `${name}`; // Replace with your new context name
     const newClusterName = `${name}`; // Replace with your new cluster name
-    const updatedConfig = updateKubeConfig(kubeconfig, initialNode.ip, newContextName, newClusterName);
+    const newUserName = `${name}`; // Replace with your new cluster name
+    const updatedConfig = updateKubeConfig(kubeconfig, initialNode.ip, newContextName, newClusterName, newUserName);
     // Call the function
     return {
       "ip": initialNode.ip,

@@ -5,7 +5,8 @@ export function updateKubeConfig(
     kubeconfig: pulumi.Input<string>,
     serverIp: pulumi.Input<string>,
     newContextName: string,
-    newClusterName: string
+    newClusterName: string,
+    newUserName: string
 ): pulumi.Output<string> {
   return pulumi.all([kubeconfig, serverIp]).apply(([kc, ip]) => {
     // Parse the YAML kubeconfig to JSON
@@ -19,13 +20,20 @@ export function updateKubeConfig(
       }
     });
 
+    config.users.forEach((user: KubeUser) => {
+      if (user.name === 'default') {
+        user.name = newUserName; // Update cluster reference
+      }
+    });
     // Replace the context name in all contexts
     config.contexts.forEach((context: KubeContext) => {
       if (context.name === 'default') {
         context.context.cluster = newClusterName; // Update cluster reference
         context.name = newContextName; // Update context name
+        context.context.user = newUserName
       }
     });
+
 
     // Update current-context if it was 'default'
     if (config['current-context'] === 'default') {
@@ -48,12 +56,22 @@ interface KubeContext {
 interface KubeConfig {
   clusters: KubeCluster[];
   contexts: KubeContext[];
+  users: KubeUser[];
   'current-context': string;
   // Add other properties of kubeconfig as needed
 }
+
 interface KubeCluster {
   cluster: {
     server: string;
+  };
+  name: string;
+}
+
+interface KubeUser {
+  user: {
+    "client-certificate-data": string;
+    "client-key-data": string;
   };
   name: string;
 }
