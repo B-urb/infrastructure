@@ -62,7 +62,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
       "strategy": {
         "type": "RollingUpdate"
       },
-      replicas: 2,
+      replicas: 1,
       "selector": {
         "matchLabels": {
           "name": website.name
@@ -76,7 +76,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
           }
         },
         "spec": {
-          priority: 1000,
           // nodeSelector: {
           // },
           "containers": [
