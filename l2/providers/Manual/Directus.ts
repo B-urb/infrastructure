@@ -86,12 +86,12 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
               "imagePullPolicy": "Always",
               resources: {
                 requests: {
-                  memory: "1Gi",
+                  memory: "500Mi",
                   cpu: "500m"
                 },
                 limits: {
-                  memory: "3Gi",
-                  cpu: "3000m"
+                  memory: "1500Mi",
+                  cpu: "1500m"
                 }
               },
               envFrom: [{
