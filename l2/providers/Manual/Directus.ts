@@ -36,20 +36,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
   const externalPushSecret = createExternalPushSecret("isr-token-push-secret", externalSecretProps, kubernetesProvider, website.namespace)
 
 
-  const directusDataPvc = new k8s.core.v1.PersistentVolumeClaim("directus-data-pvc", {
-    metadata: {
-      name: "directus-data",
-      namespace: website.namespace.metadata.name
-    },
-    spec: {
-      accessModes: ["ReadWriteOnce"],
-      resources: {
-        requests: {
-          storage: "10Gi", // Adjust the size as needed
-        },
-      },
-    },
-  });
   return new k8s.apps.v1.Deployment(website.name, {
     metadata: {
       name: website.name,
@@ -62,7 +48,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
       "strategy": {
         "type": "RollingUpdate"
       },
-      replicas: 1,
+      replicas: 2,
       "selector": {
         "matchLabels": {
           "name": website.name
@@ -185,13 +171,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name:"FLOWS_ENV_ALLOW_LIST", value: "ISR_TOKEN"}
 
               ],
-              volumeMounts: [
-                {
-                  name: "data",
-                  mountPath: "/directus/uploads",
-                },
-                // Mount other volumes if necessary
-              ],
 
               "ports": [
                 {
@@ -211,15 +190,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 }
               }
             }
-          ],
-          volumes: [
-            {
-              name: "data",
-              persistentVolumeClaim: {
-                claimName: directusDataPvc.metadata.name,
-              },
-            },
-            // Define other volumes if necessary
           ],
         }
 
