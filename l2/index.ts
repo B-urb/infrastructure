@@ -14,6 +14,7 @@ import * as aws from "@pulumi/aws"
 import {createSecretStore} from "./secretstore";
 import * as k8s from "@pulumi/kubernetes"
 import {createKubevoyage} from "./create/kubevoyage";
+import {createPlane} from "./create/plane";
 
 const config = new Config();
 const stack = getStack();
@@ -42,9 +43,13 @@ export const awsProvider = new aws.Provider("my-aws-provider", {
   // Optional: If you are using temporary credentials, you also need to specify a session token
   region: "eu-central-1",
 });
-const kubeConfig  = stackRefl0.getOutput("kubeconfig").apply(kubeconfig => interpolate`${kubeconfig}`);
-const clusterName  = stackRefl0.getOutput("cluster").apply(cluster => interpolate`${cluster}`);
-export const kubernetesProvider = new k8s.Provider("kube-provider", {kubeconfig: kubeConfig, cluster: clusterName, context: clusterName})
+const kubeConfig = stackRefl0.getOutput("kubeconfig").apply(kubeconfig => interpolate`${kubeconfig}`);
+const clusterName = stackRefl0.getOutput("cluster").apply(cluster => interpolate`${cluster}`);
+export const kubernetesProvider = new k8s.Provider("kube-provider", {
+  kubeconfig: kubeConfig,
+  cluster: clusterName,
+  context: clusterName
+})
 
 export const secretStore = createSecretStore(kubernetesProvider)
 
@@ -95,6 +100,7 @@ function createDBCredentials(ident: string) {
 
 createDirectus(postgresProvider, stackRef, config)
 createKubevoyage(postgresProvider, stackRef, config)
+createPlane(postgresProvider, stackRef, config)
 
 
 const umamiCredentials = createDBCredentials("umami")
@@ -118,7 +124,7 @@ const configMap = new ConfigMap("vaultwarden", {
     name: "vaultwarden",
     namespace: vaultwardenNamespace.metadata.name
   }, data: {
-    "url":"https://warden.burban.me"
+    "url": "https://warden.burban.me"
   }
 })
 createVaultwardenManual(vaultwardenNamespace, configMap, vaultwardenSecret)
