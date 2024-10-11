@@ -22,7 +22,7 @@ const operatorVersion = config.get("operator-version") || defaultOperatorVersion
 const pulumiAccessToken = config.requireSecret("pulumiAccessToken")
 const tagL1 = process.env.versionTag
 const tagL2 = process.env.versionTag
-if (tagL1 == undefined || tagL2 == undefined)
+if (stack == "hetzner" && (tagL1 == undefined || tagL2 == undefined))
   throw Error("tag not set")
 const stackCRD = new kubernetes.yaml.ConfigFile("stackcrd", {
   file: `https://raw.githubusercontent.com/pulumi/pulumi-kubernetes-operator/${crdVersion}/deploy/crds/pulumi.com_stacks.yaml`
