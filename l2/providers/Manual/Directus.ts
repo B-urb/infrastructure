@@ -42,7 +42,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
       namespace: website.namespace.metadata.name
     },
     spec: {
-      accessModes: ["ReadWriteOnce"],
+      accessModes: ["ReadWriteMany"],
       resources: {
         requests: {
           storage: "10Gi", // Adjust the size as needed
@@ -76,7 +76,6 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
           }
         },
         "spec": {
-          priority: 1000,
           // nodeSelector: {
           // },
           "containers": [
