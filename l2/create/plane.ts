@@ -38,7 +38,7 @@ export function createPlane(postgresProvider: Provider, stackRef: StackReference
 
   const planeBucket = createS3Bucket("plane");
   const planeConfig = {
-    url: "https://plane.burban.me",
+    url: "plane.burban.me",
     dbConnectionString: interpolate`postgresql://${role.name}:${password.result}@${postgresUrl}:5432/${planeDb.name}`,
     dbName: planeDb.name,
     awsS3Bucket: planeBucket.bucketName,
