@@ -21,6 +21,13 @@ export const versions: Record<string, VersionEntry> = {
     datasource: "docker",
     versioning: "docker",
   },
+  plane: {
+    version: "1.32.1-alpine",
+    depName: "makeplane/plane-ce",
+    datasource: "helm",
+    versioning: "helm",
+    registryUrl: "https://helm.plane.so"
+  },
 };
 
 export default versions;
