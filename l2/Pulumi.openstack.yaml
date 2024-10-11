@@ -1,0 +1,10 @@
+config:
+  l2:org: bjoern_urban_5
+  l2:s3-key:
+    secure: AAABADpVLp9eAa2BkVAcz2KlvqyksiODvcBp7Y6vDKOPqkdxZ7JDiaYlPxG2Scj+J0IWxe1aBzFLwiDtc4biaA==
+  l2:s3-secret:
+    secure: AAABAPMzbX6aCBjdXWFbERhoxNusX2ZLrzI5S+aQ/VkjJSGO1t3i1jHjQ12IvGKxTX+X/Q46bhkITJZ6ybFi7w==
+  l2:aws-key:
+    secure: AAABAPvta6bkNFr5bMDkhdZp4IZI5knxLvTbf2bQ9v5x/Gr4Pd7NbmgFtziTicwR2On2Hw==
+  l2:aws-secret:
+    secure: AAABANw97y+BZl6DbpBwat0/3EAPLEaWPTiVgaXJaAGuIvwrR23/hvVScUCx2hDkb/EHhnc1ncvCRY9+pucE3r6Th6wbdNQj
