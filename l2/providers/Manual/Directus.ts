@@ -42,7 +42,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
       namespace: website.namespace.metadata.name
     },
     spec: {
-      accessModes: ["ReadWriteMany"],
+      accessModes: ["ReadWriteOnce"],
       resources: {
         requests: {
           storage: "10Gi", // Adjust the size as needed
@@ -62,7 +62,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
       "strategy": {
         "type": "RollingUpdate"
       },
-      replicas: 2,
+      replicas: 1,
       "selector": {
         "matchLabels": {
           "name": website.name
