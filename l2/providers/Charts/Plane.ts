@@ -28,7 +28,6 @@ export default function createPlaneHelm(namespace: Namespace, config: {
       ingress: {
         appHost: config.url
       },
-      services: {
         postgres: {
           local_setup: false
         },
@@ -37,8 +36,7 @@ export default function createPlaneHelm(namespace: Namespace, config: {
         },
         minio: {
           local_setup: false
-        }
-      },
+        },
       env: {
         pgdb_database: config.dbName,
         pgdb_remote_url: config.dbConnectionString,
