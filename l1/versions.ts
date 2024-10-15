@@ -16,7 +16,7 @@ export const versions: Record<string, VersionEntry> = {
     versioning: "semver-coerced",
   },
   redis: {
-    version: "20.2.0",
+    version: "20.2.1",
     depName: "redis",
     datasource: "helm",
     versioning: "helm",
