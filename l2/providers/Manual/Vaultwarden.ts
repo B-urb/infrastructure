@@ -17,16 +17,7 @@ export function createVaultwardenManual(namespace: Namespace, configMap: ConfigM
 }
 function createVaultwardenDeployments(website: WebService, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>): Deployment {
   const secret = createSecretWrapper(website.name, website.namespace, secretData)
-  const wardenPvc = new PersistentVolumeClaim(website.name, {
-    metadata: {
-      name: website.name,
-      namespace: website.namespace.metadata.name
-    },
-    spec: {
-      accessModes: ["ReadWriteOnce"],
-      resources: { requests: { storage: "10Gi" } },
-    },
-  });
+
   return new k8s.apps.v1.Deployment(website.name, {
     metadata: {
       name: website.name,
@@ -89,21 +80,6 @@ function createVaultwardenDeployments(website: WebService, configMap: ConfigMap,
                   port: "http"
                 }
               },
-              "volumeMounts": [
-                {
-                  "name": wardenPvc.metadata.name,
-                  "mountPropagation": "HostToContainer",
-                  "mountPath": "/data"
-                }
-              ]
-            }
-          ],
-          "volumes": [
-            {
-              "name": wardenPvc.metadata.name,
-              "persistentVolumeClaim": {
-                "claimName": wardenPvc.metadata.name,
-              }
             }
           ],
         }
