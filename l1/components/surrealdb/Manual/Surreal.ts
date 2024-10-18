@@ -45,7 +45,7 @@ export function createSurrealManual() {
   },
   spec: {
    accessModes: ["ReadWriteOnce"],
-   resources: { requests: { storage: "10Gi" } },
+   resources: { requests: { storage: "1Gi" } },
   },
  });
  new StatefulSet(name, {

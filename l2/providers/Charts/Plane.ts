@@ -31,6 +31,9 @@ export default function createPlaneHelm(namespace: Namespace, config: {
         postgres: {
           local_setup: false
         },
+      rabbitmq: {
+        storageClass: "default"
+      },
         redis: {
           local_setup: false
         },

@@ -100,7 +100,7 @@ function createDBCredentials(ident: string) {
 
 createDirectus(postgresProvider, stackRef, config)
 createKubevoyage(postgresProvider, stackRef, config)
-createPlane(postgresProvider, stackRef, config)
+//createPlane(postgresProvider, stackRef, config)
 
 
 const umamiCredentials = createDBCredentials("umami")

@@ -17,8 +17,8 @@ export function createPlane(postgresProvider: Provider, stackRef: StackReference
   const postgresUrl = stackRef.getOutput("postgresUrl").apply(url => interpolate`${url}`)
 
   const password = new RandomPassword("planeDbPassword", {
-    length: 16,
-    special: true,
+    length: 24,
+    special: false,
   });
 // Create Database for PlaneCMS
   const role = new Role("plane", {
@@ -47,7 +47,7 @@ export function createPlane(postgresProvider: Provider, stackRef: StackReference
     s3UserKey: planeBucket.accessKeyId,
     s3UserSecret: planeBucket.secretAccessKey,
     planeKey: planeSecretKey,
-    redisConnectionString: `redis://redis-headless.redis:6379?ConnectTimeout=5000&password=${redisDBPassword}&IdleTimeOutSecs=180`
+    redisConnectionString: `redis://redis-headless.redis:6379?ConnectTimeout=5000&IdleTimeOutSecs=180`
   }
   const plane = createPlaneHelm(namespacePlane, planeConfig)
 }
