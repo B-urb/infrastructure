@@ -44,7 +44,7 @@ export function createSurrealManual() {
    namespace: namespace.metadata.name
   },
   spec: {
-   storageClassName: "local",
+   storageClassName: "local-path",
    accessModes: ["ReadWriteOnce"],
    resources: { requests: { storage: "1Gi" } },
   },
