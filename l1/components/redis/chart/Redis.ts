@@ -15,7 +15,8 @@ export function createRedisHelm(namespace: Namespace) {
           "global": {
             "redis":{
                 "password": redisDBPassword,
-            }
+            },
+            defaultStorageClass: "local"
           },
           auth: {
             enabled: false,

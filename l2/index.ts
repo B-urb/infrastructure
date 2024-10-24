@@ -129,24 +129,24 @@ const configMap = new ConfigMap("vaultwarden", {
 })
 createVaultwardenManual(vaultwardenNamespace, configMap, vaultwardenSecret)
 
-const paperlessSecretKey = new RandomPassword("paperlessSecretKey", {
-  length: 16,
-  special: true,
-});
-const paperlessDbCredentials = createDBCredentials("paperless")
-const paperlessNamespace = createNamespace("paperless")
-const paperlessSecret = {
-  "postgresHost": postgresUrl,
-  "postgresUser": paperlessDbCredentials.user,
-  "postgresPassword": paperlessDbCredentials.password,
-  "postgresDBName": paperlessDbCredentials.db,
-  "usermap-uid": config.get("paperlessUsermapUid")!!,
-  "usermap-gid": config.get("paperlessUsermapGid")!!,
-  "secret": paperlessSecretKey.result,
-  "adminUser": config.get("paperlessAdminUser")!!,
-  "adminPassword": config.get("paperlessAdminPw")!!,
-}
-const paperlessConfigMap = new ConfigMap("paperless", {
-  metadata: {name: "paperless", namespace: vaultwardenNamespace.metadata.name}, data: {}
-})
-createPaperless(paperlessNamespace, createSecretWrapper("paperless", paperlessNamespace, paperlessSecret), paperlessConfigMap)
+// const paperlessSecretKey = new RandomPassword("paperlessSecretKey", {
+//   length: 16,
+//   special: true,
+// });
+// const paperlessDbCredentials = createDBCredentials("paperless")
+// const paperlessNamespace = createNamespace("paperless")
+// const paperlessSecret = {
+//   "postgresHost": postgresUrl,
+//   "postgresUser": paperlessDbCredentials.user,
+//   "postgresPassword": paperlessDbCredentials.password,
+//   "postgresDBName": paperlessDbCredentials.db,
+//   "usermap-uid": config.get("paperlessUsermapUid")!!,
+//   "usermap-gid": config.get("paperlessUsermapGid")!!,
+//   "secret": paperlessSecretKey.result,
+//   "adminUser": config.get("paperlessAdminUser")!!,
+//   "adminPassword": config.get("paperlessAdminPw")!!,
+// }
+// const paperlessConfigMap = new ConfigMap("paperless", {
+//   metadata: {name: "paperless", namespace: vaultwardenNamespace.metadata.name}, data: {}
+// })
+// createPaperless(paperlessNamespace, createSecretWrapper("paperless", paperlessNamespace, paperlessSecret), paperlessConfigMap)
