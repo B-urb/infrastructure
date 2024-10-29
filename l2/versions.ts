@@ -10,7 +10,7 @@ export interface VersionEntry {
 
 export const versions: Record<string, VersionEntry> = {
   directus: {
-    version: "11.1.1",
+    version: "11.1.2",
     depName: "directus/directus",
     datasource: "docker",
     versioning: "docker",
