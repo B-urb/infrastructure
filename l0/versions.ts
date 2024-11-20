@@ -52,7 +52,7 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://charts.hetzner.cloud/"
   },
   externalSecrets: {
-    version: "0.10.5",
+    version: "0.10.6",
     depName: "external-secrets",
     datasource: "helm",
     versioning: "semver-coerced",
