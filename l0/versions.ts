@@ -38,7 +38,7 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://istio-release.storage.googleapis.com/charts"
   },
   istioD: {
-    version: "1.24.0",
+    version: "1.24.1",
     depName: "istiod",
     datasource: "helm",
     versioning: "helm",
