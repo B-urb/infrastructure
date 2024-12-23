@@ -16,14 +16,14 @@ export const versions: Record<string, VersionEntry> = {
     versioning: "semver-coerced",
   },
   redis: {
-    version: "20.3.0",
+    version: "20.6.1",
     depName: "redis",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://charts.bitnami.com/bitnami"
   },
   postgresql: {
-    version: "16.2.5",
+    version: "16.3.4",
     depName: "postgresql",
     datasource: "helm",
     versioning: "helm",
