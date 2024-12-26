@@ -4,13 +4,10 @@ import {redisDBPassword} from "../../../../util/env";
 import versions from "../../../versions";
 
 export function createRedisHelm(namespace: Namespace) {
-  return new k8s.helm.v3.Chart("redis", {
-        chart: versions.redis.depName,
+  return new k8s.helm.v4.Chart("redis", {
+        chart: versions.redis.registryUrl!!,
         namespace: namespace.metadata.name,
         version: versions.redis.version,
-        fetchOpts: {
-          repo: versions.redis.registryUrl,
-        },
         values: {
           "global": {
             "redis":{
