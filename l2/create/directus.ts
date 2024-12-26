@@ -10,7 +10,7 @@ import {Provider, Role} from "@pulumi/postgresql";
 import * as postgresql from "@pulumi/postgresql";
 
 
-export function createDirectus(postgresProvider: Provider, stackRef: StackReference, config: Config) {
+export function createDirectus(postgresProvider: Provider, stackRef: StackReference, config: Config, dev: boolean = false) {
   const directusSecretKey = new RandomPassword("directus-secret", {length: 24}).result.apply(
       password => interpolate`${password}`
   )
@@ -41,7 +41,7 @@ export function createDirectus(postgresProvider: Provider, stackRef: StackRefere
   }, {provider: postgresProvider});
 
 
-  const directusBucket = createS3Bucket("directus");
+  const directusBucket = createS3Bucket(`directus${dev ? "-dev" : "dev"}`);
 
   const directusSecret = {
     "db-user": role.name,

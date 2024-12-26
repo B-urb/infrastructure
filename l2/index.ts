@@ -23,6 +23,11 @@ const org = config.require("org");
 const stackRef = new StackReference(`${org}/l1/${stack}`)
 const stackRefl0 = new StackReference(`${org}/l0/${stack}`)
 
+let dev = false
+
+if(stack == "opnenstack")
+  dev = true
+
 
 const postgresNamespace = stackRef.getOutput("postgresNamespace").apply(namespace => interpolate`${namespace}`)
 //Initialize Postgres Provider. NOTE: Requires port-forward for now
@@ -72,6 +77,8 @@ const backUpSecret = {
   "s3-user-secret": config.get("s3-secret")!!,
 }
 
+
+
 createBackupCronjob(postgresNamespace, createBackupSecret(postgresNamespace, backUpSecret))
 export const backupPassword = backupPGPassword.result
 
@@ -98,7 +105,7 @@ function createDBCredentials(ident: string) {
 }
 
 
-createDirectus(postgresProvider, stackRef, config)
+createDirectus(postgresProvider, stackRef, config, dev)
 createKubevoyage(postgresProvider, stackRef, config)
 //createPlane(postgresProvider, stackRef, config)
 
