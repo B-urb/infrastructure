@@ -20,14 +20,14 @@ export const versions: Record<string, VersionEntry> = {
     depName: "redis",
     datasource: "helm",
     versioning: "helm",
-    registryUrl: "https://charts.bitnami.com/bitnami"
+    registryUrl: "oci://registry-1.docker.io/bitnamicharts/redis"
   },
   postgresql: {
     version: "16.3.3",
     depName: "postgresql",
     datasource: "helm",
     versioning: "helm",
-    registryUrl: "https://charts.bitnami.com/bitnami"
+    registryUrl: "oci://registry-1.docker.io/bitnamicharts/postgresql"
   },
 };
 

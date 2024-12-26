@@ -8,13 +8,10 @@ import versions from "../../../versions";
 
 
 export function createPostgresHelm(namespace: Namespace, dbRootPassword: RandomPassword, appDbPassword: RandomPassword) {
-  return new k8s.helm.v3.Chart("postgres", {
-        chart: versions.postgresql.depName,
+  return new k8s.helm.v4.Chart("postgres", {
+        chart: versions.postgresql.registryUrl!!,
         namespace: namespace.metadata.name,
         version:versions.postgresql.version ,
-        fetchOpts: {
-          repo: versions.postgresql.registryUrl,
-        },
         values: {
          "global": {
            "postgresql":{
