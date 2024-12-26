@@ -41,7 +41,7 @@ export function createDirectus(postgresProvider: Provider, stackRef: StackRefere
   }, {provider: postgresProvider});
 
 
-  const directusBucket = createS3Bucket(`directus${dev ? "-dev" : "dev"}`);
+  const directusBucket = createS3Bucket(`directus${dev ? "-dev" : ""}`);
 
   const directusSecret = {
     "db-user": role.name,
