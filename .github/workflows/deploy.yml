@@ -20,12 +20,6 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG }}" | base64 -d >  $HOME/.kube/config
           cat $HOME/.kube/config
         shell: bash
-      - name: Set Version in pulumi config
-        uses: pulumi/actions@v6
-        with:
-          command: config set version $versionTag
-          stack-name: openstack
-          work-dir: flux-operator
       - name: Deploy with Pulumi
         uses: pulumi/actions@v6
         with:
@@ -42,18 +36,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - run: npm install
+      - name: setup kubectl
+        uses: actions-hub/kubectl@v1.32.0
       - name: Decode kubeconfig
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" | base64 -d >  $HOME/.kube/config
           cat $HOME/.kube/config
         shell: bash
-      - name: Set Version in pulumi config
-        uses: pulumi/actions@v6
-        with:
-          command: config set version $versionTag
-          stack-name: hetzner
-          work-dir: flux-operator
+      - name: Get current Version in pulumi config
+        run: |
+          echo "PREVIOUS_VERSION=kubectl get stacks -n flux-system l1 -o jsonpath='{.spec.branch}' | awk -F'/' '{print $NF}'" >> $GITHUB_ENV
       - name: Deploy with Pulumi
         uses: pulumi/actions@v6
         with:
