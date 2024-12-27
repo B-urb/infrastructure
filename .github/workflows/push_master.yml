@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: [Pulumi]
+    types:
+      - completed
+    branches:
+      - master
+jobs:
+  preview-prod:
+    name: Preview-Prod
+    runs-on: ubuntu-latest
+    environment: prod
+    strategy:
+      fail-fast: false
+      matrix:
+        workdir: [ l1, l2 ]
+        stack: [ hetzner ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version: '19.9.0'
+      - name: Decode kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d >  $HOME/.kube/config
+          cat $HOME/.kube/config
+        shell: bash
+      - run: npm install
+        working-directory: ${{ matrix.workdir }}
+      - uses: pulumi/actions@v6
+        with:
+          command: preview
+          work-dir: ${{ matrix.workdir }}
+          stack-name: ${{ matrix.stack }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+  release:
+    needs: preview-prod
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install -g semantic-release @saithodev/semantic-release-backmerge @semantic-release/github @semantic-release/exec
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: npx semantic-release --debug
