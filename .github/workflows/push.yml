@@ -7,7 +7,7 @@ on:
         - "renovate/*"
 jobs:
   preview:
-    name: Preview-Prod
+    name: Preview-dev
     environment: development
     runs-on: ubuntu-latest
     strategy:
@@ -25,35 +25,6 @@ jobs:
             mkdir -p $HOME/.kube
             echo "${{ secrets.KUBE_CONFIG }}" | base64 -d >  $HOME/.kube/config
             cat $HOME/.kube/config
-        shell: bash
-      - run: npm install
-        working-directory: ${{ matrix.workdir }}
-      - uses: pulumi/actions@v6
-        with:
-          command: preview
-          work-dir: ${{ matrix.workdir }}
-          stack-name: ${{ matrix.stack }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-  preview-prod:
-    name: Preview-Prod
-    runs-on: ubuntu-latest
-    environment: prod
-    strategy:
-      fail-fast: false
-      matrix:
-        workdir: [ l1, l2 ]
-        stack: [hetzner]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
-        with:
-          node-version: '19.9.0'
-      - name: Decode kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d >  $HOME/.kube/config
-          cat $HOME/.kube/config
         shell: bash
       - run: npm install
         working-directory: ${{ matrix.workdir }}
