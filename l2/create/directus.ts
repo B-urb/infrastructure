@@ -58,7 +58,7 @@ export function createDirectus(postgresProvider: Provider, stackRef: StackRefere
     "directus-secret": directusSecretKey
   }
   const directusConfigMapData = {
-    PUBLIC_URL: "https://cms.burban.me",
+    PUBLIC_URL: "https://cms.burbn.de",
     "db-client": "pg",
     "db-host": postgresUrl,
     "db-port": "5432",

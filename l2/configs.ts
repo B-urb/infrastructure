@@ -5,7 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 export const mailgunConfig = {
   host: "api.eu.mailgun.com",
   apiKey: mailgunKey,
-  sendDomain: "mg.burban.me"
+  sendDomain: "mg.burbn.de"
 }
 export function createDirectusConfigMap(directusConfigMapData: Input<{[p: string]: Input<string>}>) {
   return new k8s.core.v1.ConfigMap("directus", {

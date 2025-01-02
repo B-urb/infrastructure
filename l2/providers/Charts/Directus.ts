@@ -23,7 +23,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, co
             "enabled": "true",
             "tls": [{
               "secretName": "directus" + "-legacy-tls",
-              "hosts": ["cms-legacy.burban.me"]
+              "hosts": ["cms-legacy.burbn.de"]
             }],
             "hosts": [
               {
@@ -33,7 +33,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, co
                     "path": "/"
                   }
                 ],
-                "host": 'cms-legacy.burban.me'
+                "host": 'cms-legacy.burbn.de'
               }],
             "annotations": {
               "kubernetes.io/ingress.class": "traefik",
@@ -57,7 +57,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, co
             },
             {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__MEDIA_SRC",
-              value: "array:'self',https://cms-legacy.burban.me"
+              value: "array:'self',https://cms-legacy.burbn.de"
             }, {
               name: "ASSETS_CONTENT_SECURITY_POLICY_DIRECTIVES__SCRIPT_SRC",
               value: "array:'self', 'unsafe-inline'"
@@ -72,7 +72,7 @@ export function createDirectusHelmChart(namespace: Namespace, secret: Secret, co
             },
             {
               name: "CORS_ORIGIN",
-              value: "https://burban.me,https://dev.burban.me,https://dev.tischlerei-bahrenberg.de,https://tischlerei-bahrenberg.de"
+              value: "https://burbn.de,https://dev.burbn.de,https://dev.tischlerei-bahrenberg.de,https://tischlerei-bahrenberg.de"
             },
             {
               name: "ADMIN_PASSWORD",

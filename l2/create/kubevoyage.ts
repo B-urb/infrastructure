@@ -35,7 +35,7 @@ export function createKubevoyage(postgresProvider: Provider, stackRef: StackRefe
 
 
   const voyageConfig: KubevoyageConfig = {
-    url: "voyage.burban.me",
+    url: "voyage.burbn.de",
     jwtSecret: jwtSecret,
     adminUser: config.get("admin-mail")!!,
     adminPassword: adminPassword,

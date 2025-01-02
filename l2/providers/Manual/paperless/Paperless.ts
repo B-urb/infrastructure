@@ -4,7 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import {ConfigMap, Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 export function createPaperless(namespace: Namespace, secret: Secret, config: ConfigMap) {
-  const url = "docs.burban.me"
+  const url = "docs.burbn.de"
   const memoryLimit = "3000"
 // Tika Deployment
   const tikaDeployment = new k8s.apps.v1.Deployment("tika-deployment", {

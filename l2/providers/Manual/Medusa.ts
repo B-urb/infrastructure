@@ -59,7 +59,7 @@ function createMedusaDeployment(website: WebService, secret: Secret): Deployment
               "env": [
                 {
                   name: "ADMIN_CORS",
-                  value: "https://store-admin.burban.me"
+                  value: "https://store-admin.burbn.de"
                 },
                 {name: "DATABASE_URL", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "postgres-connection-string"}}},
                 {name: "REDIS_URL", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "redis-connection-string"}}},
