@@ -9,7 +9,7 @@ import {Input} from "@pulumi/pulumi";
 import versions from "../../versions";
 
 export function createVaultwardenManual(namespace: Namespace, configMap: ConfigMap, secretData: Input<{[key: string]:  Input<string>}>) {
-  const website =  new WebService("vaultwarden", "warden.burban.me", namespace, versions.vaultwarden.depName, versions.vaultwarden.version, {}, "prod");
+  const website =  new WebService("vaultwarden", "warden.burbn.de", namespace, versions.vaultwarden.depName, versions.vaultwarden.version, {}, "prod");
 
   const deployment = createVaultwardenDeployments(website, configMap, secretData);
   const service = createVaultwardenService(website);

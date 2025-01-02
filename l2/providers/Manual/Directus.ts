@@ -8,7 +8,7 @@ import {kubernetesProvider} from "../../index";
 import {versions} from "../../versions"
 
 export function createDirectusManual(namespace: Namespace, secret: Secret, config: ConfigMap) {
-  const url = "cms.burban.me"
+  const url = "cms.burbn.de"
   const website =  new WebService("directus", url, namespace, "directus/directus", versions.directus.version, {}, "prod");
 
   const deployment = createDirectusDeployments(website, secret, config);
@@ -16,7 +16,7 @@ export function createDirectusManual(namespace: Namespace, secret: Secret, confi
   const ingress = createDirectusIngress(website);
 }
 function createDirectusDeployments(website: WebService, secret: Secret, config: ConfigMap): Deployment {
-  const url = "cms.burban.me"
+  const url = "cms.burbn.de"
 
   const token  = new RandomPassword("isrToken", {
     length: 24,
@@ -113,7 +113,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 },
                 {
                   name: "CORS_ORIGIN",
-                  value: "https://burban.me,https://dev.burban.me,https://dev.tischlerei-bahrenberg.de,https://tischlerei-bahrenberg.de"
+                  value: "https://burbn.de,https://dev.burbn.de,https://dev.tischlerei-bahrenberg.de,https://tischlerei-bahrenberg.de"
                 },
                 {
                   name: "ADMIN_PASSWORD",
@@ -164,7 +164,7 @@ function createDirectusDeployments(website: WebService, secret: Secret, config: 
                 {name: "EMAIL_VERIFY_SETUP", value: "true"},
                 {name: "EMAIL_FROM", value: "no-reply"+url},
                 {name: "EMAIL_TRANSPORT", value: "mailgun"},
-                {name: "EMAIL_MAILGUN_DOMAIN", value: "mg.burban.me"},
+                {name: "EMAIL_MAILGUN_DOMAIN", value: "mg.burbn.de"},
                 {name: "EMAIL_MAILGUN_API_KEY", valueFrom: {secretKeyRef: {name: secret.metadata.name, key: "mg-api-key"}}
                 },
                 {name:"ASSETS_TRANSFORM_IMAGE_MAX_DIMENSION", value: "8000"},

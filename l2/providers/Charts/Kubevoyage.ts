@@ -47,7 +47,7 @@ export function createKubevoyageHelmChart(config: KubevoyageConfig) {
                     }
                   }
                 ],
-                "host": 'voyage.burban.me'
+                "host": 'voyage.burbn.de'
               }],
             "annotations": {
               "cert-manager.io/cluster-issuer": "letsencrypt"
