@@ -38,6 +38,8 @@ jobs:
       - run: npm install
       - name: setup kubectl
         uses: actions-hub/kubectl@v1.32.0
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       - name: Decode kubeconfig
         run: |
           mkdir -p $HOME/.kube
