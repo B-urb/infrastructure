@@ -10,9 +10,9 @@ import {throws} from "node:assert";
 
 
 const stack = pulumi.getStack()
-const defaultCRDVersion = "v1.14.0";
-const defaultOperatorVersion = "v1.14.0";
-const image = stack === "hetzner" ? "bjoern5urban/pulumi-kubernetes-operator:latest" : "pulumi/pulumi-kubernetes-operator:v1.16.0"
+const defaultCRDVersion = "v1.16.0";
+const defaultOperatorVersion = "v1.16.0";
+const image = stack === "hetzner" ? "pulumi/pulumi-kubernetes-operator:v2.0.0-beta.3" : "pulumi/pulumi-kubernetes-operator:v1.16.0"
 const config = new pulumi.Config();
 const deployNamespace = config.get("namespace") || 'default';
 const deployNamespaceList = config.getObject<string[]>("namespaces") || [deployNamespace];
