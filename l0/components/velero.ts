@@ -8,7 +8,7 @@ const ns = new k8s.core.v1.Namespace(ident, {
   metadata: { name: ident },
 })
 
-new k8s.helm.v3.Release("velero", {
+new k8s.helm.v4.Release("velero", {
   namespace: ns.metadata.name,
   name: "velero",
   chart: "velero",

@@ -11,10 +11,10 @@ export function createGitlabRunner(namespace: Namespace) {
   const serviceAccount = createServiceAccount(namespace)
   const role = createRole(namespace)
   const roleBinding = createRoleBinding(namespace, role, serviceAccount)
-  return new k8s.helm.v3.Chart("gitlab-runner", {
+  return new k8s.helm.v4.Chart("gitlab-runner", {
     chart: "gitlab-runner",
     namespace: namespace.metadata.name,
-    fetchOpts: {
+    repositoryOpts: {
       repo: "https://charts.gitlab.io/"
     },
     values: {
