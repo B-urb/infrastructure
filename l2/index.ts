@@ -4,17 +4,15 @@ import * as postgresql from "@pulumi/postgresql";
 import {Provider, Role} from "@pulumi/postgresql";
 import {RandomPassword} from "@pulumi/random";
 import {Config, getStack, interpolate, StackReference} from "@pulumi/pulumi";
-import {createBackupSecret, createSecretWrapper, createUmamiSecret} from "./secrets";
+import {createBackupSecret, createUmamiSecret} from "./secrets";
 import {ConfigMap} from "@pulumi/kubernetes/core/v1";
 import createBackupCronjob from "./CronJob";
 import {createVaultwardenManual} from "./providers/Manual/Vaultwarden";
-import {createPaperless} from "./providers/Manual/paperless/Paperless";
 import {createDirectus} from "./create/directus";
 import * as aws from "@pulumi/aws"
 import {createSecretStore} from "./secretstore";
 import * as k8s from "@pulumi/kubernetes"
 import {createKubevoyage} from "./create/kubevoyage";
-import {createPlane} from "./create/plane";
 
 const config = new Config();
 const stack = getStack();
@@ -120,10 +118,13 @@ export const umamiSecret = {
 }
 createUmami("manual", namespaceUmami, createUmamiSecret(namespaceUmami, umamiSecret))
 
-
+const yubiClientSecret = config.getSecret("yubi-client-secret")
+const yubiClientId = config.getSecret("yubi-client-id")
 const vaultwardenCredentials = createDBCredentials("vaultwarden")
 export const vaultwardenSecret = {
-  "database-url": interpolate`postgresql://${vaultwardenCredentials.user}:${vaultwardenCredentials.password}@${postgresUrl}:5432/${vaultwardenCredentials.db}`
+  "database-url": interpolate`postgresql://${vaultwardenCredentials.user}:${vaultwardenCredentials.password}@${postgresUrl}:5432/${vaultwardenCredentials.db}`,
+  "yubico-client-secret": interpolate`${yubiClientSecret}`,
+  "yubico-client-id":interpolate`${yubiClientId}`
 }
 const vaultwardenNamespace = createNamespace("vaultwarden")
 const configMap = new ConfigMap("vaultwarden", {

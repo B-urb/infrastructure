@@ -60,6 +60,10 @@ function createVaultwardenDeployments(website: WebService, configMap: ConfigMap,
               "env": [
                 {name: "DATABASE_URL",
                 valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "database-url" }}},
+                {name: "YUBICO_SECRET_KEY",
+                  valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "yubico-client-secret" }}},
+                {name: "YUBICO_CLIENT_ID",
+                  valueFrom: {secretKeyRef: { name: secret.metadata.name, key: "yubico-client-id" }}},
                 {name: "DOMAIN",
                   valueFrom: {configMapKeyRef: { name: configMap.metadata.name, key: "url" }}}
               ],
