@@ -58,6 +58,13 @@ export const versions: Record<string, VersionEntry> = {
     versioning: "semver-coerced",
     registryUrl: "https://charts.external-secrets.io"
   },
+  pulumiOperator: {
+    version: "0.8.1",
+    depName: "pulumi-kubernetes-operator",
+    datasource: "helm",
+    versioning: "semver-coerced",
+    registryUrl: "oci://ghcr.io/pulumi/helm-charts/pulumi-kubernetes-operator"
+  },
 
 };
 

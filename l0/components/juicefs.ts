@@ -10,7 +10,7 @@ const ns = new k8s.core.v1.Namespace(ident, {
   metadata: { name: ident },
 })
 
-const redis = new k8s.helm.v3.Release("redis", {
+const redis = new k8s.helm.v4.Release("redis", {
   namespace: ns.metadata.name,
   name: "redis",
   chart: "redis",
@@ -47,7 +47,7 @@ const minioSecret = {
 }
 
 const juiceStorageClassName = "juice"
-const juicefs = new k8s.helm.v3.Release("juicefs-driver", {
+const juicefs = new k8s.helm.v4.Release("juicefs-driver", {
   namespace: ns.metadata.name,
   chart: versions.juiceCsiDriver.depName,
   version: versions.juiceCsiDriver.version,
@@ -79,7 +79,7 @@ const storage = k8s.storage.v1.StorageClass.get(
 
 export const juicefsStorage = storage.metadata.name
 
-new k8s.helm.v3.Release("juicefs-gateway", {
+new k8s.helm.v4.Release("juicefs-gateway", {
   namespace: ns.metadata.name,
   chart: "juicefs-s3-gateway",
   version: "0.9.0",
@@ -95,7 +95,7 @@ new k8s.helm.v3.Release("juicefs-gateway", {
   },
 })
 
-new k8s.helm.v3.Release("juicefs-volume-hook", {
+new k8s.helm.v4.Release("juicefs-volume-hook", {
   namespace: ns.metadata.name,
   chart: "juicefs-volume-hook",
   version: "0.2.4",

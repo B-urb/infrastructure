@@ -8,10 +8,10 @@ import {dbPassword, dbRootPassword} from "../../../util/env";
 
 export function createDirectusHelmChart(namespace: Namespace, secret: Secret, config: ConfigMap) {
 
-  return new k8s.helm.v3.Chart("directus-release", {
+  return new k8s.helm.v4.Chart("directus-release", {
         chart: "directus",
         namespace: namespace.metadata.name,
-        fetchOpts: {
+        repositoryOpts: {
           repo: "https://directus-community.github.io/helm-chart",
         },
         values: {

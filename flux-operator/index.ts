@@ -66,74 +66,12 @@ const operatorClusterRoleBinding = new kubernetes.rbac.v1.ClusterRoleBinding(`op
     apiGroup: "rbac.authorization.k8s.io",
   },
 });
-const operatorDeployment = new kubernetes.apps.v1.Deployment(`pulumi-kubernetes-operator-${ns}`, {
-  metadata: {
-    "namespace": ns,
-  },
-  spec: {
-    replicas: 1,
-    selector: {
-      matchLabels: {
-        name: "pulumi-kubernetes-operator",
-      },
-    },
-    template: {
-      metadata: {
-        labels: {
-          name: "pulumi-kubernetes-operator",
-        },
-      },
-      spec: {
-        serviceAccountName: operatorServiceAccount.metadata.name,
-        containers: [{
-          name: "pulumi-kubernetes-operator",
-          image: image,
-          args: ["--zap-level=error", "--zap-time-encoding=iso8601"],
-          imagePullPolicy: "Always",
-          env: [
-            {
-              name: "WATCH_NAMESPACE",
-              valueFrom: {
-                fieldRef: {
-                  fieldPath: "metadata.namespace",
-                },
-              },
-            },
-            {
-              name: "POD_NAME",
-              valueFrom: {
-                fieldRef: {
-                  fieldPath: "metadata.name",
-                },
-              },
-            },
-            {
-              name: "OPERATOR_NAME",
-              value: "pulumi-kubernetes-operator",
-            },
-            {
-              name: "GRACEFUL_SHUTDOWN_TIMEOUT_DURATION",
-              value: "5m",
-            },
-            {
-              name: "MAX_CONCURRENT_RECONCILES",
-              value: "10",
-            },
 
-
-          ],
-        }],
-        // Should be same or larger than GRACEFUL_SHUTDOWN_TIMEOUT_DURATION
-        terminationGracePeriodSeconds: 300,
-      },
-    },
-  },
-}, deploymentOptions);
 
 // Create the API token as a Kubernetes Secret.
 const accessToken = new Secret("operator-accesstoken", {
   metadata: {
-    name: "flux-secret",
+    name: "pulumi-operator-secret",
     namespace: ns
   },
   stringData: {accessToken: pulumiAccessToken},

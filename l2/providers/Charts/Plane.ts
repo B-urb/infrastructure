@@ -15,10 +15,10 @@ export default function createPlaneHelm(namespace: Namespace, config: {
   awsS3Endpoint: Output<string>;
   url: string
 }) {
-  return new k8s.helm.v3.Chart("plane", {
+  return new k8s.helm.v4.Chart("plane", {
     chart: versions.plane.depName,
     namespace: namespace.metadata.name,
-    fetchOpts: {
+    repositoryOpts: {
       repo: versions.plane.registryUrl,
     },
     values: {

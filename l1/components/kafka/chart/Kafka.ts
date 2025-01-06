@@ -3,10 +3,10 @@ import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 
 export function createKafka(namespace: Namespace, secret: Secret) {
-  return new k8s.helm.v3.Chart("kafka", {
+  return new k8s.helm.v4.Chart("kafka", {
     chart: "kafka",
     namespace: namespace.metadata.name,
-    fetchOpts: {
+    repositoryOpts: {
       repo: "https://charts.bitnami.com/bitnami"
     },
     values: {

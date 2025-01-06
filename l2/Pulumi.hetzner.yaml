@@ -17,3 +17,7 @@ config:
     secure: AAABAD/h/5wcP3a2K4aZY3e8zhvSFxpvP4aYzkV3iPl2UE4qauHXV6fMndab2TzKyjoqWOYUAGJWjwW4xRNK0Q==
   l2:s3-secret:
     secure: AAABAOyJpJFwRpQnQVyFz3S7Pgf41EmOOts3Fzh4QfOMDL+3XY3AHeYjyyIr15NCCTsN879eOJDYgbKl/sWiFg==
+  l2:yubi-client-secret:
+    secure: AAABANxQrX2UjUlkvn7qqFyp5PAg6Lxt1kTtJ0Mh47+cIsUua3yZ/B6LJSHFwN3R82W3yBB4glJcjjKk
+  l2:yubi-client-id:
+    secure: AAABAGQXUV3oPcgNQ71AZNLWw4IazST0atdQeFK+xr1SpDkfMi4=

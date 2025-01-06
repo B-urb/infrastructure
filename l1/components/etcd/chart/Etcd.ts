@@ -3,10 +3,10 @@ import {Namespace, Secret} from "@pulumi/kubernetes/core/v1";
 
 
 export function createEtcd(namespace: Namespace, secret: Secret) {
-  return new k8s.helm.v3.Chart("etcd", {
+  return new k8s.helm.v4.Chart("etcd", {
     chart: "etcd",
     namespace: namespace.metadata.name,
-    fetchOpts: {
+    repositoryOpts: {
       repo: "https://charts.bitnami.com/bitnami"
     },
     values: {

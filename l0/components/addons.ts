@@ -5,12 +5,12 @@ import {Namespace} from "@pulumi/kubernetes/core/v1";
 import versions from "../versions";
 
 export function installCilium(opts: CustomResourceOptions) {
-  return new helm.v3.Chart("cilium", {
-    chart: "cilium",
-    version: "1.15.6",
+  return new helm.v4.Chart("cilium", {
+    chart: versions.cilium.depName,
+    version: versions.cilium.version,
     namespace: "kube-system",
-    fetchOpts: {
-      repo: "https://helm.cilium.io/",
+    repositoryOpts: {
+      repo: versions.cilium.registryUrl,
     },
   }, opts)
 }
@@ -19,10 +19,10 @@ export function installCilium(opts: CustomResourceOptions) {
 
 export function installCertManager(opts: CustomResourceOptions) {
   //TODO: Switch to Helm Release, to enable Hook Support
-  return new helm.v3.Chart("cert-manager", {
+  return new helm.v4.Chart("cert-manager", {
     chart: versions.certManager.depName,
     version: versions.certManager.version,
-    fetchOpts: {
+    repositoryOpts: {
       repo: versions.certManager.registryUrl,
     },
     namespace: "kube-system",
@@ -39,10 +39,10 @@ export function installExternalSecretsOperator(opts: CustomResourceOptions) {
       name: "external-secrets"
     }
   }, opts)
-  return new helm.v3.Chart("external-secrets", {
+  return new helm.v4.Chart("external-secrets", {
     chart: versions.externalSecrets.depName ,
     version: versions.externalSecrets.version,
-    fetchOpts: {
+    repositoryOpts: {
       repo: versions.externalSecrets.registryUrl,
     },
     namespace: ns.metadata.name,
@@ -59,10 +59,10 @@ export function installIstio(opts: CustomResourceOptions) {
       name: "istio-system"
     }
   }, opts)
-  new helm.v3.Chart("istio-base", {
+  new helm.v4.Chart("istio-base", {
     chart: versions.istioBase.depName,
     version: versions.istioBase.version,
-    fetchOpts: {
+    repositoryOpts: {
       repo: versions.istioBase.registryUrl,
     },
     namespace: ns.metadata.name,
@@ -71,10 +71,10 @@ export function installIstio(opts: CustomResourceOptions) {
     },
   }, opts);
 
-  return new helm.v3.Chart("istiod", {
+  return new helm.v4.Chart("istiod", {
     chart: versions.istioD.depName,
     version: versions.istioD.version,
-    fetchOpts: {
+    repositoryOpts: {
       repo: versions.istioD.registryUrl,
     },
     namespace: ns.metadata.name,
@@ -123,11 +123,11 @@ export function installCSIDriver(token: Input<string>, opts: CustomResourceOptio
     }
   },opts)
 
-  return new helm.v3.Chart("hcloud-csi", {
+  return new helm.v4.Chart("hcloud-csi", {
     chart: versions.hcloudCSI.depName,
     namespace: "kube-system",
     version: versions.hcloudCSI.version,
-    fetchOpts: {
+    repositoryOpts: {
       repo: versions.hcloudCSI.registryUrl
     },
   },opts)

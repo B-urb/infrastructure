@@ -14,6 +14,7 @@ import {
 import {Namespace} from "@pulumi/kubernetes/core/v1";
 import {Provider} from "@pulumi/kubernetes";
 import {Input} from "@pulumi/pulumi";
+import {installPulumiOperator} from "../components/pulumi-operator/chart";
 
 
 export function createHetznerK3S(config: pulumi.Config, clusterName: string, mail: Input<string>) {
@@ -46,13 +47,18 @@ export function createHetznerK3S(config: pulumi.Config, clusterName: string, mai
   const certManager = installCertManager({provider:kubernetesProvider})
   installClusterIssuer(mail!!,{provider: kubernetesProvider, dependsOn: [certManager]})
   installIstio({provider: kubernetesProvider})
+
   const externalSecrets = installExternalSecretsOperator({provider: kubernetesProvider})
-  new Namespace("flux-system", {
+
+  //const pulumiAccessToken = config.getSecret("pulumiAccessToken")
+  const pulumiOperatorNamespace = new Namespace("pulumi-kubernetes-operator", {
         metadata: {
-          name: "flux-system"
+          name: "pulumi-kubernetes-operator"
         },
       },
       {provider: kubernetesProvider}
   )
+ // const pulumiOperator = installPulumiOperator(pulumiAccessToken!!, pulumiOperatorNamespace, {provider: kubernetesProvider})
+
   return {kubeconfig: kubeconfig, cluster: pulumi.output(cluster)}
 }

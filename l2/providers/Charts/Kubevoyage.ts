@@ -15,11 +15,11 @@ export type KubevoyageConfig = {
 
 export function createKubevoyageHelmChart(config: KubevoyageConfig) {
 
-  return new k8s.helm.v3.Chart("kubevoyage", {
+  return new k8s.helm.v4.Chart("kubevoyage", {
         chart: "kubevoyage",
         version: "0.7.0",
         namespace: "default",
-        fetchOpts: {
+        repositoryOpts: {
           repo: "https://b-urb.github.io/KubeVoyage/",
         },
         values: {
