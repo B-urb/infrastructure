@@ -17,14 +17,14 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://juicedata.github.io/charts"
   },
   cilium: {
-    version: "1.16.6",
+    version: "1.17.0",
     depName: "cilium",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://helm.cilium.io/"
   },
   certManager: {
-    version: "v1.16.3",
+    version: "v1.17.0",
     depName: "cert-manager",
     datasource: "helm",
     versioning: "semver-coerced",
@@ -45,14 +45,14 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://istio-release.storage.googleapis.com/charts"
   },
   hcloudCSI: {
-    version: "2.11.0",
+    version: "2.12.0",
     depName: "hcloud-csi",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://charts.hetzner.cloud/"
   },
   externalSecrets: {
-    version: "0.12.1",
+    version: "0.14.1",
     depName: "external-secrets",
     datasource: "helm",
     versioning: "semver-coerced",
