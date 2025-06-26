@@ -19,9 +19,9 @@ jobs:
         stack: [ hetzner ]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/setup-node@v4.4.0
         with:
-          node-version: '19.9.0'
+          node-version: '22.17.0'
       - name: Decode kubeconfig
         run: |
           mkdir -p $HOME/.kube
