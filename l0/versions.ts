@@ -10,7 +10,7 @@ export interface VersionEntry {
 
 export const versions: Record<string, VersionEntry> = {
   juiceCsiDriver: {
-    version: "0.28.4",
+    version: "0.29.0",
     depName: "juicefs-csi-driver",
     datasource: "helm",
     versioning: "helm",
@@ -24,7 +24,7 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://helm.cilium.io/"
   },
   certManager: {
-    version: "v1.18.1",
+    version: "v1.18.2",
     depName: "cert-manager",
     datasource: "helm",
     versioning: "semver-coerced",
@@ -52,7 +52,7 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://charts.hetzner.cloud/"
   },
   externalSecrets: {
-    version: "0.18.1",
+    version: "0.18.2",
     depName: "external-secrets",
     datasource: "helm",
     versioning: "semver-coerced",
