@@ -16,7 +16,7 @@ export const versions: Record<string, VersionEntry> = {
     versioning: "docker",
   },
   vaultwarden: {
-    version: "1.34.1-alpine",
+    version: "1.34.2-alpine",
     depName: "vaultwarden/server",
     datasource: "docker",
     versioning: "docker",
