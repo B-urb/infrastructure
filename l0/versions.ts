@@ -17,7 +17,7 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://juicedata.github.io/charts"
   },
   cilium: {
-    version: "1.17.6",
+    version: "1.18.1",
     depName: "cilium",
     datasource: "helm",
     versioning: "helm",
@@ -31,28 +31,28 @@ export const versions: Record<string, VersionEntry> = {
     registryUrl: "https://charts.jetstack.io"
   },
   istioBase: {
-    version: "1.26.3",
+    version: "1.27.0",
     depName: "base",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://istio-release.storage.googleapis.com/charts"
   },
   istioD: {
-    version: "1.26.3",
+    version: "1.27.0",
     depName: "istiod",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://istio-release.storage.googleapis.com/charts"
   },
   hcloudCSI: {
-    version: "2.16.0",
+    version: "2.17.0",
     depName: "hcloud-csi",
     datasource: "helm",
     versioning: "helm",
     registryUrl: "https://charts.hetzner.cloud/"
   },
   externalSecrets: {
-    version: "0.18.2",
+    version: "0.19.2",
     depName: "external-secrets",
     datasource: "helm",
     versioning: "semver-coerced",
