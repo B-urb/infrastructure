@@ -20,11 +20,13 @@ export function createRedisHelm(namespace: Namespace) {
             sentinel: false,
           },
           master: {
+            disableCommands: [],
             persistence: {
               size: "3Gi"
             },
           },
           replica: {
+            disableCommands: [],
             persistence: {
               size: "3Gi"
             },
